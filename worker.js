@@ -7,9 +7,9 @@
 const ALLOWED_HOSTS = ['www.steamgriddb.com'];
 // Direcciones desde las que se abre la app (solo https://dominio, sin barra final ni ruta)
 const ALLOWED_ORIGINS = [
-  'https://hvck460.github.io',
-  'https://backlogmgr.sluacesmartin.workers.dev',
-  'https://backlogmgr.app'
+  'https://backlogmgr.github.io',               // la app publicada en GitHub Pages
+  'https://hvck460.github.io',                  // dirección antigua de la app (quítala cuando ya no la uses)
+  'https://backlogmgr.backlogmgr.workers.dev'   // copia de la app servida desde Cloudflare (quítala si la borras)
 ];
 const MAX_BYTES = 8 * 1024 * 1024;   // tamaño máximo de los datos sincronizados
 

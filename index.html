@@ -121,6 +121,8 @@ nav .sh{display:none}
 .detail-head{display:flex;gap:14px}
 .detail-head .th{width:88px;aspect-ratio:2/3;border-radius:12px;overflow:hidden;flex:none;background:var(--panel2);box-shadow:0 8px 20px #0008}
 .detail-head .th img{width:100%;height:100%;object-fit:cover}
+.detail-head .th.edit{position:relative;cursor:pointer}
+.detail-head .th.edit::after{content:"Cambiar";position:absolute;inset:auto 0 0 0;background:#000c;font-size:11px;font-weight:700;text-align:center;padding:5px 0}
 .detail-head .f{flex:1;min-width:0}
 .prog{display:flex;gap:10px;align-items:center}
 .prog input[type=range]{padding:0;border:0;background:none;accent-color:var(--accent);height:30px;box-shadow:none}
@@ -286,7 +288,10 @@ const KEY = 'backlog.data.v1', SKEY = 'backlog.settings.v1';
 function load(k, d){ try { const v = JSON.parse(localStorage.getItem(k)); return v && typeof v === 'object' ? v : d; } catch(_) { return d; } }
 function store(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch(_) { return false; } }
 let D = load(KEY, {games:{}});
+const DEFAULT_PROXY = 'https://backlog-proxy.backlogmgr.workers.dev/?url=';   // tu Worker de Cloudflare (proxy de SteamGridDB + sincronización)
 let S = Object.assign({sgdbKey:'', proxy:'', lastPlatform:'PC', syncCode:'', lastSync:0, syncErr:''}, load(SKEY, {}));
+if (/sluacesmartin\.workers\.dev/.test(S.proxy)) S.proxy = '';   // dirección antigua del Worker: se usa la nueva por defecto
+const proxyUrl = () => S.proxy || DEFAULT_PROXY;
 if (!D.games) D.games = {};
 Object.values(D.games).forEach(g => norm(g));   // completa campos nuevos en datos antiguos
 let syncBusy = false, syncDirty = false, syncTimer = null;
@@ -356,10 +361,10 @@ const SGDB = 'https://www.steamgriddb.com/api/v2';
 async function sgdb(path){
   if (!S.sgdbKey) throw new Error('Falta la clave API de SteamGridDB (Ajustes).');
   const url = SGDB + path;
-  const target = S.proxy ? S.proxy + encodeURIComponent(url) : url;
+  const target = proxyUrl() + encodeURIComponent(url);
   let r;
   try { r = await fetch(target, {headers:{Authorization:'Bearer ' + S.sgdbKey}}); }
-  catch(e){ throw new Error('No se pudo conectar (¿bloqueo CORS o sin red?). Prueba a configurar el proxy en Ajustes.'); }
+  catch(e){ throw new Error('No se pudo conectar con el Worker. Revisa tu conexión y que la dirección del Worker en Ajustes sea correcta.'); }
   if (r.status === 401 || r.status === 403) throw new Error('SteamGridDB rechazó la clave (HTTP ' + r.status + ').');
   if (!r.ok) throw new Error('SteamGridDB respondió HTTP ' + r.status);
   const j = await r.json();
@@ -426,7 +431,8 @@ function mergeRemote(remote){   // gana el cambio más reciente de cada juego
     const r = adopt(id, rg); if (!r) continue;
     if (r.deleted && r.updated < lim){ push = true; continue; }   // lápida caducada: que la nube también la olvide
     const l = D.games[id];
-    if (!l || r.updated > (l.updated || 0)){ D.games[id] = r; changed = true; }
+    if (!l){ D.games[id] = r; changed = true; }
+    else if (r.updated > (l.updated || 0)){ for (const k of Object.keys(l)) delete l[k]; Object.assign(l, r); changed = true; }   // mismo objeto: no se pierde lo que haya abierto en pantalla
     else if (r.updated < (l.updated || 0)) push = true;
   }
   for (const id of Object.keys(D.games)) if (!seen.has(id)) push = true;
@@ -434,7 +440,7 @@ function mergeRemote(remote){   // gana el cambio más reciente de cada juego
   return {changed, push};
 }
 
-const syncBase = () => { try { return new URL(S.proxy).origin; } catch(_) { return ''; } };   // el mismo Worker del proxy
+const syncBase = () => { try { return new URL(proxyUrl()).origin; } catch(_) { return ''; } };   // el mismo Worker del proxy
 const syncReady = () => !!(S.syncCode && syncBase());
 async function syncFetch(path, opts){
   const base = syncBase(); if (!base) throw new Error('Primero pon la dirección del Worker en «Proxy CORS».');
@@ -461,7 +467,7 @@ async function syncNow(manual){
     if (r.status === 200) remote = await unseal(code, await r.text());
     else if (r.status !== 404) throw new Error(await syncErr(r));
     const m = mergeRemote(remote && remote.games);
-    if (m.changed){ store(KEY, D); render(); }
+    if (m.changed){ store(KEY, D); render(); if (!manual) toast('Actualizado desde otro dispositivo'); }
     if (!remote || m.push){
       const w = await syncFetch('/sync/' + id, {method:'PUT', headers:{'Content-Type':'application/json'}, body:await seal(code, {v:1, games:D.games})});
       if (!w.ok) throw new Error(await syncErr(w));
@@ -476,7 +482,10 @@ async function syncNow(manual){
     if (syncDirty){ syncDirty = false; scheduleSync(); }
   }
 }
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && Date.now() - (S.lastSync || 0) > 30000) syncNow(false); });
+const stale = ms => Date.now() - (S.lastSync || 0) > ms;
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && stale(10000)) syncNow(false); });
+window.addEventListener('focus', () => { if (stale(10000)) syncNow(false); });
+setInterval(() => { if (document.visibilityState === 'visible' && stale(40000)) syncNow(false); }, 20000);   // mientras la app está a la vista, se mira la nube cada ~40 s
 window.addEventListener('online', () => syncNow(false));
 
 async function copyText(t){ try { await navigator.clipboard.writeText(t); return true; } catch(_) { return false; } }
@@ -522,7 +531,7 @@ function renderSyncPanel(){
   $('#sc-eye').onclick = () => { const i = $('#sc-show'), on = i.type === 'password'; i.type = on ? 'text' : 'password'; $('#sc-eye').textContent = on ? 'Ocultar' : 'Mostrar'; };
   $('#sc-now').onclick = () => syncNow(true);
   $('#sc-copy').onclick = async () => toast(await copyText(S.syncCode) ? 'Código copiado' : 'No se pudo copiar: pulsa «Mostrar» y cópialo a mano');
-  $('#sc-link').onclick = async () => toast(await copyText(`${location.origin}${location.pathname}#sync=${S.syncCode}&w=${encodeURIComponent(S.proxy)}`) ? 'Enlace copiado. Ábrelo en el otro dispositivo' : 'No se pudo copiar el enlace');
+  $('#sc-link').onclick = async () => toast(await copyText(`${location.origin}${location.pathname}#sync=${S.syncCode}`) ? 'Enlace copiado. Ábrelo en el otro dispositivo' : 'No se pudo copiar el enlace');
   $('#sc-off').onclick = () => { S.syncCode = ''; S.lastSync = 0; S.syncErr = ''; saveS(); setSync(''); renderSyncPanel(); toast('Dispositivo desconectado. Tus juegos siguen aquí'); };
   $('#sc-wipe').onclick = async () => {
     const b = $('#sc-wipe');
@@ -534,20 +543,16 @@ function renderSyncPanel(){
     } catch(e){ toast(e.message); }
   };
 }
-function checkSyncLink(){   // enlace «#sync=CÓDIGO&w=WORKER» para conectar otro dispositivo de un toque
+function checkSyncLink(){   // enlace «#sync=CÓDIGO» para conectar otro dispositivo de un toque
   if (!location.hash.startsWith('#sync=')) return;
   const q = new URLSearchParams(location.hash.slice(1));
-  history.replaceState(null, '', location.pathname + location.search);   // el código no se queda en la barra de direcciones
+  history.replaceState({bm:'app'}, '', location.pathname + location.search);   // el código no se queda en la barra de direcciones
   const code = normCode(q.get('sync')); if (!code) return toast('El enlace de sincronización no es válido');
-  let w = ''; try { const u = new URL(q.get('w') || ''); if (u.protocol === 'https:' || u.hostname === 'localhost') w = u.toString(); } catch(_) {}
-  const setW = !S.proxy && !!w;                       // solo se acepta un Worker nuevo si aún no hay ninguno configurado
-  if (!S.proxy && !w){ toast('Antes de conectar, pon la dirección del Worker en Ajustes'); return openSettings(); }
   openSheet(`<div class="top"><h2>Conectar sincronización</h2><button id="x">Cerrar</button></div>
     <div class="hint">Este enlace conecta este dispositivo con tu nube de BacklogMGR. Los juegos de aquí se unirán a los de la nube${S.syncCode && S.syncCode !== code ? '. <b>Este dispositivo ya usa otro código y se cambiará.</b>' : '.'}</div>
-    ${setW ? `<div class="status-line">Se configurará este Worker: <b>${esc(new URL(w).host)}</b><br><small>Continúa solo si es tuyo.</small></div>` : ''}
     <div class="btnrow"><button id="sl-no">Cancelar</button><button id="sl-ok" class="pri">Conectar</button></div>`);
   $('#x').onclick = $('#sl-no').onclick = closeSheet;
-  $('#sl-ok').onclick = () => { if (setW) S.proxy = w; S.syncCode = code; S.lastSync = 0; S.syncErr = ''; saveS(); closeSheet(); setSync('busy'); syncNow(true); };
+  $('#sl-ok').onclick = () => { S.syncCode = code; S.lastSync = 0; S.syncErr = ''; saveS(); closeSheet(); setSync('busy'); syncNow(true); };
 }
 
 /* ---------- render principal ---------- */
@@ -728,7 +733,7 @@ function openDetail(g){
     openSheet(`
     <div class="top"><h2>Detalles</h2><button id="x">Cerrar</button></div>
     <div class="detail-head">
-      <div class="th" id="dth">${coverHTML(g)}</div>
+      <div class="th edit" id="dth" role="button" tabindex="0" aria-label="Cambiar portada">${coverHTML(g)}</div>
       <div class="f"><label style="margin-top:0">Título</label><input id="dt" value="${esc(g.title)}">
         <label>Plataforma</label>${platSelect('dp', g.platform)}</div>
     </div>
@@ -751,7 +756,7 @@ function openDetail(g){
     <div class="tags" id="dtags">${allTags().map(t => `<button data-t="${esc(t)}" class="${g.tags.includes(t) ? 'on' : ''}">${esc(t)}</button>`).join('')}</div>
     <input id="dtn" placeholder="Nueva etiqueta (Enter para añadir)" maxlength="24">
     <label>${NOTE_LABEL[g.status] || 'Notas'}</label><textarea id="dno" rows="3" placeholder="Opcional">${esc(g.notes)}</textarea>
-    <div class="btnrow"><button id="dcov">Cambiar portada</button><button id="ddel" class="danger">Eliminar</button></div>`);
+    <div class="btnrow"><button id="ddel" class="danger">Eliminar</button></div>`);
     $('#sheet').scrollTop = keep; bind();
   };
   const bind = () => {
@@ -783,7 +788,8 @@ function openDetail(g){
       if ($('#ddel').dataset.sure){ removeGame(g); closeSheet(); toast('Juego eliminado'); }
       else { $('#ddel').dataset.sure = 1; $('#ddel').textContent = 'Pulsa otra vez para confirmar'; }
     };
-    $('#dcov').onclick = () => openCovers(g, draw);
+    $('#dth').onclick = () => openCovers(g, draw);
+    $('#dth').onkeydown = e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openCovers(g, draw); } };
   };
   draw();
 }
@@ -837,41 +843,40 @@ function openStats(){
   $('#x').onclick = closeSheet;
 }
 
-/* --- elegir portada --- */
+/* --- elegir portada (solo desde SteamGridDB) --- */
 async function openCovers(g, back){
   openSheet(`<div class="top"><h2>Portada de «${esc(g.title)}»</h2><button id="x">Atrás</button></div>
-    <div id="cv"><div class="hint">Buscando portadas…</div></div>
-    <label>O pega la URL de una imagen</label><input id="cu" placeholder="https://…">
-    <label>O sube una imagen</label><input id="cf" type="file" accept="image/*">
-    <div class="btnrow"><button id="cclear">Quitar portada</button></div>`);
+    <div class="hint">Las portadas vienen de SteamGridDB. Toca una para elegirla.</div>
+    <div class="tags" id="cmatch"></div>
+    <div id="cv"></div>
+    <label>¿No es este juego? Busca otro</label>
+    <input id="cq" type="search" placeholder="Nombre en SteamGridDB" value="${esc(g.title)}" autocomplete="off">`);
   $('#x').onclick = back;
-  const set = u => { g.cover = u; touch(g); back(); };
-  $('#cu').onchange = e => { const u = e.target.value.trim(); if (/^https?:\/\//i.test(u)) set(u); else if (u) toast('La URL debe empezar por http(s)://'); };
-  $('#cclear').onclick = () => set('');
-  $('#cf').onchange = e => {
-    const f = e.target.files[0]; if (!f) return;
-    const img = new Image(), url = URL.createObjectURL(f);
-    img.onload = () => {
-      const w = 360, h = Math.round(w * 1.5), c = document.createElement('canvas'); c.width = w; c.height = h;
-      const x = c.getContext('2d'); const s = Math.max(w / img.width, h / img.height);
-      x.drawImage(img, (w - img.width * s) / 2, (h - img.height * s) / 2, img.width * s, img.height * s);
-      URL.revokeObjectURL(url); set(c.toDataURL('image/jpeg', 0.82));
-    };
-    img.onerror = () => toast('No se pudo leer esa imagen'); img.src = url;
+  const cv = $('#cv'), cm = $('#cmatch');
+  if (!S.sgdbKey){ cv.innerHTML = '<div class="status-line">Para cambiar la portada necesitas tu clave de SteamGridDB (Ajustes).</div>'; $('#cq').hidden = true; return; }
+  let cur = g.sgdbId, seq = 0, results = [];
+  const drawMatches = () => { cm.innerHTML = results.slice(0, 6).map(r => `<button data-id="${r.id}" class="${r.id === cur ? 'on' : ''}">${esc(r.name)}${r.release_date ? ' (' + new Date(r.release_date * 1000).getUTCFullYear() + ')' : ''}</button>`).join(''); };
+  const covers = async id => {
+    const me = ++seq; cur = id; drawMatches(); cv.innerHTML = '<div class="hint">Buscando portadas…</div>';
+    try {
+      let arr = await grids(id); if (!arr.length) arr = await grids(id, true);
+      if (me !== seq) return;
+      if (!arr.length){ cv.innerHTML = '<div class="hint">SteamGridDB no tiene portadas para este juego. Prueba con otro de la lista o busca otro nombre.</div>'; return; }
+      cv.innerHTML = `<div class="covers">${arr.slice(0, 30).map((a, i) => `<img data-i="${i}" src="${esc(a.thumb || a.url)}" alt="" loading="lazy" referrerpolicy="no-referrer">`).join('')}</div>`;
+      cv.onclick = e => { const im = e.target.closest('img'); if (!im) return; const a = arr[+im.dataset.i]; g.cover = a.thumb || a.url; g.sgdbId = id; touch(g); back(); };
+    } catch(e){ if (me === seq) cv.innerHTML = `<div class="status-line ko">${esc(e.message)}</div>`; }
   };
-  const cv = $('#cv');
-  try {
-    if (!g.sgdbId){
-      const r = await sgdb('/search/autocomplete/' + encodeURIComponent(g.title));
-      if (r && r[0]){ g.sgdbId = r[0].id; save(); }
-    }
-    if (!g.sgdbId){ cv.innerHTML = '<div class="hint">No encontré este juego en SteamGridDB.</div>'; return; }
-    let arr = await grids(g.sgdbId);
-    if (!arr.length) arr = await grids(g.sgdbId, true);
-    if (!arr.length){ cv.innerHTML = '<div class="hint">SteamGridDB no tiene portadas para este juego.</div>'; return; }
-    cv.innerHTML = `<div class="covers">${arr.slice(0, 30).map((a, i) => `<img data-i="${i}" src="${esc(a.thumb || a.url)}" alt="" loading="lazy" referrerpolicy="no-referrer">`).join('')}</div>`;
-    cv.onclick = e => { const im = e.target.closest('img'); if (im) { const a = arr[+im.dataset.i]; set(a.thumb || a.url); } };
-  } catch(e){ cv.innerHTML = `<div class="status-line ko">${esc(e.message)}</div>`; }
+  const find = async (term, pickFirst) => {
+    try {
+      results = (await sgdb('/search/autocomplete/' + encodeURIComponent(term))) || [];
+      if (!results.length){ cm.innerHTML = ''; cv.innerHTML = '<div class="hint">Sin resultados en SteamGridDB para ese nombre.</div>'; return; }
+      if (pickFirst || !cur) cur = results[0].id;
+      drawMatches(); if (pickFirst || !g.sgdbId) covers(cur);
+    } catch(e){ cv.innerHTML = `<div class="status-line ko">${esc(e.message)}</div>`; }
+  };
+  cm.onclick = e => { const b = e.target.closest('button'); if (b) covers(+b.dataset.id); };
+  let t; $('#cq').oninput = () => { clearTimeout(t); t = setTimeout(() => { const v = $('#cq').value.trim(); if (v.length > 1) find(v, true); }, 450); };
+  if (g.sgdbId){ covers(g.sgdbId); find(g.title, false); } else find(g.title, true);
 }
 
 /* --- ajustes --- */
@@ -881,9 +886,9 @@ function openSettings(){
     <label>Clave API de SteamGridDB</label>
     <input id="sk" type="password" value="${esc(S.sgdbKey)}" placeholder="Pega aquí tu clave" autocomplete="off">
     <div class="hint">Consíguela en <a href="https://www.steamgriddb.com/profile/preferences/api" target="_blank" rel="noopener">steamgriddb.com → Preferences → API</a>. Se guarda solo en este dispositivo.</div>
-    <label>Proxy CORS (opcional)</label>
-    <input id="sp" value="${esc(S.proxy)}" placeholder="https://tu-worker.workers.dev/?url=">
-    <div class="hint">Solo si «Probar conexión» falla por CORS. Ver README.</div>
+    <label>Dirección del Worker</label>
+    <input id="sp" value="${esc(proxyUrl())}" placeholder="${esc(DEFAULT_PROXY)}" autocomplete="off" spellcheck="false">
+    <div class="hint">Ya viene configurada. Solo cámbiala si algún día cambias de Worker.</div>
     <div class="btnrow"><button id="test">Probar conexión</button></div>
     <div id="tres"></div>
     <div id="syncbox"></div>
@@ -893,7 +898,7 @@ function openSettings(){
     <div class="hint">Tus datos se guardan en este navegador y, si activas la sincronización, también (cifrados) en tu nube. Haz copias de vez en cuando: al borrar los datos del navegador se pierden los locales.</div>`);
   $('#x').onclick = closeSheet;
   renderSyncPanel();
-  const commit = () => { S.sgdbKey = $('#sk').value.trim(); S.proxy = $('#sp').value.trim(); saveS(); renderSyncPanel(); };
+  const commit = () => { S.sgdbKey = $('#sk').value.trim(); const v = $('#sp').value.trim(); S.proxy = (!v || v === DEFAULT_PROXY) ? '' : v; saveS(); renderSyncPanel(); };
   $('#sk').onchange = commit; $('#sp').onchange = commit;
   $('#test').onclick = async () => {
     commit(); const out = $('#tres'); out.innerHTML = '<div class="status-line">Probando…</div>';
@@ -928,6 +933,19 @@ render();
 if (S.syncCode) setSync(S.syncErr ? 'err' : 'ok');
 checkSyncLink();
 window.addEventListener('hashchange', checkSyncLink);   // enlace pulsado con la app ya abierta
+
+/* «Atrás»: cierra la ventana abierta; si no hay ninguna y no estás en el inicio, vuelve al inicio; en el inicio, sale como siempre */
+const isHome = () => UI.tab === 'playing' && !UI.q && !UI.plat && !UI.tag;
+function goHome(){ UI.tab = 'playing'; UI.q = ''; UI.plat = ''; UI.tag = ''; $('#q').value = ''; render(); $('#main').scrollTop = 0; }
+const guard = () => history.pushState({bm:'app'}, '', location.href);
+history.replaceState({bm:'base'}, '', location.href); guard();
+window.addEventListener('popstate', e => {
+  if (!e.state) return;   // navegación a un fragmento (#…), no es «atrás»
+  if (!$('#wrap').hidden){ closeSheet(); guard(); return; }
+  if (!isHome()){ goHome(); guard(); return; }
+  history.back();
+});
+window.addEventListener('pageshow', e => { if (e.persisted) location.reload(); });   // página restaurada de la caché: que no muestre un estado viejo
 if (syncReady()) syncNow(false);
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')){
   const had = !!navigator.serviceWorker.controller; let reloaded = false;
