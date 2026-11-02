@@ -17,6 +17,7 @@ Gestor personal de backlog de videojuegos. Web instalable (PWA): funciona en And
 - **Papelera de 30 días** con «Deshacer» al eliminar; se restaura desde Ajustes → Datos y copias.
 - **Versiones de la nube:** una copia diaria durante 14 días; recupera juegos borrados o vuelve a cómo estaba la lista.
 - **Tema** automático, oscuro o claro; **copiar tus listas como texto**; aviso si añades un juego que ya tienes.
+- **Idioma** español o inglés (Ajustes → Apariencia). **Valoración con medias estrellas** (toca la mitad izquierda de la estrella) y orden por valoración. **Cada lista recuerda su propio orden** (por defecto: en espera A–Z, completados por valoración, el resto recientes). «Añadir a» parte de la lista en la que estás.
 - Exportar e importar copia de seguridad.
 - Botón «atrás» del móvil: cierra la ventana abierta y, si no hay ninguna, lleva al inicio (Jugando).
 

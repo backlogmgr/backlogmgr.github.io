@@ -203,6 +203,8 @@ nav .sh{display:none}
 .ok{color:var(--good)} .ko{color:var(--bad)}
 .stars{display:flex;gap:4px}
 .stars button{flex:1;padding:8px 0;font-size:21px;line-height:1;background:var(--panel2);color:var(--mute)}
+.stars button.half{border-color:#ffc53d55}
+.stars button.half span{background:linear-gradient(90deg,#ffc53d 50%,var(--mute) 50%);-webkit-background-clip:text;background-clip:text;color:transparent}
 .stars button.on{color:#ffc53d;border-color:#ffc53d55;background:#ffc53d14}
 .two{display:flex;gap:8px}.two>div{flex:1;min-width:0}
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
@@ -276,6 +278,7 @@ nav .sh{display:none}
       <option value="updated">Recientes</option>
       <option value="title">A–Z</option>
       <option value="progress">Progreso</option>
+      <option value="rating">Valoración</option>
       <option value="manual">Mi orden</option>
       <option value="added">Añadidos</option>
     </select>
@@ -314,35 +317,39 @@ const STATUSES = [
 const ST = Object.fromEntries(STATUSES.map(s => [s.id, s]));
 const PLATFORMS = [
   // Nintendo
-  'NES / Famicom','Famicom Disk System','SNES / Super Famicom','Nintendo 64','Nintendo 64DD','GameCube','Wii','Wii U','Nintendo Switch','Nintendo Switch 2',
-  'Game & Watch','Game Boy','Game Boy Color','Game Boy Advance','Virtual Boy','Pokémon Mini','Nintendo DS','Nintendo DSi','Nintendo 3DS','New Nintendo 3DS',
+  'NES / Famicom','Famicom Disk System','SNES / Super Famicom','Nintendo 64','GameCube','Wii','Wii U','Nintendo Switch','Nintendo Switch 2',
+  'Game & Watch','Game Boy','Game Boy Color','Game Boy Advance','Virtual Boy','Nintendo DS (DS Lite, DSi, DSi XL)','Nintendo 3DS','New Nintendo 3DS',
   // Sony
   'PlayStation','PlayStation 2','PlayStation 3','PlayStation 4','PlayStation 5','PlayStation Portable (PSP)','PlayStation Vita','PlayStation VR','PlayStation VR2',
   // Microsoft
-  'Xbox','Xbox 360','Xbox One','Xbox Series X|S',
+  'Xbox (original)','Xbox 360','Xbox One','Xbox Series X|S',
   // Sega
   'SG-1000','Master System','Mega Drive / Genesis','Mega CD / Sega CD','Sega 32X','Sega Saturn','Dreamcast','Game Gear',
-  // Atari
-  'Atari 2600','Atari 5200','Atari 7800','Atari Jaguar','Atari Jaguar CD','Atari Lynx',
-  // NEC y SNK
-  'PC Engine / TurboGrafx-16','PC Engine CD / TurboGrafx-CD','PC Engine SuperGrafx','PC Engine GT / TurboExpress','PC-FX',
-  'Neo Geo AES','Neo Geo CD','Neo Geo Pocket','Neo Geo Pocket Color',
-  // Otras consolas
-  '3DO','Philips CD-i','Amiga CD32','ColecoVision','Intellivision','Magnavox Odyssey²','Vectrex','Fairchild Channel F',
-  'WonderSwan','WonderSwan Color','N-Gage','Evercade','Playdate','Sega Pico','Amstrad GX4000','Atari XEGS','Bandai Pippin','Casio Loopy','Game.com','Gamate','Gizmondo','Mega Duck','Watara Supervision','Ouya',
-  // Valve, PC y móviles
-  'Steam Deck','Steam Machine','PC','Mac','Linux','Android','iOS','Meta Quest',
+  // Valve
+  'Steam Deck','Steam Machine','Steam Frame',
+  // PC y móviles
+  'PC','Mac','Linux','Android','iOS',
+  // Clásicas emblemáticas
+  'Atari 2600','Atari 5200','Atari 7800','Atari Jaguar','Atari Lynx','Neo Geo','Neo Geo Pocket Color','PC Engine / TurboGrafx-16','3DO','ColecoVision','Intellivision','WonderSwan','WonderSwan Color',
   // Ordenadores clásicos
-  'Amiga','Amstrad CPC','Apple II','Atari ST','Commodore 64','MSX','ZX Spectrum',
+  'Amiga','Commodore 64','MSX','ZX Spectrum',
   // Recreativas (incluye Neo Geo MVS, CPS, etc.)
   'Arcade'
 ];
 // nombres antiguos o abreviados → nombre actual (se aplica al cargar los datos)
-const PLAT_ALIAS = {'3ds':'Nintendo 3DS','ps vita':'PlayStation Vita','vita':'PlayStation Vita','psp':'PlayStation Portable (PSP)','otra':'',
-  'nes':'NES / Famicom','famicom':'NES / Famicom','snes':'SNES / Super Famicom','super nintendo':'SNES / Super Famicom','switch':'Nintendo Switch',
-  'mega drive':'Mega Drive / Genesis','genesis':'Mega Drive / Genesis','megadrive':'Mega Drive / Genesis','ps1':'PlayStation','psx':'PlayStation','ps2':'PlayStation 2',
-  'ps3':'PlayStation 3','ps4':'PlayStation 4','ps5':'PlayStation 5','saturn':'Sega Saturn','gameboy':'Game Boy','gba':'Game Boy Advance','gbc':'Game Boy Color','ds':'Nintendo DS',
-  'n64':'Nintendo 64','gamecube':'GameCube','gc':'GameCube','xbox series x':'Xbox Series X|S','xbox series s':'Xbox Series X|S','steamdeck':'Steam Deck'};
+const PLAT_ALIAS = {'otra':'','xbox':'Xbox (original)','xbox original':'Xbox (original)',
+  '3ds':'Nintendo 3DS','2ds':'Nintendo 3DS','new 3ds':'New Nintendo 3DS',
+  'ds':'Nintendo DS (DS Lite, DSi, DSi XL)','nds':'Nintendo DS (DS Lite, DSi, DSi XL)','nintendo ds':'Nintendo DS (DS Lite, DSi, DSi XL)','nintendo dsi':'Nintendo DS (DS Lite, DSi, DSi XL)','dsi':'Nintendo DS (DS Lite, DSi, DSi XL)','ds lite':'Nintendo DS (DS Lite, DSi, DSi XL)','dsi xl':'Nintendo DS (DS Lite, DSi, DSi XL)','ds xl':'Nintendo DS (DS Lite, DSi, DSi XL)',
+  'switch':'Nintendo Switch',
+  'gameboy':'Game Boy','gba':'Game Boy Advance','gbc':'Game Boy Color',
+  'nes':'NES / Famicom','famicom':'NES / Famicom','snes':'SNES / Super Famicom','super nintendo':'SNES / Super Famicom',
+  'n64':'Nintendo 64','gamecube':'GameCube','gc':'GameCube',
+  'ps vita':'PlayStation Vita','vita':'PlayStation Vita','psp':'PlayStation Portable (PSP)',
+  'ps1':'PlayStation','psx':'PlayStation','ps2':'PlayStation 2','ps3':'PlayStation 3','ps4':'PlayStation 4','ps5':'PlayStation 5',
+  'mega drive':'Mega Drive / Genesis','genesis':'Mega Drive / Genesis','megadrive':'Mega Drive / Genesis','saturn':'Sega Saturn',
+  'xbox series x':'Xbox Series X|S','xbox series s':'Xbox Series X|S','steamdeck':'Steam Deck',
+  'neo geo aes':'Neo Geo','neo geo cd':'Neo Geo','neo geo pocket':'Neo Geo Pocket Color','neo geo mvs':'Arcade',
+  'atari jaguar cd':'Atari Jaguar','pc engine':'PC Engine / TurboGrafx-16','turbografx-16':'PC Engine / TurboGrafx-16'};
 const cmpEs = (a, b) => a.localeCompare(b, 'es', {numeric:true, sensitivity:'base'});
 const EMPTY_IC = '<svg width="76" height="76" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 22h28a10 10 0 0 1 9.6 7.3l3 11.2A7 7 0 0 1 52 49c-2 0-3.6-1-5-2.6L43 42H21l-4 4.4C15.6 48 14 49 12 49a7 7 0 0 1-6.6-8.5l3-11.2A10 10 0 0 1 18 22z"/><path d="M20 30v8M16 34h8"/><circle cx="41" cy="31" r="1.7" fill="currentColor"/><circle cx="46" cy="36" r="1.7" fill="currentColor"/></svg>';
 
@@ -352,7 +359,7 @@ function load(k, d){ try { const v = JSON.parse(localStorage.getItem(k)); return
 function store(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch(_) { return false; } }
 let D = load(KEY, {games:{}});
 const DEFAULT_PROXY = 'https://backlog-proxy.backlogmgr.workers.dev/?url=';   // tu Worker de Cloudflare (proxy de SteamGridDB + sincronización)
-let S = Object.assign({sgdbKey:'', proxy:'', lastPlatform:'PC', sort:'updated', theme:'dark', syncCode:'', lastSync:0, syncErr:'', lastSnap:''}, load(SKEY, {}));
+let S = Object.assign({sgdbKey:'', proxy:'', lastPlatform:'PC', sort:'updated', sorts:{}, theme:'dark', syncCode:'', lastSync:0, syncErr:'', lastSnap:''}, load(SKEY, {}));
 if (/sluacesmartin\.workers\.dev/.test(S.proxy)) S.proxy = '';   // dirección antigua del Worker: se usa la nueva por defecto
 const proxyUrl = () => S.proxy || DEFAULT_PROXY;
 const themeMQ = matchMedia('(prefers-color-scheme: light)');
@@ -363,6 +370,148 @@ function applyTheme(){
 }
 themeMQ.addEventListener('change', () => { if (S.theme === 'auto') applyTheme(); });
 applyTheme();
+/* ---------- idioma (es / en) ---------- */
+// El código y los textos están en español; en inglés se traducen al vuelo (textos, atributos y avisos) con este diccionario.
+const LANG = S.lang === 'en' ? 'en' : 'es';   // español por defecto; el inglés se elige en Ajustes → Apariencia
+document.documentElement.lang = LANG;
+const EN = {
+  'Jugando':'Playing','Backlog':'Backlog','Deseados':'Wishlist','En espera':'On hold','Abandonados':'Dropped','Completados':'Completed','Abandon.':'Dropped','Completos':'Done',
+  'Ajustes':'Settings','Apariencia':'Appearance','Aquí no hay nada todavía':'Nothing here yet','Atrás':'Back','Añadidos':'Date added','Añadir a':'Add to','Añadir juego':'Add game',
+  'Aún no se ha sincronizado.':'Not synced yet.','A–Z':'A–Z','Borrar datos de la nube':'Delete cloud data','Buscando portadas…':'Looking for covers…','Buscando…':'Searching…',
+  'Buscar en SteamGridDB':'Search SteamGridDB','Cambiar reto':'Change goal','Cancelar':'Cancel','Cargando…':'Loading…','Cerrar':'Close','Clave API de SteamGridDB':'SteamGridDB API key',
+  'Completados por año':'Completed per year','Comprobando…':'Checking…','Conectar':'Connect','Conectar sincronización':'Connect sync','Consultar duración en HowLongToBeat ↗':'Check length on HowLongToBeat ↗',
+  'Copia de ese día':'Backup from that day','Copiar código':'Copy code','Copiar enlace para otro dispositivo':'Copy link for another device','Copiar texto':'Copy text','Copiar todas las listas':'Copy all lists',
+  'Crear código nuevo':'Create new code','Datos y copias':'Data and backups','Descargando y descifrando…':'Downloading and decrypting…','Desconectar este dispositivo':'Disconnect this device',
+  'Detalles':'Details','Dirección del Worker':'Worker address','Duración estimada (h)':'Estimated length (h)','Eliminar':'Delete','Empezado':'Started','En total':'In total','Estadísticas':'Statistics',
+  'Etiqueta':'Tag','Etiquetas':'Tags','Exportar copia':'Export backup','Guardar':'Save','Guardar imagen':'Save image','Importar copia':'Import backup','Juegos por plataforma':'Games per platform',
+  'Juegos que faltan':'Games left','Jugar este':'Play this','Lista':'List','Mi orden':'My order','Mostrar':'Show','Mover a…':'Move to…','Opciones avanzadas':'Advanced options','Otra (escribir)…':'Other (type)…',
+  'Otro':'Other','Papelera':'Trash','Plataforma':'Platform','Poner un reto':'Set a goal','Por lista':'By list','Probando…':'Testing…','Probar conexión':'Test connection','Progreso':'Progress',
+  'Quitar':'Remove','Recientes':'Recent','Restaurar':'Restore','Seleccionar':'Select','Listo':'Done','Siguiente':'Up next','Sin datos todavía.':'No data yet.','Sin plataforma':'No platform','Sin resultados':'No results',
+  'Sincronización':'Sync','Sincronizando…':'Syncing…','Sincronizar ahora':'Sync now','SteamGridDB y Worker':'SteamGridDB and Worker','Tema':'Theme','Terminado':'Finished','Todos':'All','Tu código':'Your code','Título':'Title',
+  'Vaciar papelera':'Empty trash','Valoración':'Rating','Veces completado':'Times completed','Ver':'View','Versiones anteriores de la nube':'Previous cloud versions','Versiones de la nube':'Cloud versions',
+  'Volver a esta versión':'Restore this version','Ya tengo un código':'I already have a code','Automático':'Automatic','Oscuro':'Dark','Claro':'Light','Idioma':'Language',
+  'Completar':'Complete','Rejugar':'Replay','Jugar':'Play','Resultados':'Results','Seleccionar todo':'Select all','Mover':'Move','Cancelar selección':'Cancel selection',
+  'Nombre del juego…':'Game name…','Buscar en mis juegos…':'Search my games…','Orden':'Sort','Año anterior':'Previous year','Año siguiente':'Next year','Arrastrar para ordenar':'Drag to reorder',
+  'Cambiar portada':'Change cover','Juegos a completar':'Games to complete','Mover a':'Move to','Nombre de la plataforma':'Platform name','Nombre en SteamGridDB':'Name on SteamGridDB',
+  'Nueva etiqueta (Enter para añadir)':'New tag (press Enter to add)','Opcional':'Optional','Pega aquí tu clave':'Paste your key here','Subir al principio':'Move to top','p. ej. 25':'e.g. 25','¿A qué juego ahora?':'Which game next?',
+  'Consíguela en':'Get it at','» sin buscar':'» without searching','¿No es este juego? Busca otro':'Not this game? Search another','completados en total':'completed in total','juegos en esa versión':'games in that version',
+  'media hasta completar':'average time to complete','nota media':'average rating','nota media del año':'average rating this year','que ahora no tienes':'that you don\'t have now','tasa de abandono':'drop rate','mes más activo':'most active month',
+  'Mes más activo':'Most active month','Hecho con BacklogMGR':'Made with BacklogMGR','juego completado':'game completed','juegos completados':'games completed',
+  'Toca la mitad izquierda de una estrella para media nota (p. ej. 2,5).':'Tap the left half of a star for a half point (e.g. 2.5).',
+  '. Se guarda solo en este dispositivo.':'. It is only stored on this device.',
+  'El código no es válido: son 25 caracteres (letras y números) en grupos de 5.':'The code is not valid: it has 25 characters (letters and numbers) in groups of 5.',
+  'Este dispositivo ya usa otro código y se cambiará.':'This device already uses another code and it will be replaced.',
+  'La media hasta completar y el resumen del año usan las fechas de inicio y fin de cada juego. Los juegos añadidos antes de que existieran las fechas no cuentan: puedes ponérselas en sus detalles.':'The average time to complete and the year summary use each game\'s start and finish dates. Games added before dates existed are not counted: you can add them in their details.',
+  'La nube guarda una copia al día durante 14 días. Con ella puedes recuperar juegos o volver a cómo estaba la lista.':'The cloud keeps one backup per day for 14 days. You can use it to recover games or go back to how your list was.',
+  'La papelera está vacía.':'The trash is empty.',
+  'Las portadas vienen de SteamGridDB. Toca una para elegirla.':'Covers come from SteamGridDB. Tap one to choose it.',
+  'Los juegos eliminados se guardan 30 días y se pueden restaurar.':'Deleted games are kept for 30 days and can be restored.',
+  'Los juegos eliminados van a la papelera (Ajustes → Datos y copias) y se guardan 30 días.':'Deleted games go to the trash (Settings → Data and backups) and are kept for 30 days.',
+  'No hay datos en la nube con ese código. Revisa que esté bien escrito. Si es tu primera vez, pulsa «Crear código nuevo».':'There is no cloud data for that code. Check that it is spelled correctly. If this is your first time, tap “Create new code”.',
+  'No hay juegos tuyos con ese nombre.':'None of your games have that name.',
+  'No se pudo copiar automáticamente. Selecciona el texto y cópialo:':'Could not copy automatically. Select the text and copy it:',
+  'Para buscar con portadas, añade tu clave de SteamGridDB en Ajustes. Mientras tanto puedes añadir el juego a mano.':'To search with covers, add your SteamGridDB key in Settings. Meanwhile you can add the game by hand.',
+  'Para cambiar la portada necesitas tu clave de SteamGridDB (Ajustes).':'To change the cover you need your SteamGridDB key (Settings).',
+  'Ponte una meta de juegos completados para este año.':'Set a goal of completed games for this year.',
+  'Primero pon la dirección del Worker.':'Enter the Worker address first.',
+  'Quien tenga tu código puede leer y cambiar tus datos: no lo compartas. Si pierdes el código y todos tus dispositivos, los datos de la nube no se pueden recuperar. La clave de SteamGridDB no se sincroniza.':'Anyone with your code can read and change your data: do not share it. If you lose the code and all your devices, the cloud data cannot be recovered. The SteamGridDB key is not synced.',
+  'Se guarda solo en este dispositivo. «Automático» sigue el modo claro u oscuro de tu móvil o PC.':'Stored only on this device. “Automatic” follows the light or dark mode of your phone or PC.',
+  'Sin resultados en SteamGridDB para ese nombre.':'No results on SteamGridDB for that name.',
+  'Sin resultados. Puedes añadirlo a mano abajo.':'No results. You can add it by hand below.',
+  'SteamGridDB no tiene portadas para este juego. Prueba con otro de la lista o busca otro nombre.':'SteamGridDB has no covers for this game. Try another one from the list or search another name.',
+  'Todavía no hay versiones. Se crea una al sincronizar, como mucho una al día.':'There are no versions yet. One is created when syncing, at most once a day.',
+  'Tus datos se guardan en este navegador y, si activas la sincronización, también (cifrados) en tu nube. Haz copias de vez en cuando: al borrar los datos del navegador se pierden los locales.':'Your data is stored in this browser and, if you enable sync, also (encrypted) in your cloud. Make backups from time to time: clearing the browser data deletes the local copy.',
+  'Ya viene configurada. Solo cámbiala si algún día cambias de Worker.':'It comes preconfigured. Only change it if you ever switch Worker.',
+  'Ya lo tienes. Pulsa otra vez para añadirlo igualmente':'You already have it. Tap again to add it anyway',
+  'Mantén tus juegos iguales en el móvil y el PC.':'Keep your games the same on your phone and PC.',
+  'No se pudo guardar: almacenamiento lleno o bloqueado':'Could not save: storage is full or blocked',
+  'Actualizado desde otro dispositivo':'Updated from another device','Sincronizado':'Synced','Código copiado':'Code copied',
+  'No se pudo copiar: pulsa «Mostrar» y cópialo a mano':'Could not copy: tap “Show” and copy it by hand',
+  'Enlace copiado. Ábrelo en el otro dispositivo':'Link copied. Open it on the other device','No se pudo copiar el enlace':'Could not copy the link',
+  'Dispositivo desconectado. Tus juegos siguen aquí':'Device disconnected. Your games are still here','Datos de la nube borrados':'Cloud data deleted',
+  'El enlace de sincronización no es válido':'The sync link is not valid','Escribe un título primero':'Enter a title first',
+  'No hay juegos en tu backlog con esos filtros':'No games in your backlog with those filters','Pon un número de juegos mayor que 0':'Enter a number of games greater than 0',
+  'Copiado: ya puedes pegarlo donde quieras':'Copied: you can paste it anywhere','Papelera vaciada':'Trash emptied','Ese archivo no parece una copia válida':'That file does not look like a valid backup',
+  'Deshacer':'Undo','Toca los juegos que quieras':'Tap the games you want','Recuperar':'Recover','Sin activar':'Not enabled','Error':'Error','Al día':'Up to date','Conectado':'Connected','· verificado':'· verified','Añadir «':'Add «','¡Reto cumplido!':'Goal reached!',
+  'Mantén tus juegos iguales en el móvil y el PC. Se cifran en este dispositivo antes de enviarse: el servidor solo guarda texto ilegible.':'Keep your games the same on your phone and PC. They are encrypted on this device before being sent: the server only stores unreadable text.','Nota media':'Average rating','Plataforma estrella':'Top platform','Mejor valorado':'Best rated','(vacía)':'(empty)','Falta la clave API de SteamGridDB (Ajustes).':'The SteamGridDB API key is missing (Settings).',
+  'No se pudo conectar con el Worker. Revisa tu conexión y que la dirección del Worker en Ajustes sea correcta.':'Could not connect to the Worker. Check your connection and that the Worker address in Settings is correct.',
+  'Formato de datos desconocido en la nube.':'Unknown data format in the cloud.','No se pudo conectar con el Worker de sincronización.':'Could not connect to the sync Worker.',
+  'El Worker todavía no admite versiones: pega el nuevo worker.js.':'The Worker does not support versions yet: paste the new worker.js.',
+  'No se pudieron descifrar los datos de la nube con este código.':'Could not decrypt the cloud data with this code.'
+};
+const MES_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const RULES = [
+  [/^Pulsa \+ para añadir un juego a «(.+)»\.$/, (m, l) => `Tap + to add a game to “${EN[l] || l}”.`],
+  [/^(\d+(?:\.5)?) de 5$/, (m, n) => `${n} of 5`],
+  [/^(\d+) de (\d+)$/, (m, a, b) => `${a} of ${b}`],
+  [/^Te faltan (\d+)(?: · al ritmo actual llegarías a unos (\d+))?$/, (m, n, p) => `${n} to go${p ? ` · at the current pace you'd reach about ${p}` : ''}`],
+  [/^mes más activo(?: \((\d+)\))?$/, (m, n) => `most active month${n ? ` (${n})` : ''}`],
+  [/^Resumen de (\d+)( en imagen)?$/, (m, y, i) => i ? `${y} summary as an image` : `${y} summary`],
+  [/^ya en (.+?)(?: \((.+)\))?$/, (m, l, p) => `already in ${EN[l] || l}${p ? ` (${p})` : ''}`],
+  [/^Ya lo tienes \((.+)\)\. Pulsa otra vez para añadirlo igualmente$/, (m, i) => `You already have it (${T(i)}). Tap again to add it anyway`],
+  [/^El Worker respondió HTTP (\d+)\.$/, (m, n) => `The Worker responded HTTP ${n}.`],
+  [/^SteamGridDB respondió HTTP (\d+)$/, (m, n) => `SteamGridDB responded HTTP ${n}`],
+  [/^SteamGridDB rechazó la clave \(HTTP (\d+)\)\.$/, (m, n) => `SteamGridDB rejected the key (HTTP ${n}).`],
+  [/^Recuperar (\d+) juegos?$/, (m, n) => `Recover ${n} ${n === '1' ? 'game' : 'games'}`],
+  [/^«Recuperar» solo añade lo que falta y no toca nada más\. «Volver a esta versión» deja tu lista como estaba ese día(?:; los (\d+) juegos que tienes ahora y entonces no estaban irían a la papelera)?\.$/, (m, n) => `“Recover” only adds what is missing and touches nothing else. “Restore this version” leaves your list as it was that day${n ? `; the ${n} games you have now that were not there then would go to the trash` : ''}.`],
+  [/^(.* · )(Jugando|Deseados|En espera|Abandonados|Completados)$/, (m, a, l) => a + EN[l]],
+  [/^(Jugando|Deseados|En espera|Abandonados|Completados)( · .*)$/, (m, l, a) => EN[l] + a],
+  [/^completados en (\d+)$/, (m, y) => `completed in ${y}`],
+  [/^backlog estimado \((\d+) de (\d+) con duración\)$/, (m, a, b) => `estimated backlog (${a} of ${b} with length)`],
+  [/^(\d+) juegos?$/, (m, n) => `${n} ${n === '1' ? 'game' : 'games'}`],
+  [/^«(.+)» añadido$/, (m, t) => `«${t}» added`],
+  [/^«(.+)» completado$/, (m, t) => `«${t}» completed`],
+  [/^«(.+)» restaurado$/, (m, t) => `«${t}» restored`],
+  [/^«(.+)» movido a la papelera$/, (m, t) => `«${t}» moved to trash`],
+  [/^«(.+)» → (.+)$/, (m, t, s) => `«${t}» → ${EN[s] || s}`],
+  [/^(\d+) juegos? → (.+)$/, (m, n, s) => `${n} ${n === '1' ? 'game' : 'games'} → ${EN[s] || s}`],
+  [/^(\d+) juegos? movidos? a la papelera$/, (m, n) => `${n} ${n === '1' ? 'game' : 'games'} moved to trash`],
+  [/^(\d+) juegos recuperados$/, (m, n) => `${n} games recovered`],
+  [/^(\d+) juegos importados$/, (m, n) => `${n} games imported`],
+  [/^Lista restaurada a la versión del (.+)$/, (m, d) => `List restored to the version from ${d}`],
+  [/^Versión del (.+)$/, (m, d) => `Version from ${d}`],
+  [/^Sincronizado · (.+)$/, (m, d) => `Synced · ${d}`],
+  [/^Añadir «(.+)»$/, (m, t) => `Add «${t}»`],
+  [/^Papelera \((\d+)\)$/, (m, n) => `Trash (${n})`],
+  [/^Copiar «(.+)»$/, (m, t) => `Copy «${t}»`],
+  [/^Conexión correcta \((\d+) resultados de prueba\)\.$/, (m, n) => `Connection OK (${n} test results).`],
+  [/^Reto: (\d+) de (\d+)$/, (m, a, b) => `Goal: ${a} of ${b}`],
+  [/^Mi (\d+) en juegos$/, (m, y) => `My ${y} in games`],
+  [/^(\d+) seleccionados?$/, (m, n) => `${n} selected`],
+  [/^(\d+) días?$/, (m, n) => `${n} ${n === '1' ? 'day' : 'days'}`],
+  [/^(\d+) veces$/, (m, n) => `${n} times`]
+];
+function T(str){
+  if (LANG !== 'en' || typeof str !== 'string') return str;
+  const k = str.trim(); if (!k) return str;
+  let r = EN[k];
+  if (r === undefined) for (const [re, f] of RULES){ const m = k.match(re); if (m){ r = f(...m); break; } }
+  return r === undefined ? str : str.replace(k, r);
+}
+const TR_ATTRS = ['placeholder', 'aria-label', 'title', 'alt'];
+function trNode(root){
+  if (LANG !== 'en' || !root) return;
+  if (root.nodeType === 3){
+    const p = root.parentElement; if (!p || /^(SCRIPT|STYLE|TEXTAREA)$/.test(p.tagName) || p.closest('[data-notr]')) return;
+    if (p.tagName === 'OPTION' && !p.hasAttribute('value')) return;   // su texto es su valor
+    const t = T(root.nodeValue); if (t !== root.nodeValue) root.nodeValue = t; return;
+  }
+  if (root.nodeType !== 1 || root.closest('[data-notr]')) return;
+  for (const a of TR_ATTRS){ if (root.hasAttribute(a)){ const v = root.getAttribute(a), t = T(v); if (t !== v) root.setAttribute(a, t); } }
+  if (root.tagName === 'SCRIPT' || root.tagName === 'STYLE') return;
+  root.childNodes.forEach(trNode);
+}
+if (LANG === 'en'){
+  new MutationObserver(ms => {
+    for (const m of ms){
+      if (m.type === 'characterData') trNode(m.target);
+      else if (m.type === 'attributes') { const v = m.target.getAttribute(m.attributeName), t = T(v); if (t !== v) m.target.setAttribute(m.attributeName, t); }
+      else m.addedNodes.forEach(trNode);
+    }
+  }).observe(document.documentElement, {childList:true, subtree:true, characterData:true, attributes:true, attributeFilter:TR_ATTRS});
+  trNode(document.body);
+  document.title = T(document.title);
+}
 const TRASH_MS = 30 * 864e5;   // los juegos eliminados se guardan 30 días en la papelera
 if (!D.games) D.games = {};
 D.meta = cleanMeta(D.meta);   // retos anuales (se sincronizan)
@@ -371,7 +520,7 @@ if (compactTrash()) store(KEY, D);
 let syncBusy = false, syncDirty = false, syncTimer = null;
 const save = () => { if (!store(KEY, D)) toast('No se pudo guardar: almacenamiento lleno o bloqueado'); if (syncBusy) syncDirty = true; else scheduleSync(); };
 const saveS = () => store(SKEY, S);
-const UI = {tab:'playing', q:'', plat:'', tag:'', sort:'updated', selecting:false, sel:new Set()};
+const UI = {tab:'playing', q:'', plat:'', tag:'', selecting:false, sel:new Set()};
 const list = () => Object.values(D.games).filter(g => !g.deleted);   // los borrados se conservan como «lápidas» para poder sincronizarlos
 
 /* ---------- toast ---------- */
@@ -389,7 +538,7 @@ function toast(msg, act){
 const ymd = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
 function norm(g){
   g.tags = Array.isArray(g.tags) ? g.tags.filter(t => typeof t === 'string' && t.trim()) : [];
-  g.rating = clamp(Math.round(+g.rating || 0), 0, 5);
+  g.rating = clamp(Math.round((+g.rating || 0) * 2) / 2, 0, 5);   // de 0,5 en 0,5
   g.plays = Math.max(0, Math.round(+g.plays || 0));
   g.est = Math.max(0, +g.est || 0);
   g.started = typeof g.started === 'string' ? g.started : '';
@@ -626,7 +775,7 @@ function renderSyncPanel(){
   }
   const st = syncBusy ? '<div class="status-line">Sincronizando…</div>'
     : S.syncErr ? `<div class="status-line ko">${esc(S.syncErr)}</div>`
-    : S.lastSync ? `<div class="status-line ok">Sincronizado · ${esc(new Date(S.lastSync).toLocaleString('es-ES', {dateStyle:'short', timeStyle:'short'}))}</div>`
+    : S.lastSync ? `<div class="status-line ok">Sincronizado · ${esc(new Date(S.lastSync).toLocaleString(LANG === 'en' ? 'en-GB' : 'es-ES', {dateStyle:'short', timeStyle:'short'}))}</div>`
     : '<div class="status-line">Aún no se ha sincronizado.</div>';
   box.innerHTML = `${st}
     <label>Tu código</label>
@@ -752,12 +901,17 @@ const SORTS = {
   added:    (a, b) => b.added - a.added,
   title:    (a, b) => a.title.localeCompare(b.title, 'es', {sensitivity:'base'}),
   progress: (a, b) => b.progress - a.progress,
+  rating:   (a, b) => b.rating - a.rating || b.updated - a.updated,
   manual:   (a, b) => okey(a) - okey(b) || a.added - b.added
 };
-if (SORTS[S.sort]) UI.sort = S.sort;
+// cada panel recuerda su propio orden; por defecto: en espera A–Z, completados por valoración, el resto recientes
+const DEF_SORT = {playing:'updated', backlog:'updated', wish:'updated', hold:'title', dropped:'updated', done:'rating'};
+if (!S.sorts || typeof S.sorts !== 'object') S.sorts = {};
+if (S.sort === 'manual' && !S.sorts.backlog) S.sorts.backlog = 'manual';   // quien ya usaba «Mi orden» lo conserva en Backlog
+const curSort = () => SORTS[S.sorts[UI.tab]] ? S.sorts[UI.tab] : (DEF_SORT[UI.tab] || 'updated');
 function viewItems(){
   const q = UI.q.trim().toLowerCase();
-  return list().filter(g => (q ? g.title.toLowerCase().includes(q) : g.status === UI.tab) && (!UI.plat || g.platform === UI.plat) && (!UI.tag || g.tags.includes(UI.tag))).sort(SORTS[UI.sort] || SORTS.updated);
+  return list().filter(g => (q ? g.title.toLowerCase().includes(q) : g.status === UI.tab) && (!UI.plat || g.platform === UI.plat) && (!UI.tag || g.tags.includes(UI.tag))).sort(SORTS[curSort()]);
 }
 function render(){
   const q = UI.q.trim().toLowerCase();
@@ -774,9 +928,9 @@ function render(){
   if (UI.tag && !tagsAll.includes(UI.tag)) UI.tag = '';
   const ft = $('#fTag'); ft.hidden = !tagsAll.length;
   ft.innerHTML = '<option value="">Etiqueta</option>' + tagsAll.map(t => `<option ${t === UI.tag ? 'selected' : ''}>${esc(t)}</option>`).join('');
-  $('#fSort').value = UI.sort;
+  $('#fSort').value = curSort();
   // lista
-  const items = viewItems(), listMode = UI.sort === 'manual';
+  const items = viewItems(), listMode = curSort() === 'manual';
   if (UI.selecting) UI.sel = new Set([...UI.sel].filter(id => items.some(g => g.id === id)));
   const grid = $('#grid'); grid.className = 'grid' + (listMode ? ' list' : '');
   grid.innerHTML = items.map((g, i) => listMode ? rowHTML(g, i, !!q) : cardHTML(g, !!q)).join('');
@@ -830,7 +984,7 @@ $('#nav').addEventListener('click', e => {
 });
 $('#q').addEventListener('input', e => { endSel(); UI.q = e.target.value; render(); });
 $('#fPlat').addEventListener('change', e => { UI.plat = e.target.value; render(); });
-$('#fSort').addEventListener('change', e => { endSel(); UI.sort = e.target.value; S.sort = UI.sort; saveS(); render(); });
+$('#fSort').addEventListener('change', e => { endSel(); S.sorts[UI.tab] = e.target.value; saveS(); render(); });
 $('#fab').addEventListener('click', openAdd);
 $('#fTag').addEventListener('change', e => { UI.tag = e.target.value; render(); });
 $('#btnSettings').addEventListener('click', openSettings);
@@ -941,7 +1095,7 @@ function openAdd(){
     <input id="aq" type="search" placeholder="Nombre del juego…" autocomplete="off">
     <div style="display:flex;gap:8px">
       <div style="flex:1"><label>Plataforma</label>${platSelect('ap', S.lastPlatform)}</div>
-      <div style="flex:1"><label>Añadir a</label><select id="as">${STATUSES.map(s => `<option value="${s.id}" ${s.id === (UI.tab === 'done' ? 'backlog' : UI.tab) ? 'selected' : ''}>${s.label}</option>`).join('')}</select></div>
+      <div style="flex:1"><label>Añadir a</label><select id="as">${STATUSES.map(s => `<option value="${s.id}" ${s.id === UI.tab ? 'selected' : ''}>${s.label}</option>`).join('')}</select></div>
     </div>
     <div id="ares" style="margin-top:12px"></div>
     <div class="btnrow"><button id="manual">Añadir «<span id="mt">…</span>» sin buscar</button></div>`);
@@ -1007,7 +1161,8 @@ function openDetail(g){
     <label>Progreso</label>
     <div class="prog"><input id="dr" type="range" min="0" max="100" value="${g.progress}" style="flex:1"><input id="dn" type="number" min="0" max="100" value="${g.progress}"></div>
     <label>Valoración</label>
-    <div class="stars" id="dstars">${[1, 2, 3, 4, 5].map(n => `<button data-r="${n}" class="${g.rating >= n ? 'on' : ''}" aria-label="${n} de 5">★</button>`).join('')}</div>
+    <div class="stars" id="dstars">${[1, 2, 3, 4, 5].map(n => `<button data-r="${n}" class="${g.rating >= n ? 'on' : g.rating === n - 0.5 ? 'half' : ''}" aria-label="${n} de 5"><span>★</span></button>`).join('')}</div>
+    <div class="hint" style="margin-top:4px">Toca la mitad izquierda de una estrella para media nota (p. ej. 2,5).</div>
     <div class="two">
       <div><label>Empezado</label><input id="dd1" type="date" value="${esc(g.started)}"></div>
       <div><label>Terminado</label><input id="dd2" type="date" value="${esc(g.finished)}"></div>
@@ -1035,7 +1190,7 @@ function openDetail(g){
     r.oninput = () => { n.value = r.value; };
     r.onchange = () => { setProgress(g, +r.value); draw(); };
     n.onchange = () => { setProgress(g, clamp(+n.value || 0, 0, 100)); draw(); };
-    $('#dstars').onclick = e => { const b = e.target.closest('[data-r]'); if (!b) return; const v = +b.dataset.r; g.rating = g.rating === v ? 0 : v; touch(g); draw(); };
+    $('#dstars').onclick = e => { const b = e.target.closest('[data-r]'); if (!b) return; const r = b.getBoundingClientRect(), v = +b.dataset.r - (e.clientX - r.left < r.width * 0.45 ? 0.5 : 0); g.rating = g.rating === v ? 0 : v; touch(g); draw(); };
     $('#dd1').onchange = e => { g.started = e.target.value; touch(g); };
     $('#dd2').onchange = e => { g.finished = e.target.value; touch(g); };
     $('#de').onchange = e => { g.est = Math.max(0, +e.target.value || 0); touch(g); };
@@ -1076,7 +1231,7 @@ function openRandom(skipId){
 }
 
 /* --- estadísticas, reto anual y resumen del año --- */
-const MONTHS = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const MONTHS = LANG === 'en' ? MES_EN.map(m => m.toLowerCase()) : ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 let statsYear = new Date().getFullYear();
 function yearStats(y){
   const done = list().filter(g => g.status === 'done' && (g.finished || '').startsWith(String(y)));
@@ -1161,12 +1316,12 @@ function drawYearCard(ys, goal){
   x.textBaseline = 'alphabetic'; x.font = `800 54px ${F}`; x.fillStyle = '#fff'; x.fillText('Backlog', 200, 144);
   const bw = x.measureText('Backlog').width; x.fillStyle = brand; x.fillText('MGR', 200 + bw, 144);
   // título y cifra principal
-  x.fillStyle = '#fff'; x.font = `800 96px ${F}`; x.fillText(`Mi ${ys.y} en juegos`, 72, 390);
+  x.fillStyle = '#fff'; x.font = `800 96px ${F}`; x.fillText(T(`Mi ${ys.y} en juegos`), 72, 390);
   x.font = `800 360px ${F}`; x.fillStyle = brand; x.fillText(String(ys.n), 64, 700);
-  x.font = `600 58px ${F}`; x.fillStyle = 'rgba(255,255,255,.72)'; x.fillText(ys.n === 1 ? 'juego completado' : 'juegos completados', 72, 776);
+  x.font = `600 58px ${F}`; x.fillStyle = 'rgba(255,255,255,.72)'; x.fillText(T(ys.n === 1 ? 'juego completado' : 'juegos completados'), 72, 776);
   let yy = 880;
   if (goal){
-    x.font = `700 42px ${F}`; x.fillStyle = '#fff'; x.fillText(`Reto: ${ys.n} de ${goal}`, 72, yy);
+    x.font = `700 42px ${F}`; x.fillStyle = '#fff'; x.fillText(T(`Reto: ${ys.n} de ${goal}`), 72, yy);
     rrect(x, 72, yy + 26, 936, 30, 15); x.fillStyle = 'rgba(255,255,255,.14)'; x.fill();
     const w = Math.max(30, 936 * Math.min(1, ys.n / goal)); rrect(x, 72, yy + 26, w, 30, 15); x.fillStyle = brand; x.fill();
     yy += 110;
@@ -1180,11 +1335,11 @@ function drawYearCard(ys, goal){
   ];
   rows.forEach(([k, v], i) => {
     const ry = yy + i * 72;
-    x.font = `500 40px ${F}`; x.fillStyle = 'rgba(255,255,255,.6)'; x.textAlign = 'left'; x.fillText(k, 72, ry);
+    x.font = `500 40px ${F}`; x.fillStyle = 'rgba(255,255,255,.6)'; x.textAlign = 'left'; x.fillText(T(k), 72, ry);
     x.font = `700 42px ${F}`; x.fillStyle = '#fff'; x.textAlign = 'right'; x.fillText(fit(v, 520), 1008, ry);
     x.fillStyle = 'rgba(255,255,255,.1)'; x.fillRect(72, ry + 22, 936, 2);
   });
-  x.textAlign = 'center'; x.font = `500 32px ${F}`; x.fillStyle = 'rgba(255,255,255,.45)'; x.fillText('Hecho con BacklogMGR', W / 2, 1312);
+  x.textAlign = 'center'; x.font = `500 32px ${F}`; x.fillStyle = 'rgba(255,255,255,.45)'; x.fillText(T('Hecho con BacklogMGR'), W / 2, 1312);
   return c;
 }
 function openYearCard(y){
@@ -1198,7 +1353,7 @@ function openYearCard(y){
   const save = blob => { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); };
   $('#yshare').onclick = () => cv.toBlob(async blob => {
     const file = new File([blob], name, {type:'image/png'});
-    if (canShare && navigator.canShare({files:[file]})){ try { await navigator.share({files:[file], title:`Mi ${y} en juegos`}); return; } catch(e){ if (e.name === 'AbortError') return; } }
+    if (canShare && navigator.canShare({files:[file]})){ try { await navigator.share({files:[file], title:T(`Mi ${y} en juegos`)}); return; } catch(e){ if (e.name === 'AbortError') return; } }
     save(blob);
   }, 'image/png');
   const sv = $('#ysave'); if (sv) sv.onclick = () => cv.toBlob(save, 'image/png');
@@ -1243,10 +1398,10 @@ async function openCovers(g, back){
 /* --- copiar listas como texto --- */
 function listsText(onlyTab){
   const d = new Date(), head = `BacklogMGR · ${d.getDate()} ${MONTHS[d.getMonth()].slice(0, 3)} ${d.getFullYear()}`;
-  const line = g => '• ' + g.title + (g.platform ? ' — ' + g.platform : '') + (g.progress > 0 && g.progress < 100 ? ` — ${g.progress} %` : '') + (g.rating ? ' — ' + '★'.repeat(g.rating) : '');
+  const line = g => '• ' + g.title + (g.platform ? ' — ' + g.platform : '') + (g.progress > 0 && g.progress < 100 ? ` — ${g.progress} %` : '') + (g.rating ? ' — ' + '★'.repeat(Math.floor(g.rating)) + (g.rating % 1 ? '½' : '') : '');
   const blocks = (onlyTab ? [ST[onlyTab]] : STATUSES).map(s => {
     const items = list().filter(g => g.status === s.id).sort(s.id === 'backlog' ? SORTS.manual : SORTS.title);
-    return items.length || onlyTab ? `${s.label} (${items.length})\n${items.map(line).join('\n') || '(vacía)'}` : '';
+    return items.length || onlyTab ? `${T(s.label)} (${items.length})\n${items.map(line).join('\n') || T('(vacía)')}` : '';
   }).filter(Boolean);
   return head + '\n\n' + blocks.join('\n\n');
 }
@@ -1300,6 +1455,8 @@ function openSettings(which){   // which: sección que debe quedar abierta al vo
       <label>Tema</label>
       <div class="seg" id="themeseg">${[['auto', 'Automático'], ['dark', 'Oscuro'], ['light', 'Claro']].map(([v, l]) => `<button data-t="${v}" class="${(S.theme || 'dark') === v ? 'on' : ''}" style="--c:var(--accent)">${l}</button>`).join('')}</div>
       <div class="hint">Se guarda solo en este dispositivo. «Automático» sigue el modo claro u oscuro de tu móvil o PC.</div>
+      <label>Idioma</label>
+      <div class="seg" id="langseg" data-notr>${[['es', 'Español'], ['en', 'English']].map(([v, l]) => `<button data-l="${v}" class="${LANG === v ? 'on' : ''}" style="--c:var(--accent)">${l}</button>`).join('')}</div>
     </div></details>
     <details class="acc" ${which === 'data' ? 'open' : ''}><summary>Datos y copias <small>${list().length} juegos</small></summary><div class="in">
       <div class="btnrow" style="margin-top:0"><button id="exp">Exportar copia</button><button id="imp">Importar copia</button></div>
@@ -1313,6 +1470,7 @@ function openSettings(which){   // which: sección que debe quedar abierta al vo
   $('#trashbtn').onclick = openTrash;
   $('#copyall').onclick = () => copyLists(); $('#copycur').onclick = () => copyLists(UI.tab);
   $('#themeseg').onclick = e => { const b = e.target.closest('[data-t]'); if (!b) return; S.theme = b.dataset.t; saveS(); applyTheme(); openSettings(which); document.querySelectorAll('details.acc')[2].open = true; };
+  $('#langseg').onclick = e => { const b = e.target.closest('[data-l]'); if (!b || b.dataset.l === LANG) return; S.lang = b.dataset.l; saveS(); location.reload(); };
   const commit = () => { S.sgdbKey = $('#sk').value.trim(); const v = $('#sp').value.trim(); S.proxy = (!v || v === DEFAULT_PROXY) ? '' : v; saveS(); renderSyncPanel(); };
   $('#sk').onchange = commit; $('#sp').onchange = commit;
   $('#test').onclick = async () => {
