@@ -11,6 +11,12 @@ Gestor personal de backlog de videojuegos. Web instalable (PWA): funciona en And
 - Búsqueda de juegos y portadas con SteamGridDB (tu clave personal). La portada solo se cambia desde SteamGridDB: toca la imagen en la ficha del juego y, si no es el juego correcto, busca otro dentro del selector.
 - «¿A qué juego ahora?» (dado), estadísticas, filtros y buscador.
 - **Sincronización entre dispositivos** con un código y cifrado de extremo a extremo (ver abajo).
+- **Mi orden:** en el selector de orden, «Mi orden» muestra una lista compacta donde arrastras (⠿) para priorizar tu cola; el primero del backlog lleva la etiqueta «Siguiente», y ⤒ sube un juego al principio.
+- **Selección múltiple:** el botón «Seleccionar» junto al título de la lista permite mover o eliminar varios juegos a la vez.
+- **Reto anual y resumen del año** (en Estadísticas): pon una meta de juegos completados, mira cómo vas y genera una imagen con tu año para guardar o compartir. El reto se sincroniza.
+- **Papelera de 30 días** con «Deshacer» al eliminar; se restaura desde Ajustes → Datos y copias.
+- **Versiones de la nube:** una copia diaria durante 14 días; recupera juegos borrados o vuelve a cómo estaba la lista.
+- **Tema** automático, oscuro o claro; **copiar tus listas como texto**; aviso si añades un juego que ya tienes.
 - Exportar e importar copia de seguridad.
 - Botón «atrás» del móvil: cierra la ventana abierta y, si no hay ninguna, lleva al inicio (Jugando).
 
@@ -27,6 +33,7 @@ Un único Worker hace las dos cosas. Si ya tienes uno funcionando como proxy (`b
 1. **Crear el almacén KV.** Cloudflare → *Storage & Databases* → *KV* → *Create* → nombre `backlogmgr-sync`. (Los nombres de los menús pueden variar un poco.)
 2. **Actualizar el código.** *Workers & Pages* → tu Worker → *Edit code* → borra todo y pega el contenido de `worker.js` → *Deploy*.
    - Revisa la lista `ALLOWED_ORIGINS` al principio: debe contener la dirección desde la que abres la app (solo `https://dominio`, sin barra final ni ruta).
+   - Si ya tenías el Worker de una versión anterior, **vuelve a pegar este `worker.js` completo**: añade las copias diarias de la nube. Sin eso, todo lo demás funciona, pero «Versiones anteriores» avisará de que el Worker es antiguo.
 3. **Enlazar el KV.** En la pantalla del Worker, tarjeta *Bindings* → *Add* → *KV namespace* → nombre de variable **`SYNC`** (en mayúsculas, exacto) → elige `backlogmgr-sync` → guardar y desplegar.
 
 La dirección del Worker **ya viene escrita en la app** (constante `DEFAULT_PROXY` de `index.html`, ahora `https://backlog-proxy.backlogmgr.workers.dev/?url=`), así que no hay que configurarla en cada dispositivo. Si algún día cambias de Worker o del subdominio de `workers.dev`, cámbiala en esa línea y sube el archivo, o escríbela en Ajustes → «Dirección del Worker». La sincronización usa ese mismo Worker.
@@ -41,10 +48,12 @@ La dirección del Worker **ya viene escrita en la app** (constante `DEFAULT_PROX
 Cómo funciona y qué garantiza:
 - Los juegos se **cifran en tu dispositivo** (AES-256) con una clave derivada de tu código. El Worker solo guarda texto ilegible bajo un identificador derivado del código, y nunca ve tus juegos ni el código.
 - El código tiene 125 bits de azar: no se puede adivinar. **Quien lo tenga puede leer y cambiar tus datos; si lo pierdes junto con todos tus dispositivos, no hay forma de recuperar la nube.** Guárdalo en un gestor de contraseñas.
+- Cada día, la primera sincronización guarda en la nube una copia de cómo estaba antes de subir cambios (caduca a los 14 días). Se usa en Ajustes → Sincronización → «Versiones anteriores de la nube». Cuesta una escritura más al día en KV.
 - Cuando dos dispositivos cambian el mismo juego, gana el cambio más reciente de ese juego. Lo demás se une. Los borrados también se sincronizan.
 - La clave de SteamGridDB **no** se sincroniza y no debe ir en el repositorio: se pone en cada dispositivo.
 - Las portadas son enlaces de SteamGridDB, así que casi no pesan. Hay un límite de 8 MB de datos.
-- *Desconectar este dispositivo* deja de sincronizar pero conserva tus juegos. *Borrar datos de la nube* elimina la copia en la nube y desconecta este dispositivo; otros dispositivos con el mismo código la volverían a crear al sincronizar.
+- La papelera también se sincroniza: un juego eliminado en un dispositivo aparece en la papelera de los demás, con sus datos, durante 30 días.
+- *Desconectar este dispositivo* (dentro de «Opciones avanzadas») deja de sincronizar pero conserva tus juegos. *Borrar datos de la nube* elimina la copia en la nube y desconecta este dispositivo; otros dispositivos con el mismo código la volverían a crear al sincronizar.
 
 ## Dominio propio (p. ej. backlogmgr.app)
 

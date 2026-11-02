@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f1017">
+<script>try{var t=(JSON.parse(localStorage.getItem("backlog.settings.v1"))||{}).theme||"dark";document.documentElement.dataset.theme=(t==="light"||(t==="auto"&&matchMedia("(prefers-color-scheme: light)").matches))?"light":"dark"}catch(e){}</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -16,13 +17,22 @@
   --accent:#7c6cff; --accent2:#3fa7ff; --grad:linear-gradient(135deg,#8b7bff,#3fa7ff);
   --good:#3ecf8e; --warn:#f5a524; --bad:#ef5b6b; --r:16px;
   --playing:#7c6cff; --backlog:#4aa8ff; --wish:#c084fc; --hold:#f5a524; --dropped:#ef5b6b; --done:#3ecf8e;
+  --hdr:rgba(15,16,23,.72); --navbg:rgba(24,26,37,.93); --navbg2:rgba(24,26,37,.8); --glow1:#3a2f8a55; --glow2:#1b5a8a40;
+  --track:#ffffff14; --danger-t:#ff8d99; --link:#9a8dff; --scrim:#000b; --shadow:#0008; --sbar:#ffffff30;
+}
+:root[data-theme=light]{
+  --bg:#f3f4fa; --panel:#ffffff; --panel2:#eceef7; --line:#1a1d3314; --text:#171a2b; --mute:#5b6180;
+  --good:#10a06a; --bad:#d6334a; --warn:#c77a06;
+  --hdr:rgba(243,244,250,.85); --navbg:rgba(255,255,255,.95); --navbg2:rgba(255,255,255,.88); --glow1:#7c6cff26; --glow2:#3fa7ff24;
+  --track:#1a1d3318; --danger-t:#c4283d; --link:#5a49e6; --scrim:#12163088; --shadow:#1a1d3340; --sbar:#00000030;
+  color-scheme:light;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{background:var(--bg);color-scheme:dark}
 html,body{margin:0;height:100%}
 body{color:var(--text);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
 body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
-  background:radial-gradient(800px 380px at 12% -8%,#3a2f8a55,transparent 70%),radial-gradient(700px 320px at 100% 0,#1b5a8a40,transparent 70%)}
+  background:radial-gradient(800px 380px at 12% -8%,var(--glow1),transparent 70%),radial-gradient(700px 320px at 100% 0,var(--glow2),transparent 70%)}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer;border:1px solid var(--line);background:var(--panel2);border-radius:12px;padding:9px 14px;font-weight:500;transition:transform .12s,filter .15s,background .15s,border-color .15s}
 button:hover{filter:brightness(1.18)}
@@ -32,9 +42,9 @@ input,select,textarea{background-color:var(--panel2);border:1px solid var(--line
 input:focus,select:focus,textarea:focus{outline:0;border-color:var(--accent);box-shadow:0 0 0 3px #7c6cff33}
 select{appearance:none;-webkit-appearance:none;padding-right:34px;background-repeat:no-repeat;background-position:right 12px center;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%239096b0' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")}
-option{background:#22253a;color:#eceef6}
+option{background:var(--panel2);color:var(--text)}
 label{display:block;font-size:12px;font-weight:600;letter-spacing:.2px;color:var(--mute);margin:14px 0 6px}
-a{color:#9a8dff}
+a{color:var(--link)}
 .other{margin-top:6px}
 header .ib{position:relative}
 .sdot{position:absolute;top:7px;right:7px;width:11px;height:11px;border-radius:50%;border:2px solid var(--panel);display:none}
@@ -45,7 +55,7 @@ header .ib{position:relative}
 .code{font-family:ui-monospace,Menlo,Consolas,monospace;letter-spacing:.4px}
 
 #app{display:flex;flex-direction:column;height:100%}
-header{display:flex;gap:8px;align-items:center;padding:calc(12px + env(safe-area-inset-top)) 14px 10px;position:sticky;top:0;z-index:5;background:rgba(15,16,23,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+header{display:flex;gap:8px;align-items:center;padding:calc(12px + env(safe-area-inset-top)) 14px 10px;position:sticky;top:0;z-index:5;background:var(--hdr);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .brand{display:flex;align-items:center;gap:10px;flex:1;min-width:0;font-size:21px;font-weight:800;letter-spacing:-.5px;text-decoration:none;color:var(--text)}
 .brand .logo{width:36px;height:36px;flex:none;filter:drop-shadow(0 4px 10px #7c6cff55)}
 .brand em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -54,7 +64,7 @@ header .ib{width:42px;height:42px;padding:0;display:grid;place-items:center;bord
 #q{flex:1 1 100%;min-width:0;padding-left:40px;background-repeat:no-repeat;background-position:13px center;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%239096b0' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M20 20l-3.5-3.5'/%3E%3C/svg%3E")}
 .toolbar select{flex:1 1 28%;min-width:0}
-main{flex:1;overflow-y:auto;padding:2px 14px calc(96px + env(safe-area-inset-bottom));scrollbar-width:thin;scrollbar-color:#ffffff30 transparent}
+main{flex:1;overflow-y:auto;padding:2px 14px calc(96px + env(safe-area-inset-bottom));scrollbar-width:thin;scrollbar-color:var(--sbar) transparent}
 .sec{display:flex;align-items:baseline;gap:10px;padding:4px 2px 14px}
 .sec h2{margin:0;font-size:24px;font-weight:800;letter-spacing:-.5px;display:flex;align-items:center;gap:10px}
 .sec h2::before{content:"";width:5px;height:24px;border-radius:3px;background:var(--c,var(--accent))}
@@ -64,7 +74,7 @@ main{flex:1;overflow-y:auto;padding:2px 14px calc(96px + env(safe-area-inset-bot
 .empty svg{display:block;margin:0 auto 12px;opacity:.55}
 .empty b{display:block;color:var(--text);font-size:17px;margin-bottom:6px}
 
-nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:rgba(24,26,37,.93);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);z-index:6}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--navbg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);z-index:6}
 nav button{flex:1;min-width:0;background:none;border:0;border-radius:0;padding:10px 2px 9px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:500;color:var(--mute);position:relative}
 nav button:hover{filter:none;color:var(--text)}
 nav button svg{width:22px;height:22px}
@@ -80,19 +90,19 @@ nav .sh{display:none}
 
 .card{--c:var(--accent);background:var(--panel);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;border:1px solid var(--line);transition:transform .18s,box-shadow .18s,border-color .18s;animation:pop .28s ease both}
 @keyframes pop{from{opacity:0;transform:translateY(8px) scale(.98)}}
-@media(hover:hover){.card:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--c) 55%,transparent);box-shadow:0 14px 30px #0008,0 0 0 1px color-mix(in srgb,var(--c) 25%,transparent)}}
+@media(hover:hover){.card:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--c) 55%,transparent);box-shadow:0 14px 30px var(--shadow),0 0 0 1px color-mix(in srgb,var(--c) 25%,transparent)}}
 .cover{position:relative;aspect-ratio:2/3;background:var(--panel2);cursor:pointer;overflow:hidden}
 .cover img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s}
 @media(hover:hover){.card:hover .cover img{transform:scale(1.04)}}
 .cover::after{content:"";position:absolute;inset:auto 0 0 0;height:46%;background:linear-gradient(transparent,#000b);pointer-events:none;z-index:1}
 .cover::before{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--c);z-index:2}
 .ph{width:100%;height:100%;display:grid;place-items:center;font-size:36px;font-weight:800;letter-spacing:-1px;color:#ffffffa8;padding:10px;text-align:center}
-.chip{position:absolute;left:8px;bottom:9px;z-index:3;background:#000a;backdrop-filter:blur(4px);border:1px solid #ffffff1f;border-radius:8px;padding:2px 8px;font-size:11px;font-weight:600;max-width:calc(100% - 16px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip{position:absolute;left:8px;bottom:9px;z-index:3;color:#fff;background:#000a;backdrop-filter:blur(4px);border:1px solid #ffffff1f;border-radius:8px;padding:2px 8px;font-size:11px;font-weight:600;max-width:calc(100% - 16px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .badge{position:absolute;right:8px;top:8px;z-index:3;border-radius:8px;padding:2px 8px;font-size:11px;font-weight:700;color:#fff;background:var(--c)}
 .rate{position:absolute;left:8px;top:8px;z-index:3;background:#000a;border-radius:8px;padding:2px 7px;font-size:11px;font-weight:700;color:#ffc53d}
 .meta{padding:10px 11px 11px;display:flex;flex-direction:column;gap:8px}
 .meta h3{margin:0;font-size:13.5px;font-weight:650;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.5em;cursor:pointer}
-.bar{position:relative;height:9px;border-radius:6px;background:#ffffff14;touch-action:pan-y;cursor:ew-resize}
+.bar{position:relative;height:9px;border-radius:6px;background:var(--track);touch-action:pan-y;cursor:ew-resize}
 .bar::before{content:"";position:absolute;inset:-9px 0}
 .bar i{display:block;height:100%;border-radius:6px;background:var(--c);background-image:linear-gradient(90deg,#ffffff00,#ffffff40);pointer-events:none;transition:width .2s}
 .pg{display:flex;align-items:center;gap:9px}.pg .bar{flex:1}
@@ -103,7 +113,7 @@ nav .sh{display:none}
 .row .more{flex:none;padding:0;width:36px;height:36px;display:grid;place-items:center;font-size:16px;line-height:1}
 
 .wrap[hidden]{display:none}
-.wrap{position:fixed;inset:0;background:#000b;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:20;display:flex;align-items:flex-end;justify-content:center;animation:fade .18s ease}
+.wrap{position:fixed;inset:0;background:var(--scrim);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:20;display:flex;align-items:flex-end;justify-content:center;animation:fade .18s ease}
 @keyframes fade{from{opacity:0}}
 .sheet{background:var(--panel);width:100%;max-width:560px;max-height:92%;overflow-y:auto;border-radius:22px 22px 0 0;border:1px solid var(--line);border-bottom:0;padding:0 16px calc(18px + env(safe-area-inset-bottom));animation:up .24s cubic-bezier(.2,.8,.2,1)}
 @keyframes up{from{transform:translateY(28px);opacity:0}}
@@ -117,12 +127,12 @@ nav .sh{display:none}
 .btnrow{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
 .btnrow button{flex:1;padding:11px 14px}
 .pri{background:var(--grad);border:0;color:#fff;font-weight:700;box-shadow:0 6px 18px #5b4fe040}
-.danger{color:#ff8d99;background:#ef5b6b18;border-color:#ef5b6b55}
+.danger{color:var(--danger-t);background:#ef5b6b18;border-color:#ef5b6b55}
 .detail-head{display:flex;gap:14px}
 .detail-head .th{width:88px;aspect-ratio:2/3;border-radius:12px;overflow:hidden;flex:none;background:var(--panel2);box-shadow:0 8px 20px #0008}
 .detail-head .th img{width:100%;height:100%;object-fit:cover}
 .detail-head .th.edit{position:relative;cursor:pointer}
-.detail-head .th.edit::after{content:"Cambiar";position:absolute;inset:auto 0 0 0;background:#000c;font-size:11px;font-weight:700;text-align:center;padding:5px 0}
+.detail-head .th.edit::after{content:"Cambiar";position:absolute;inset:auto 0 0 0;color:#fff;background:#000c;font-size:11px;font-weight:700;text-align:center;padding:5px 0}
 .detail-head .f{flex:1;min-width:0}
 .prog{display:flex;gap:10px;align-items:center}
 .prog input[type=range]{padding:0;border:0;background:none;accent-color:var(--accent);height:30px;box-shadow:none}
@@ -139,6 +149,56 @@ nav .sh{display:none}
 .covers img{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:10px;cursor:pointer;background:var(--panel2);border:2px solid transparent;transition:transform .12s,border-color .12s}
 .covers img:hover{border-color:var(--accent);transform:scale(1.03)}
 .toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#14162a;border:1px solid #ffffff22;color:#fff;padding:11px 18px;border-radius:14px;z-index:30;max-width:90%;font-size:14px;font-weight:500;text-align:center;box-shadow:0 10px 30px #000a;animation:up .2s ease}
+.toast{display:flex;align-items:center;gap:12px}
+.toast button{flex:none;padding:5px 11px;font-size:13px;font-weight:700;background:#ffffff1f;border:0;color:#fff}
+.acc{border:1px solid var(--line);border-radius:14px;margin:12px 0 0;background:color-mix(in srgb,var(--panel2) 55%,transparent)}
+.acc>summary{display:flex;align-items:center;gap:8px;padding:14px;font-weight:700;cursor:pointer;list-style:none}
+.acc>summary::-webkit-details-marker{display:none}
+.acc>summary small{margin-left:auto;font-weight:500;color:var(--mute);font-size:12px}
+.acc>summary::after{content:"";width:8px;height:8px;border-right:2px solid var(--mute);border-bottom:2px solid var(--mute);transform:rotate(45deg);margin:-3px 2px 0 6px;transition:transform .15s;flex:none}
+.acc[open]>summary::after{transform:rotate(-135deg);margin-top:3px}
+.acc>.in{padding:0 14px 14px}
+.acc .in>label:first-child{margin-top:0}
+.sub{margin-top:12px}.sub>summary{cursor:pointer;color:var(--mute);font-size:13px;padding:6px 0;list-style:none}
+.sub>summary::-webkit-details-marker{display:none}
+.yearbar{display:flex;align-items:center;justify-content:center;gap:18px;margin:6px 0 12px}
+.yearbar b{font-size:24px;font-weight:800;min-width:76px;text-align:center;letter-spacing:-.5px}
+.yearbar button{width:42px;height:42px;padding:0;font-size:22px;line-height:1}
+.yearbar button:disabled{opacity:.35;cursor:default}
+.reto{background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+.reto .rh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.reto .rh b{font-size:16px}.reto .rh span{font-weight:800;font-size:18px}
+.pgbar{height:12px;border-radius:7px;background:var(--track);overflow:hidden}
+.pgbar i{display:block;height:100%;background:var(--grad);border-radius:7px;transition:width .3s}
+.reto button{margin-top:10px}
+#gform{display:flex;gap:8px;margin-top:10px}#gform[hidden]{display:none}#gform input{flex:1;min-width:0}#gform button{margin:0}
+.sec .tbtn{margin-left:auto;align-self:center;padding:6px 14px;font-size:13px;font-weight:600;background:var(--panel)}
+.grid.list{display:flex;flex-direction:column;gap:8px}
+.row2{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:14px;padding:8px 8px 8px 10px;animation:pop .25s ease both}
+.row2 .pos{width:22px;text-align:center;font-weight:800;color:var(--mute);font-size:13px;flex:none}
+.row2 .rth{width:40px;aspect-ratio:2/3;border-radius:7px;overflow:hidden;flex:none;background:var(--panel2);cursor:pointer}
+.row2 .rth img,.row2 .rth .ph{width:100%;height:100%;object-fit:cover;font-size:14px}
+.row2 .rt{flex:1;min-width:0;cursor:pointer}
+.row2 .rt b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:650}
+.row2 .rt small{color:var(--mute);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row2 .nxt{display:inline-block;margin-top:3px;background:var(--grad);color:#fff;border-radius:8px;padding:1px 9px;font-size:11px;font-weight:700}
+.row2 .rb{flex:none;width:36px;height:36px;padding:0;display:grid;place-items:center;font-size:16px;line-height:1}
+.row2 .rb svg{width:15px;height:15px}
+.row2 .hd{flex:none;width:34px;height:44px;display:grid;place-items:center;cursor:grab;touch-action:none;color:var(--mute);font-size:22px;user-select:none;-webkit-user-select:none}
+.row2.drag{position:relative;z-index:5;box-shadow:0 14px 34px var(--shadow);transition:none;cursor:grabbing}
+.row2.over{box-shadow:0 -3px 0 var(--accent)}.row2.overend{box-shadow:0 3px 0 var(--accent)}
+.ck{display:none;position:absolute;right:8px;top:8px;z-index:4;width:26px;height:26px;border-radius:50%;border:2px solid #fff;background:#0008;color:#fff;font-size:15px;line-height:22px;text-align:center;font-weight:800}
+.selecting .ck{display:block}.selecting .badge{display:none}
+.card.sel{outline:3px solid var(--accent);outline-offset:-3px}
+.card.sel .ck{background:var(--accent);border-color:var(--accent)}.card.sel .ck::after{content:"✓"}
+.selecting .fab{display:none}.selecting main{padding-bottom:calc(190px + env(safe-area-inset-bottom))}
+#selbar{position:fixed;left:12px;right:12px;bottom:calc(76px + env(safe-area-inset-bottom));z-index:8;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;box-shadow:0 14px 34px var(--shadow);animation:up .2s ease}
+#selbar[hidden]{display:none}
+#selbar #selcount{flex:1 1 120px;font-weight:700;font-size:14px;padding-left:4px}
+#selbar select{flex:1 1 130px;min-width:0;width:auto}#selbar button{padding:9px 13px;font-size:13.5px}
+#selbar button:disabled,#selbar select:disabled{opacity:.4}
+.dup{color:var(--warn);font-weight:600}
+.res button{flex:none;padding:7px 12px;font-size:13px}
 .status-line{font-size:13px;margin:8px 0;padding:10px 12px;border-radius:12px;background:var(--panel2);border:1px solid var(--line)}
 .ok{color:var(--good)} .ko{color:var(--bad)}
 .stars{display:flex;gap:4px}
@@ -155,7 +215,7 @@ nav .sh{display:none}
 .kpi small{color:var(--mute);font-size:12px}
 .sb{display:flex;align-items:center;gap:8px;margin:7px 0;font-size:13px}
 .sb span:first-child{width:104px;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sb .t{flex:1;height:10px;border-radius:6px;background:#ffffff14;overflow:hidden}
+.sb .t{flex:1;height:10px;border-radius:6px;background:var(--track);overflow:hidden}
 .sb .t i{display:block;height:100%;background:var(--c,var(--accent));border-radius:6px}
 .sb em{font-style:normal;color:var(--mute);width:28px;text-align:right}
 
@@ -163,7 +223,7 @@ nav .sh{display:none}
 @media(min-width:900px){
   #app{flex-direction:row;flex-wrap:wrap;align-content:flex-start}
   .brand{position:fixed;left:20px;top:16px;z-index:7;flex:none}
-  nav{position:fixed;top:0;bottom:0;left:0;right:auto;width:228px;flex-direction:column;border-top:0;border-right:1px solid var(--line);padding:84px 12px 16px;gap:4px;background:rgba(24,26,37,.8)}
+  nav{position:fixed;top:0;bottom:0;left:0;right:auto;width:228px;flex-direction:column;border-top:0;border-right:1px solid var(--line);padding:84px 12px 16px;gap:4px;background:var(--navbg2)}
   nav button{flex:none;flex-direction:row;gap:12px;font-size:15px;padding:12px 14px;border-radius:12px;justify-content:flex-start}
   nav button:hover{background:#ffffff0a}
   nav button.on{background:var(--panel2)}
@@ -175,6 +235,7 @@ nav .sh{display:none}
   #q{flex:2}.toolbar select{flex:1}
   main{padding-bottom:40px;height:calc(100% - 118px);flex:none}
   .grid{grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:18px}
+  #selbar{left:calc(228px + 16px);right:16px;bottom:22px;max-width:640px}
   .fab{bottom:26px;right:30px}
   .fab span{display:inline}
   .toast{bottom:26px;left:calc(50% + 114px)}
@@ -215,13 +276,15 @@ nav .sh{display:none}
       <option value="updated">Recientes</option>
       <option value="title">A–Z</option>
       <option value="progress">Progreso</option>
+      <option value="manual">Mi orden</option>
       <option value="added">Añadidos</option>
     </select>
   </div>
-  <main id="main"><div class="sec" id="sec"><h2 id="title"></h2><span id="count"></span></div><div class="grid" id="grid"></div><div id="empty"></div></main>
+  <main id="main"><div class="sec" id="sec"><h2 id="title"></h2><span id="count"></span><button class="tbtn" id="btnSel" hidden>Seleccionar</button></div><div class="grid" id="grid"></div><div id="empty"></div></main>
   <nav id="nav"></nav>
   <button class="fab" id="fab" aria-label="Añadir juego" title="Añadir juego"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><span>Añadir juego</span></button>
 </div>
+<div id="selbar" hidden><span id="selcount"></span><button id="selall">Todos</button><button id="selx">Cancelar</button><select id="selmove" aria-label="Mover a"></select><button id="seldel" class="danger">Eliminar</button></div>
 <div class="wrap" id="wrap" hidden><div class="sheet" id="sheet"></div></div>
 
 <script>
@@ -289,23 +352,37 @@ function load(k, d){ try { const v = JSON.parse(localStorage.getItem(k)); return
 function store(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch(_) { return false; } }
 let D = load(KEY, {games:{}});
 const DEFAULT_PROXY = 'https://backlog-proxy.backlogmgr.workers.dev/?url=';   // tu Worker de Cloudflare (proxy de SteamGridDB + sincronización)
-let S = Object.assign({sgdbKey:'', proxy:'', lastPlatform:'PC', syncCode:'', lastSync:0, syncErr:''}, load(SKEY, {}));
+let S = Object.assign({sgdbKey:'', proxy:'', lastPlatform:'PC', sort:'updated', theme:'dark', syncCode:'', lastSync:0, syncErr:'', lastSnap:''}, load(SKEY, {}));
 if (/sluacesmartin\.workers\.dev/.test(S.proxy)) S.proxy = '';   // dirección antigua del Worker: se usa la nueva por defecto
 const proxyUrl = () => S.proxy || DEFAULT_PROXY;
+const themeMQ = matchMedia('(prefers-color-scheme: light)');
+function applyTheme(){
+  const t = S.theme || 'dark', light = t === 'light' || (t === 'auto' && themeMQ.matches);
+  document.documentElement.dataset.theme = light ? 'light' : 'dark';
+  const m = document.querySelector('meta[name=theme-color]'); if (m) m.content = light ? '#f3f4fa' : '#0f1017';
+}
+themeMQ.addEventListener('change', () => { if (S.theme === 'auto') applyTheme(); });
+applyTheme();
+const TRASH_MS = 30 * 864e5;   // los juegos eliminados se guardan 30 días en la papelera
 if (!D.games) D.games = {};
+D.meta = cleanMeta(D.meta);   // retos anuales (se sincronizan)
 Object.values(D.games).forEach(g => norm(g));   // completa campos nuevos en datos antiguos
+if (compactTrash()) store(KEY, D);
 let syncBusy = false, syncDirty = false, syncTimer = null;
 const save = () => { if (!store(KEY, D)) toast('No se pudo guardar: almacenamiento lleno o bloqueado'); if (syncBusy) syncDirty = true; else scheduleSync(); };
 const saveS = () => store(SKEY, S);
-const UI = {tab:'playing', q:'', plat:'', tag:'', sort:'updated'};
+const UI = {tab:'playing', q:'', plat:'', tag:'', sort:'updated', selecting:false, sel:new Set()};
 const list = () => Object.values(D.games).filter(g => !g.deleted);   // los borrados se conservan como «lápidas» para poder sincronizarlos
 
 /* ---------- toast ---------- */
 let toastT;
-function toast(msg){
+function toast(msg, act){
   document.querySelectorAll('.toast').forEach(n => n.remove());
-  const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; document.body.appendChild(t);
-  clearTimeout(toastT); toastT = setTimeout(() => t.remove(), 2600);
+  const t = document.createElement('div'); t.className = 'toast';
+  const m = document.createElement('span'); m.textContent = msg; t.appendChild(m);
+  if (act){ const b = document.createElement('button'); b.textContent = act.label; b.onclick = () => { t.remove(); act.fn(); }; t.appendChild(b); }
+  document.body.appendChild(t);
+  clearTimeout(toastT); toastT = setTimeout(() => t.remove(), act ? 6500 : 2600);
 }
 
 /* ---------- operaciones de datos ---------- */
@@ -321,6 +398,7 @@ function norm(g){
   g.platform = typeof g.platform === 'string' ? g.platform.trim() : '';
   if (Object.prototype.hasOwnProperty.call(PLAT_ALIAS, g.platform.toLowerCase())) g.platform = PLAT_ALIAS[g.platform.toLowerCase()];
   g.cover = typeof g.cover === 'string' ? g.cover : '';
+  if (g.order === null || g.order === '' || g.order === undefined || !Number.isFinite(+g.order)) delete g.order; else g.order = +g.order;
   if (g.deleted !== true) delete g.deleted;
   return g;
 }
@@ -351,10 +429,26 @@ function setProgress(g, v){
   if (g.progress >= 100 && g.status !== 'done'){ applyStatus(g, 'done'); toast(`«${g.title}» completado`); }
   touch(g);
 }
-function removeGame(g){   // se guarda una «lápida» mínima para que el borrado llegue a los demás dispositivos
-  D.games[g.id] = norm({id:g.id, title:'', status:'backlog', progress:0, sgdbId:null, added:g.added || Date.now(), updated:Date.now(), deleted:true});
-  save(); render();
+/* Papelera: eliminar marca el juego como borrado conservando sus datos 30 días (así se puede restaurar).
+   Pasado ese tiempo queda una «lápida» mínima, para que el borrado llegue a los demás dispositivos. */
+const trashList = () => Object.values(D.games).filter(g => g.deleted && g.title).sort((a, b) => b.updated - a.updated);
+function cleanMeta(m){
+  const goals = {}; for (const [y, n] of Object.entries((m && m.goals) || {})) if (/^\d{4}$/.test(y) && +n > 0) goals[y] = Math.min(999, Math.round(+n));
+  return {goals, updated: +(m && m.updated) || 0};
 }
+const metaGoal = y => +D.meta.goals[y] || 0;
+function setGoal(y, n){
+  n = Math.max(0, Math.min(999, Math.round(+n || 0)));
+  if (n) D.meta.goals[y] = n; else delete D.meta.goals[y];
+  D.meta.updated = Date.now(); save();
+}
+function strip(g, bump){
+  const {id, added, updated} = g; for (const k of Object.keys(g)) delete g[k];
+  Object.assign(g, {id, title:'', status:'backlog', progress:0, sgdbId:null, added, updated:bump ? Date.now() : updated, deleted:true}); norm(g);
+}
+function compactTrash(){ const lim = Date.now() - TRASH_MS; let n = 0; for (const g of Object.values(D.games)) if (g.deleted && g.title && (g.updated || 0) < lim){ strip(g, false); n++; } return n; }
+function removeGame(g){ g.deleted = true; g.updated = Date.now(); save(); render(); }
+function restoreGame(g){ delete g.deleted; g.updated = Date.now(); save(); render(); }
 
 /* ---------- API de SteamGridDB ---------- */
 const SGDB = 'https://www.steamgriddb.com/api/v2';
@@ -422,9 +516,9 @@ function adopt(id, g){        // copia saneada de un juego que viene de fuera (i
   if (!g || typeof g.title !== 'string' || !ST[g.status]) return null;
   return norm({id, title:g.title, platform:g.platform, status:g.status, progress:clamp(+g.progress || 0, 0, 100), cover:g.cover, sgdbId:g.sgdbId || null,
     notes:g.notes, tags:g.tags, rating:g.rating, plays:g.plays, est:g.est, started:g.started, finished:g.finished,
-    added:g.added || Date.now(), updated:+g.updated || 0, deleted:g.deleted === true});
+    added:g.added || Date.now(), updated:+g.updated || 0, order:g.order, deleted:g.deleted === true});
 }
-function mergeRemote(remote){   // gana el cambio más reciente de cada juego
+function mergeRemote(remote, remoteMeta){   // gana el cambio más reciente de cada juego
   let changed = false, push = false; const seen = new Set(), lim = Date.now() - TOMB_MS;
   for (const [id, rg] of Object.entries(remote || {})){
     seen.add(id);
@@ -437,6 +531,9 @@ function mergeRemote(remote){   // gana el cambio más reciente de cada juego
   }
   for (const id of Object.keys(D.games)) if (!seen.has(id)) push = true;
   for (const [id, g] of Object.entries(D.games)) if (g.deleted && (g.updated || 0) < lim){ delete D.games[id]; changed = true; }
+  const rm = cleanMeta(remoteMeta);
+  if (rm.updated > D.meta.updated){ D.meta = rm; changed = true; }
+  else if (rm.updated < D.meta.updated) push = true;
   return {changed, push};
 }
 
@@ -457,19 +554,28 @@ async function syncErr(r){
 }
 function setSync(state){ const d = $('#sdot'); if (d) d.className = 'sdot ' + (S.syncCode ? state : ''); }
 function scheduleSync(){ if (!syncReady()) return; clearTimeout(syncTimer); syncTimer = setTimeout(() => syncNow(false), 8000); }
+const ymd8 = () => ymd().replace(/-/g, '');
+const fmtD8 = d => `${+d.slice(6)}/${+d.slice(4, 6)}/${d.slice(0, 4)}`;
+let snapTried = '';
+function snapRemote(id, raw){   // copia diaria de lo que había en la nube ANTES de subir cambios (mejor esfuerzo; solo la primera del día cuenta)
+  const day = ymd8(); snapTried = day;
+  syncFetch('/sync/' + id + '/snap/' + day, {method:'PUT', headers:{'Content-Type':'application/json'}, body:raw})
+    .then(r => { if (r.ok){ S.lastSnap = day; saveS(); } }).catch(() => {});
+}
 async function syncNow(manual){
   if (!syncReady() || syncBusy) return;
   syncBusy = true; syncDirty = false; clearTimeout(syncTimer); setSync('busy'); renderSyncPanel();
   try {
     const code = S.syncCode, id = await syncId(code);
     const r = await syncFetch('/sync/' + id, {cache:'no-store'});
-    let remote = null;
-    if (r.status === 200) remote = await unseal(code, await r.text());
+    let remote = null, raw = '';
+    if (r.status === 200){ raw = await r.text(); remote = await unseal(code, raw); }
     else if (r.status !== 404) throw new Error(await syncErr(r));
-    const m = mergeRemote(remote && remote.games);
+    if (raw && S.lastSnap !== ymd8() && snapTried !== ymd8()) snapRemote(id, raw);
+    const m = mergeRemote(remote && remote.games, remote && remote.meta);
     if (m.changed){ store(KEY, D); render(); if (!manual) toast('Actualizado desde otro dispositivo'); }
     if (!remote || m.push){
-      const w = await syncFetch('/sync/' + id, {method:'PUT', headers:{'Content-Type':'application/json'}, body:await seal(code, {v:1, games:D.games})});
+      const w = await syncFetch('/sync/' + id, {method:'PUT', headers:{'Content-Type':'application/json'}, body:await seal(code, {v:1, games:D.games, meta:D.meta})});
       if (!w.ok) throw new Error(await syncErr(w));
     }
     S.lastSync = Date.now(); S.syncErr = ''; saveS(); setSync('ok');
@@ -490,17 +596,18 @@ window.addEventListener('online', () => syncNow(false));
 
 async function copyText(t){ try { await navigator.clipboard.writeText(t); return true; } catch(_) { return false; } }
 function renderSyncPanel(){
+  const sum = $('#syncsum');
+  if (sum) sum.textContent = syncBusy ? 'Sincronizando…' : S.syncErr ? 'Error' : S.syncCode ? (S.lastSync ? 'Al día' : 'Conectado') : 'Sin activar';
   const box = $('#syncbox'); if (!box) return;
   const ready = !!syncBase();
   if (!S.syncCode){
-    box.innerHTML = `<label style="margin-top:18px">Sincronización entre dispositivos</label>
-      <div class="hint">Mantén tus juegos iguales en el móvil y el PC. Se cifran en este dispositivo antes de enviarse: el servidor solo guarda texto ilegible.${ready ? '' : ' <b>Primero pon la dirección del Worker en «Proxy CORS».</b>'}</div>
+    box.innerHTML = `<div class="hint" style="margin-top:0">Mantén tus juegos iguales en el móvil y el PC. Se cifran en este dispositivo antes de enviarse: el servidor solo guarda texto ilegible.${ready ? '' : ' <b>Primero pon la dirección del Worker.</b>'}</div>
       <div class="btnrow" style="margin-top:8px"><button id="sc-new" class="pri">Crear código nuevo</button><button id="sc-have">Ya tengo un código</button></div>
       <div id="sc-in" hidden style="margin-top:10px"><input id="sc-code" class="code" placeholder="XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" autocomplete="off" autocapitalize="characters" spellcheck="false">
         <div class="btnrow" style="margin-top:8px"><button id="sc-go" class="pri">Conectar</button></div></div>
       <div id="sc-msg"></div>`;
     $('#sc-new').onclick = () => {
-      if (!syncBase()) return toast('Primero pon la dirección del Worker en «Proxy CORS».');
+      if (!syncBase()) return toast('Primero pon la dirección del Worker.');
       S.syncCode = newSyncCode(); S.lastSync = 0; S.syncErr = ''; saveS(); renderSyncPanel(); syncNow(true);
     };
     $('#sc-have').onclick = () => { $('#sc-in').hidden = false; $('#sc-code').focus(); };
@@ -521,17 +628,20 @@ function renderSyncPanel(){
     : S.syncErr ? `<div class="status-line ko">${esc(S.syncErr)}</div>`
     : S.lastSync ? `<div class="status-line ok">Sincronizado · ${esc(new Date(S.lastSync).toLocaleString('es-ES', {dateStyle:'short', timeStyle:'short'}))}</div>`
     : '<div class="status-line">Aún no se ha sincronizado.</div>';
-  box.innerHTML = `<label style="margin-top:18px">Sincronización entre dispositivos</label>${st}
+  box.innerHTML = `${st}
     <label>Tu código</label>
     <div style="display:flex;gap:8px"><input id="sc-show" class="code" type="password" readonly value="${esc(S.syncCode)}"><button id="sc-eye" style="flex:none">Mostrar</button></div>
     <div class="btnrow"><button id="sc-now" class="pri">Sincronizar ahora</button><button id="sc-copy">Copiar código</button></div>
     <div class="btnrow" style="margin-top:8px"><button id="sc-link">Copiar enlace para otro dispositivo</button></div>
-    <div class="btnrow" style="margin-top:8px"><button id="sc-off">Desconectar este dispositivo</button><button id="sc-wipe" class="danger">Borrar datos de la nube</button></div>
-    <div class="hint">Quien tenga tu código puede leer y cambiar tus datos: no lo compartas. Si pierdes el código y todos tus dispositivos, los datos de la nube no se pueden recuperar. Las claves de SteamGridDB no se sincronizan.</div>`;
+    <div class="btnrow" style="margin-top:8px"><button id="sc-ver">Versiones anteriores de la nube</button></div>
+    <details class="sub"><summary>Opciones avanzadas</summary>
+      <div class="btnrow" style="margin-top:8px"><button id="sc-off">Desconectar este dispositivo</button><button id="sc-wipe" class="danger">Borrar datos de la nube</button></div></details>
+    <div class="hint">Quien tenga tu código puede leer y cambiar tus datos: no lo compartas. Si pierdes el código y todos tus dispositivos, los datos de la nube no se pueden recuperar. La clave de SteamGridDB no se sincroniza.</div>`;
   $('#sc-eye').onclick = () => { const i = $('#sc-show'), on = i.type === 'password'; i.type = on ? 'text' : 'password'; $('#sc-eye').textContent = on ? 'Ocultar' : 'Mostrar'; };
   $('#sc-now').onclick = () => syncNow(true);
   $('#sc-copy').onclick = async () => toast(await copyText(S.syncCode) ? 'Código copiado' : 'No se pudo copiar: pulsa «Mostrar» y cópialo a mano');
   $('#sc-link').onclick = async () => toast(await copyText(`${location.origin}${location.pathname}#sync=${S.syncCode}`) ? 'Enlace copiado. Ábrelo en el otro dispositivo' : 'No se pudo copiar el enlace');
+  $('#sc-ver').onclick = () => openVersions();
   $('#sc-off').onclick = () => { S.syncCode = ''; S.lastSync = 0; S.syncErr = ''; saveS(); setSync(''); renderSyncPanel(); toast('Dispositivo desconectado. Tus juegos siguen aquí'); };
   $('#sc-wipe').onclick = async () => {
     const b = $('#sc-wipe');
@@ -543,6 +653,50 @@ function renderSyncPanel(){
     } catch(e){ toast(e.message); }
   };
 }
+/* --- versiones anteriores de la nube --- */
+async function openVersions(){
+  openSheet(`<div class="top"><h2>Versiones de la nube</h2><button id="x">Atrás</button></div>
+    <div class="hint">La nube guarda una copia al día durante 14 días. Con ella puedes recuperar juegos o volver a cómo estaba la lista.</div>
+    <div id="vl"><div class="hint">Cargando…</div></div>`);
+  $('#x').onclick = () => openSettings('sync');
+  try {
+    const r = await syncFetch('/sync/' + await syncId(S.syncCode) + '/snaps', {cache:'no-store'});
+    if (r.status === 400 || r.status === 404) throw new Error('El Worker todavía no admite versiones: pega el nuevo worker.js.');
+    if (!r.ok) throw new Error(await syncErr(r));
+    const dates = (await r.json()).dates || [];
+    $('#vl').innerHTML = dates.length
+      ? dates.map(d => `<div class="res" data-d="${d}"><div class="t"><b>${fmtD8(d)}</b><small>Copia de ese día</small></div><button>Ver</button></div>`).join('')
+      : '<div class="hint">Todavía no hay versiones. Se crea una al sincronizar, como mucho una al día.</div>';
+    $('#vl').onclick = e => { const row = e.target.closest('.res'); if (row) openVersion(row.dataset.d); };
+  } catch(e){ $('#vl').innerHTML = `<div class="status-line ko">${esc(e.message)}</div>`; }
+}
+async function openVersion(d){
+  openSheet(`<div class="top"><h2>Versión del ${fmtD8(d)}</h2><button id="x">Atrás</button></div><div id="vb"><div class="hint">Descargando y descifrando…</div></div>`);
+  $('#x').onclick = openVersions;
+  try {
+    const r = await syncFetch('/sync/' + await syncId(S.syncCode) + '/snap/' + d, {cache:'no-store'});
+    if (!r.ok) throw new Error(await syncErr(r));
+    const snap = await unseal(S.syncCode, await r.text());
+    const old = new Map();
+    for (const [gid, g] of Object.entries(snap.games || {})){ const a = adopt(gid, g); if (a && !a.deleted) old.set(gid, a); }
+    const missing = [...old.values()].filter(g => !D.games[g.id] || D.games[g.id].deleted);
+    const extra = list().filter(g => !old.has(g.id));
+    $('#vb').innerHTML = `<div class="kpis"><div class="kpi"><b>${old.size}</b><small>juegos en esa versión</small></div><div class="kpi"><b>${missing.length}</b><small>que ahora no tienes</small></div></div>
+      ${missing.length ? '<h3>Juegos que faltan</h3>' + missing.slice(0, 40).map(g => `<div class="res"><div class="th">${coverHTML(g)}</div><div class="t"><b>${esc(g.title)}</b><small>${esc([g.platform, ST[g.status].label].filter(Boolean).join(' · '))}</small></div></div>`).join('') : ''}
+      <div class="btnrow"><button id="vrec" class="pri" ${missing.length ? '' : 'disabled'}>Recuperar ${missing.length} juego${missing.length === 1 ? '' : 's'}</button></div>
+      <div class="btnrow" style="margin-top:8px"><button id="vrev" class="danger">Volver a esta versión</button></div>
+      <div class="hint">«Recuperar» solo añade lo que falta y no toca nada más. «Volver a esta versión» deja tu lista como estaba ese día${extra.length ? `; los ${extra.length} juegos que tienes ahora y entonces no estaban irían a la papelera` : ''}.</div>`;
+    $('#vrec').onclick = () => { const now = Date.now(); missing.forEach(g => { g.updated = now; D.games[g.id] = g; }); save(); render(); toast(`${missing.length} juegos recuperados`); closeSheet(); };
+    $('#vrev').onclick = () => {
+      const b = $('#vrev'); if (!b.dataset.sure){ b.dataset.sure = 1; b.textContent = 'Pulsa otra vez para confirmar'; return; }
+      const now = Date.now();
+      old.forEach(g => { g.updated = now; D.games[g.id] = g; });
+      extra.forEach(g => { g.deleted = true; g.updated = now; });
+      save(); render(); toast('Lista restaurada a la versión del ' + fmtD8(d)); closeSheet();
+    };
+  } catch(e){ $('#vb').innerHTML = `<div class="status-line ko">${esc(e.message)}</div>`; }
+}
+
 function checkSyncLink(){   // enlace «#sync=CÓDIGO» para conectar otro dispositivo de un toque
   if (!location.hash.startsWith('#sync=')) return;
   const q = new URLSearchParams(location.hash.slice(1));
@@ -567,11 +721,11 @@ function ph(g){
   return `<div class="ph" style="background:linear-gradient(145deg,hsl(${h} 45% 32%),hsl(${(h + 50) % 360} 50% 20%))">${esc(ini)}</div>`;
 }
 const chip = g => [g.platform, g.est ? '~' + g.est + ' h' : ''].filter(Boolean).join(' · ');
+const actOf = g => g.status === 'playing' ? ['done', 'Completar', IC.done] : g.status === 'done' ? ['playing', 'Rejugar', IC.playing] : ['playing', 'Jugar', IC.playing];
 function cardHTML(g, showSt){
-  const st = ST[g.status];
-  const act = g.status === 'playing' ? ['done','Completar',IC.done] : g.status === 'done' ? ['playing','Rejugar',IC.playing] : ['playing','Jugar',IC.playing];
-  return `<article class="card" data-id="${g.id}" style="--c:${st.c}">
-    <div class="cover" data-act="open">${coverHTML(g)}${showSt ? `<span class="badge">${st.label}</span>` : ''}${g.rating ? `<span class="rate">★ ${g.rating}</span>` : ''}${chip(g) ? `<span class="chip">${esc(chip(g))}</span>` : ''}</div>
+  const st = ST[g.status], act = actOf(g), sel = UI.selecting && UI.sel.has(g.id);
+  return `<article class="card${sel ? ' sel' : ''}" data-id="${g.id}" style="--c:${st.c}">
+    <div class="cover" data-act="open">${coverHTML(g)}<span class="ck"></span>${showSt ? `<span class="badge">${st.label}</span>` : ''}${g.rating ? `<span class="rate">★ ${g.rating}</span>` : ''}${chip(g) ? `<span class="chip">${esc(chip(g))}</span>` : ''}</div>
     <div class="meta">
       <h3 data-act="open">${esc(g.title)}</h3>
       <div class="pg"><div class="bar" role="slider" aria-label="Progreso" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${g.progress}"><i style="width:${g.progress}%"></i></div><span class="pct">${g.progress}%</span></div>
@@ -580,6 +734,31 @@ function cardHTML(g, showSt){
         <button class="more" data-act="open" aria-label="Detalles">⋯</button></div>
     </div></article>`;
 }
+function rowHTML(g, i, showSt){   // vista compacta de «Mi orden»
+  const st = ST[g.status], act = actOf(g), next = i === 0 && g.status === 'backlog';
+  const sub = [showSt ? st.label : '', g.platform, g.est ? '~' + g.est + ' h' : '', g.progress ? g.progress + ' %' : ''].filter(Boolean).join(' · ');
+  return `<div class="row2" data-id="${g.id}" style="--c:${st.c}">
+    <span class="pos">${i + 1}</span>
+    <div class="rth" data-act="open">${coverHTML(g)}</div>
+    <div class="rt" data-act="open"><b>${esc(g.title)}</b>${sub ? `<small>${esc(sub)}</small>` : ''}${next ? '<span class="nxt">Siguiente</span>' : ''}</div>
+    <button class="rb" data-act="top" aria-label="Subir al principio" title="Subir al principio">⤒</button>
+    <button class="rb" data-act="move" data-to="${act[0]}" aria-label="${act[1]}" title="${act[1]}">${act[2]}</button>
+    <span class="hd" aria-label="Arrastrar para ordenar" title="Arrastrar para ordenar">⠿</span></div>`;
+}
+
+const okey = g => Number.isFinite(g.order) ? g.order : g.added;   // sin orden propio, manda la fecha de alta
+const SORTS = {
+  updated:  (a, b) => b.updated - a.updated,
+  added:    (a, b) => b.added - a.added,
+  title:    (a, b) => a.title.localeCompare(b.title, 'es', {sensitivity:'base'}),
+  progress: (a, b) => b.progress - a.progress,
+  manual:   (a, b) => okey(a) - okey(b) || a.added - b.added
+};
+if (SORTS[S.sort]) UI.sort = S.sort;
+function viewItems(){
+  const q = UI.q.trim().toLowerCase();
+  return list().filter(g => (q ? g.title.toLowerCase().includes(q) : g.status === UI.tab) && (!UI.plat || g.platform === UI.plat) && (!UI.tag || g.tags.includes(UI.tag))).sort(SORTS[UI.sort] || SORTS.updated);
+}
 function render(){
   const q = UI.q.trim().toLowerCase();
   // navegación
@@ -587,54 +766,105 @@ function render(){
   $('#nav').innerHTML = STATUSES.map(s =>
     `<button data-tab="${s.id}" class="${!q && UI.tab === s.id ? 'on' : ''}" style="--c:${s.c}">${IC[s.id]}<span class="lg">${s.label}</span><span class="sh">${s.short}</span><span class="n">${counts[s.id] || 0}</span></button>`).join('');
   $('#title').textContent = q ? 'Resultados' : ST[UI.tab].label;
-  // filtro de plataforma (según los juegos existentes)
+  // filtros (según los juegos existentes)
   const plats = [...new Set(list().map(g => g.platform).filter(Boolean))].sort(cmpEs);
   if (UI.plat && !plats.includes(UI.plat)) UI.plat = '';
   $('#fPlat').innerHTML = '<option value="">Plataforma</option>' + plats.map(p => `<option ${p === UI.plat ? 'selected' : ''}>${esc(p)}</option>`).join('');
-  // lista
   const tagsAll = [...new Set(list().flatMap(g => g.tags))].sort((a, b) => a.localeCompare(b, 'es'));
   if (UI.tag && !tagsAll.includes(UI.tag)) UI.tag = '';
   const ft = $('#fTag'); ft.hidden = !tagsAll.length;
   ft.innerHTML = '<option value="">Etiqueta</option>' + tagsAll.map(t => `<option ${t === UI.tag ? 'selected' : ''}>${esc(t)}</option>`).join('');
-  let items = list().filter(g => (q ? g.title.toLowerCase().includes(q) : g.status === UI.tab) && (!UI.plat || g.platform === UI.plat) && (!UI.tag || g.tags.includes(UI.tag)));
-  const cmp = {
-    updated: (a, b) => b.updated - a.updated,
-    added: (a, b) => b.added - a.added,
-    title: (a, b) => a.title.localeCompare(b.title, 'es', {sensitivity:'base'}),
-    progress: (a, b) => b.progress - a.progress
-  }[UI.sort];
-  items.sort(cmp);
-  $('#grid').innerHTML = items.map(g => cardHTML(g, !!q)).join('');
+  $('#fSort').value = UI.sort;
+  // lista
+  const items = viewItems(), listMode = UI.sort === 'manual';
+  if (UI.selecting) UI.sel = new Set([...UI.sel].filter(id => items.some(g => g.id === id)));
+  const grid = $('#grid'); grid.className = 'grid' + (listMode ? ' list' : '');
+  grid.innerHTML = items.map((g, i) => listMode ? rowHTML(g, i, !!q) : cardHTML(g, !!q)).join('');
   $('#count').textContent = items.length + (items.length === 1 ? ' juego' : ' juegos');
   $('#sec').style.setProperty('--c', q ? 'var(--accent)' : ST[UI.tab].c);
+  const bs = $('#btnSel'); bs.hidden = listMode || !items.length; bs.textContent = UI.selecting ? 'Listo' : 'Seleccionar';
+  updateSelBar();
   $('#empty').innerHTML = items.length ? '' : (q
     ? `<div class="empty">${EMPTY_IC}<b>Sin resultados</b>No hay juegos tuyos con ese nombre.</div>`
     : `<div class="empty">${EMPTY_IC}<b>Aquí no hay nada todavía</b>Pulsa + para añadir un juego a «${ST[UI.tab].label}».</div>`);
 }
 
+/* ---------- selección múltiple ---------- */
+function updateSelBar(){
+  const b = $('#selbar'); b.hidden = !UI.selecting; document.body.classList.toggle('selecting', UI.selecting);
+  if (!UI.selecting) return;
+  const n = UI.sel.size;
+  $('#selcount').textContent = n ? `${n} seleccionado${n === 1 ? '' : 's'}` : 'Toca los juegos que quieras';
+  $('#selmove').disabled = $('#seldel').disabled = !n;
+  const m = $('#selmove'); if (!m.options.length) m.innerHTML = '<option value="">Mover a…</option>' + STATUSES.map(s => `<option value="${s.id}">${s.label}</option>`).join('');
+}
+function endSel(){ UI.selecting = false; UI.sel.clear(); }
+function setSelecting(on){ if (on) UI.selecting = true; else endSel(); render(); }
+function toggleSel(id){
+  if (UI.sel.has(id)) UI.sel.delete(id); else UI.sel.add(id);
+  const c = $('#grid').querySelector(`[data-id="${id}"]`); if (c) c.classList.toggle('sel', UI.sel.has(id));
+  updateSelBar();
+}
+
+/* ---------- orden manual ---------- */
+function moveOrder(g, idx, others){   // others: juegos visibles sin g, en orden; idx: posición de destino
+  const prev = others[idx - 1], next = others[idx]; let k;
+  if (prev && next){
+    const a = okey(prev), b = okey(next); k = (a + b) / 2;
+    if (!(k > a && k < b)){   // sin hueco entre vecinos: se renumera la lista visible
+      const arr = others.slice(); arr.splice(idx, 0, g); const base = Math.min(...arr.map(okey)), now = Date.now();
+      arr.forEach((x, i) => { const v = base + i * 1000; if (x.order !== v){ x.order = v; x.updated = now; } });
+      save(); render(); return;
+    }
+  } else if (prev) k = okey(prev) + 1000;
+  else if (next) k = okey(next) - 1000;
+  else return;
+  g.order = k; touch(g);
+}
+const moveToTop = g => moveOrder(g, 0, viewItems().filter(x => x.id !== g.id));
+
 /* ---------- eventos del listado ---------- */
 $('#nav').addEventListener('click', e => {
   const b = e.target.closest('[data-tab]'); if (!b) return;
-  UI.tab = b.dataset.tab; UI.q = ''; $('#q').value = ''; render(); $('#main').scrollTop = 0;
+  endSel(); UI.tab = b.dataset.tab; UI.q = ''; $('#q').value = ''; render(); $('#main').scrollTop = 0;
 });
-$('#q').addEventListener('input', e => { UI.q = e.target.value; render(); });
+$('#q').addEventListener('input', e => { endSel(); UI.q = e.target.value; render(); });
 $('#fPlat').addEventListener('change', e => { UI.plat = e.target.value; render(); });
-$('#fSort').addEventListener('change', e => { UI.sort = e.target.value; render(); });
+$('#fSort').addEventListener('change', e => { endSel(); UI.sort = e.target.value; S.sort = UI.sort; saveS(); render(); });
 $('#fab').addEventListener('click', openAdd);
 $('#fTag').addEventListener('change', e => { UI.tag = e.target.value; render(); });
 $('#btnSettings').addEventListener('click', openSettings);
 $('#btnStats').addEventListener('click', openStats);
 $('#btnRandom').addEventListener('click', () => openRandom());
+$('#btnSel').addEventListener('click', () => setSelecting(!UI.selecting));
+$('#selx').addEventListener('click', () => setSelecting(false));
+$('#selall').addEventListener('click', () => {
+  const ids = viewItems().map(g => g.id); if (UI.sel.size === ids.length) UI.sel.clear(); else ids.forEach(id => UI.sel.add(id)); render();
+});
+$('#selmove').addEventListener('change', e => {
+  const v = e.target.value; e.target.value = ''; if (!v || !UI.sel.size) return;
+  const ids = [...UI.sel], now = Date.now();
+  ids.forEach(id => { const g = D.games[id]; if (g){ applyStatus(g, v); g.updated = now; } });
+  save(); setSelecting(false); toast(`${ids.length} juego${ids.length === 1 ? '' : 's'} → ${ST[v].label}`);
+});
+$('#seldel').addEventListener('click', () => {
+  const ids = [...UI.sel], now = Date.now(); if (!ids.length) return;
+  ids.forEach(id => { const g = D.games[id]; if (g){ g.deleted = true; g.updated = now; } });
+  save(); setSelecting(false);
+  toast(`${ids.length} juego${ids.length === 1 ? '' : 's'} movido${ids.length === 1 ? '' : 's'} a la papelera`, {label:'Deshacer', fn:() => { ids.forEach(id => { const g = D.games[id]; if (g && g.deleted){ delete g.deleted; g.updated = Date.now(); } }); save(); render(); }});
+});
 
 $('#grid').addEventListener('click', e => {
+  if (UI.selecting){ const c = e.target.closest('.card'); if (c) toggleSel(c.dataset.id); return; }
   const a = e.target.closest('[data-act]'); if (!a) return;
-  const card = a.closest('.card'); const g = D.games[card.dataset.id]; if (!g) return;
+  const el = a.closest('[data-id]'); const g = el && D.games[el.dataset.id]; if (!g) return;
   if (a.dataset.act === 'open') openDetail(g);
   else if (a.dataset.act === 'move') setStatus(g, a.dataset.to);
+  else if (a.dataset.act === 'top') moveToTop(g);
 });
 $('#grid').addEventListener('error', e => {   // portada rota → marcador de posición
   if (e.target.tagName !== 'IMG') return;
-  const card = e.target.closest('.card'); const g = card && D.games[card.dataset.id];
+  const card = e.target.closest('[data-id]'); const g = card && D.games[card.dataset.id];
   if (g) e.target.parentElement.insertAdjacentHTML('afterbegin', ph(g)), e.target.remove();
 }, true);
 
@@ -644,7 +874,7 @@ $('#grid').addEventListener('error', e => {   // portada rota → marcador de po
   const val = (bar, x) => { const r = bar.getBoundingClientRect(); return clamp(Math.round((x - r.left) / r.width * 100), 0, 100); };
   const paint = (d, v) => { d.v = v; d.bar.firstElementChild.style.width = v + '%'; d.pct.textContent = v + '%'; };
   $('#grid').addEventListener('pointerdown', e => {
-    const bar = e.target.closest('.bar'); if (!bar) return;
+    const bar = e.target.closest('.bar'); if (!bar || UI.selecting) return;
     const card = bar.closest('.card');
     drag = {bar, g: D.games[card.dataset.id], pct: card.querySelector('.pct'), v: 0};
     bar.setPointerCapture(e.pointerId); paint(drag, val(bar, e.clientX));
@@ -654,11 +884,39 @@ $('#grid').addEventListener('error', e => {   // portada rota → marcador de po
   $('#grid').addEventListener('pointercancel', () => { if (!drag) return; drag = null; render(); });
 })();
 
+// arrastrar para ordenar («Mi orden»)
+(function(){
+  let d = null; const grid = $('#grid'), main = $('#main');
+  const others = () => [...grid.children].filter(r => r !== d.row);
+  const target = cy => { const o = others(); let idx = 0; for (const r of o){ const b = r.getBoundingClientRect(); if (b.top + b.height / 2 < cy) idx++; } return {o, idx}; };
+  const mark = (o, idx) => { grid.querySelectorAll('.over,.overend').forEach(n => n.classList.remove('over', 'overend')); if (idx < o.length) o[idx].classList.add('over'); else if (o.length) o[o.length - 1].classList.add('overend'); };
+  grid.addEventListener('pointerdown', e => {
+    const h = e.target.closest('.hd'); if (!h) return; e.preventDefault();
+    const row = h.closest('.row2'); h.setPointerCapture(e.pointerId);
+    d = {row, y0:e.clientY, s0:main.scrollTop, from:[...grid.children].indexOf(row)}; row.classList.add('drag');
+  });
+  grid.addEventListener('pointermove', e => {
+    if (!d) return;
+    const mr = main.getBoundingClientRect(); if (e.clientY < mr.top + 70) main.scrollTop -= 14; else if (e.clientY > mr.bottom - 70) main.scrollTop += 14;
+    d.row.style.transform = `translateY(${e.clientY - d.y0 + (main.scrollTop - d.s0)}px)`;
+    const b = d.row.getBoundingClientRect(), t = target(b.top + b.height / 2); mark(t.o, t.idx);
+  });
+  const end = commit => {
+    if (!d) return; const x = d; d = null;
+    const b = x.row.getBoundingClientRect(), t = (() => { d = x; const r = target(b.top + b.height / 2); d = null; return r; })();
+    x.row.classList.remove('drag'); x.row.style.transform = ''; grid.querySelectorAll('.over,.overend').forEach(n => n.classList.remove('over', 'overend'));
+    const g = D.games[x.row.dataset.id];
+    if (commit && g && t.idx !== x.from) moveOrder(g, t.idx, t.o.map(r => D.games[r.dataset.id]).filter(Boolean)); else render();
+  };
+  grid.addEventListener('pointerup', () => end(true));
+  grid.addEventListener('pointercancel', () => end(false));
+})();
+
 /* ---------- hojas modales ---------- */
 function openSheet(html){ $('#sheet').innerHTML = html; $('#wrap').hidden = false; $('#sheet').scrollTop = 0; }
 function closeSheet(){ $('#wrap').hidden = true; $('#sheet').innerHTML = ''; }
 $('#wrap').addEventListener('mousedown', e => { if (e.target === $('#wrap')) closeSheet(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#wrap').hidden) closeSheet(); });
+document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; if (!$('#wrap').hidden) closeSheet(); else if (UI.selecting) setSelecting(false); });
 
 const platList = () => [...new Set([...PLATFORMS, ...list().map(g => g.platform).filter(Boolean)])].sort(cmpEs);
 function platSelect(id, val){   // desplegable alfabético; las plataformas propias ya usadas también aparecen
@@ -673,6 +931,9 @@ function platBind(id, onChange){
 const platVal = id => { const sel = $('#' + id); return sel.value === '__other' ? $('#' + id + '-o').value.trim() : sel.value; };
 
 /* --- añadir juego --- */
+const normTitle = t => String(t).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
+function findDup(title, sgdbId){ const nt = normTitle(title); return list().find(g => (sgdbId && g.sgdbId === sgdbId) || normTitle(g.title) === nt) || null; }
+const dupText = d => `ya en ${ST[d.status].label}${d.platform ? ' (' + d.platform + ')' : ''}`;
 function openAdd(){
   openSheet(`
     <div class="top"><h2>Añadir juego</h2><button id="x">Cerrar</button></div>
@@ -688,13 +949,16 @@ function openAdd(){
   platBind('ap', () => {});
   const aq = $('#aq'); setTimeout(() => aq.focus(), 50);
   const opts = () => { const p = platVal('ap'); S.lastPlatform = p || S.lastPlatform; saveS(); return {platform: p, status: $('#as').value}; };
+  const manLabel = () => { const t = aq.value.trim(), d = t && findDup(t, null); $('#manual').innerHTML = d ? `Ya lo tienes (${esc(dupText(d))}). Pulsa otra vez para añadirlo igualmente` : 'Añadir «<span id="mt"></span>» sin buscar'; if (!d) $('#mt').textContent = t || '…'; delete $('#manual').dataset.ok; };
+  manLabel();
   $('#manual').onclick = () => {
     const t = aq.value.trim(); if (!t) return toast('Escribe un título primero');
+    if (findDup(t, null) && !$('#manual').dataset.ok){ $('#manual').dataset.ok = 1; return; }
     addGame({title: t, ...opts()}); toast(`«${t}» añadido`); closeSheet();
   };
   let timer, seq = 0;
   aq.addEventListener('input', () => {
-    $('#mt').textContent = aq.value.trim() || '…';
+    manLabel();
     clearTimeout(timer); timer = setTimeout(run, 400);
   });
   async function run(){
@@ -708,7 +972,7 @@ function openAdd(){
       if (me !== seq || !box.isConnected) return;
       if (!data.length){ box.innerHTML = '<div class="hint">Sin resultados. Puedes añadirlo a mano abajo.</div>'; return; }
       const rows = data.slice(0, 10);
-      box.innerHTML = rows.map((r, i) => `<div class="res" data-i="${i}"><div class="th"></div><div class="t"><b>${esc(r.name)}</b><small>${r.release_date ? new Date(r.release_date * 1000).getUTCFullYear() : ''}${r.verified ? ' · verificado' : ''}</small></div></div>`).join('');
+      box.innerHTML = rows.map((r, i) => `<div class="res" data-i="${i}"><div class="th"></div><div class="t"><b>${esc(r.name)}</b><small>${r.release_date ? new Date(r.release_date * 1000).getUTCFullYear() : ''}${r.verified ? ' · verificado' : ''}${(() => { const d = findDup(r.name, r.id); return d ? ` · <span class="dup">${esc(dupText(d))}</span>` : ''; })()}</small></div></div>`).join('');
       rows.forEach((r, i) => firstCover(r.id).then(u => {
         const el = box.querySelector(`.res[data-i="${i}"] .th`);
         if (el && u) el.innerHTML = `<img src="${esc(u)}" alt="" referrerpolicy="no-referrer">`;
@@ -716,6 +980,7 @@ function openAdd(){
       box.onclick = async e => {
         const row = e.target.closest('.res'); if (!row || row.classList.contains('added')) return;
         const r = rows[+row.dataset.i];
+        if (findDup(r.name, r.id) && !row.dataset.ok){ row.dataset.ok = 1; row.querySelector('small').innerHTML = '<span class="dup">Ya lo tienes. Pulsa otra vez para añadirlo igualmente</span>'; return; }
         const cover = await firstCover(r.id);
         addGame({title: r.name, sgdbId: r.id, cover, ...opts()});
         row.classList.add('added'); row.querySelector('small').textContent = '✓ añadido'; toast(`«${r.name}» añadido`);
@@ -756,7 +1021,8 @@ function openDetail(g){
     <div class="tags" id="dtags">${allTags().map(t => `<button data-t="${esc(t)}" class="${g.tags.includes(t) ? 'on' : ''}">${esc(t)}</button>`).join('')}</div>
     <input id="dtn" placeholder="Nueva etiqueta (Enter para añadir)" maxlength="24">
     <label>${NOTE_LABEL[g.status] || 'Notas'}</label><textarea id="dno" rows="3" placeholder="Opcional">${esc(g.notes)}</textarea>
-    <div class="btnrow"><button id="ddel" class="danger">Eliminar</button></div>`);
+    <div class="btnrow"><button id="ddel" class="danger">Eliminar</button></div>
+    <div class="hint">Los juegos eliminados van a la papelera (Ajustes → Datos y copias) y se guardan 30 días.</div>`);
     $('#sheet').scrollTop = keep; bind();
   };
   const bind = () => {
@@ -785,7 +1051,7 @@ function openDetail(g){
       touch(g); draw();
     };
     $('#ddel').onclick = () => {
-      if ($('#ddel').dataset.sure){ removeGame(g); closeSheet(); toast('Juego eliminado'); }
+      if ($('#ddel').dataset.sure){ removeGame(g); closeSheet(); toast(`«${g.title}» movido a la papelera`, {label:'Deshacer', fn:() => restoreGame(g)}); }
       else { $('#ddel').dataset.sure = 1; $('#ddel').textContent = 'Pulsa otra vez para confirmar'; }
     };
     $('#dth').onclick = () => openCovers(g, draw);
@@ -809,11 +1075,27 @@ function openRandom(skipId){
   $('#rp').onclick = () => { setStatus(g, 'playing'); closeSheet(); };
 }
 
-/* --- estadísticas --- */
+/* --- estadísticas, reto anual y resumen del año --- */
+const MONTHS = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+let statsYear = new Date().getFullYear();
+function yearStats(y){
+  const done = list().filter(g => g.status === 'done' && (g.finished || '').startsWith(String(y)));
+  const rated = done.filter(g => g.rating);
+  const byPlat = {}; done.forEach(g => { const p = g.platform || 'Sin plataforma'; byPlat[p] = (byPlat[p] || 0) + 1; });
+  const topPlat = Object.entries(byPlat).sort((a, b) => b[1] - a[1])[0] || null;
+  const byMonth = Array(12).fill(0); done.forEach(g => { const m = +g.finished.slice(5, 7); if (m >= 1 && m <= 12) byMonth[m - 1]++; });
+  const mx = Math.max(...byMonth), topMonth = mx ? byMonth.indexOf(mx) : -1;
+  const best = [...done].filter(g => g.rating).sort((a, b) => b.rating - a.rating || b.finished.localeCompare(a.finished))[0] || null;
+  return {y, n: done.length, avg: rated.length ? rated.reduce((a, g) => a + g.rating, 0) / rated.length : 0, topPlat, topMonth, topMonthN: mx, best};
+}
 function openStats(){
-  const all = list(), year = String(new Date().getFullYear());
+  const all = list(), curY = new Date().getFullYear(), year = String(curY), y = statsYear, ys = yearStats(y);
+  const minY = Math.min(curY, ...all.map(g => +(g.finished || '').slice(0, 4)).filter(n => n > 1990));
+  const goal = metaGoal(y), pct = goal ? Math.min(100, Math.round(ys.n / goal * 100)) : 0;
+  const dayOfYear = Math.max(1, Math.floor((Date.now() - new Date(curY, 0, 0)) / 864e5));
+  const pace = goal && y === curY && ys.n > 0 && dayOfYear > 20 ? Math.round(ys.n / dayOfYear * 365) : 0;
   const done = all.filter(g => g.status === 'done');
-  const byYear = {}; done.forEach(g => { const y = (g.finished || '').slice(0, 4) || 'Sin fecha'; byYear[y] = (byYear[y] || 0) + 1; });
+  const byYear = {}; done.forEach(g => { const yy = (g.finished || '').slice(0, 4) || 'Sin fecha'; byYear[yy] = (byYear[yy] || 0) + 1; });
   const dropped = all.filter(g => g.status === 'dropped').length;
   const abandon = done.length + dropped ? Math.round(dropped / (done.length + dropped) * 100) + ' %' : '—';
   const rated = all.filter(g => g.rating);
@@ -828,7 +1110,22 @@ function openStats(){
   };
   const plats = {}; all.filter(g => g.status !== 'wish').forEach(g => { const p = g.platform || 'Sin plataforma'; plats[p] = (plats[p] || 0) + 1; });
   openSheet(`<div class="top"><h2>Estadísticas</h2><button id="x">Cerrar</button></div>
-    <div class="kpis">
+    <div class="yearbar"><button id="yprev" aria-label="Año anterior" ${y <= minY ? 'disabled' : ''}>‹</button><b id="yval">${y}</b><button id="ynext" aria-label="Año siguiente" ${y >= curY ? 'disabled' : ''}>›</button></div>
+    <div class="reto" id="reto">
+      ${goal ? `<div class="rh"><b>Reto ${y}</b><span>${ys.n} de ${goal}</span></div><div class="pgbar"><i style="width:${pct}%"></i></div>
+        <div class="hint">${ys.n >= goal ? '¡Reto cumplido!' : `Te faltan ${goal - ys.n}`}${pace ? ` · al ritmo actual llegarías a unos ${pace}` : ''}</div><button id="gedit">Cambiar reto</button>`
+      : `<div class="rh"><b>Reto ${y}</b></div><div class="hint" style="margin-top:0">Ponte una meta de juegos completados para este año.</div><button id="gedit" class="pri">Poner un reto</button>`}
+      <div id="gform" hidden><input id="gin" type="number" min="1" max="999" value="${goal || 12}" aria-label="Juegos a completar"><button id="gsave" class="pri">Guardar</button>${goal ? '<button id="gdel">Quitar</button>' : ''}</div>
+    </div>
+    <div class="kpis" id="kpis-year">
+      <div class="kpi"><b>${ys.n}</b><small>completados en ${y}</small></div>
+      <div class="kpi"><b>${ys.avg ? ys.avg.toFixed(1) + ' ★' : '—'}</b><small>nota media del año</small></div>
+      <div class="kpi"><b style="font-size:17px">${ys.topPlat ? esc(ys.topPlat[0]) : '—'}</b><small>plataforma estrella${ys.topPlat ? ` (${ys.topPlat[1]})` : ''}</small></div>
+      <div class="kpi"><b style="font-size:17px">${ys.topMonth >= 0 ? MONTHS[ys.topMonth] : '—'}</b><small>mes más activo${ys.topMonth >= 0 ? ` (${ys.topMonthN})` : ''}</small></div>
+    </div>
+    <div class="btnrow"><button id="yimg" ${ys.n ? '' : 'disabled'}>Resumen de ${y} en imagen</button></div>
+    <h3>En total</h3>
+    <div class="kpis" id="kpis-all">
       <div class="kpi"><b>${byYear[year] || 0}</b><small>completados en ${year}</small></div>
       <div class="kpi"><b>${done.length}</b><small>completados en total</small></div>
       <div class="kpi"><b>${abandon}</b><small>tasa de abandono</small></div>
@@ -839,8 +1136,72 @@ function openStats(){
     <h3>Por lista</h3>${bars(STATUSES.map(s => [s.label, all.filter(g => g.status === s.id).length, s.c]))}
     <h3>Completados por año</h3>${bars(Object.entries(byYear).sort((a, b) => b[0].localeCompare(a[0])))}
     <h3>Juegos por plataforma</h3>${bars(Object.entries(plats).sort((a, b) => b[1] - a[1]).slice(0, 8))}
-    <div class="hint" style="margin-top:14px">La media hasta completar usa las fechas de inicio y fin. Los juegos añadidos antes de esta versión no tienen fechas: puedes ponerlas en sus detalles.</div>`);
+    <div class="hint" style="margin-top:14px">La media hasta completar y el resumen del año usan las fechas de inicio y fin de cada juego. Los juegos añadidos antes de que existieran las fechas no cuentan: puedes ponérselas en sus detalles.</div>`);
   $('#x').onclick = closeSheet;
+  $('#yprev').onclick = () => { statsYear--; openStats(); };
+  $('#ynext').onclick = () => { statsYear++; openStats(); };
+  $('#gedit').onclick = () => { $('#gform').hidden = false; $('#gedit').hidden = true; $('#gin').focus(); $('#gin').select(); };
+  $('#gsave').onclick = () => { const n = Math.round(+$('#gin').value); if (!(n > 0)) return toast('Pon un número de juegos mayor que 0'); setGoal(y, n); openStats(); };
+  const gd = $('#gdel'); if (gd) gd.onclick = () => { setGoal(y, 0); openStats(); };
+  $('#yimg').onclick = () => openYearCard(y);
+}
+
+/* imagen del resumen del año (se dibuja en un canvas, todo en el dispositivo) */
+function rrect(x, a, b, w, h, r){ x.beginPath(); x.moveTo(a + r, b); x.arcTo(a + w, b, a + w, b + h, r); x.arcTo(a + w, b + h, a, b + h, r); x.arcTo(a, b + h, a, b, r); x.arcTo(a, b, a + w, b, r); x.closePath(); }
+function drawYearCard(ys, goal){
+  const W = 1080, H = 1350, c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d');
+  const F = 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
+  const bg = x.createLinearGradient(0, 0, W, H); bg.addColorStop(0, '#2b2170'); bg.addColorStop(.55, '#14162b'); bg.addColorStop(1, '#0f1017'); x.fillStyle = bg; x.fillRect(0, 0, W, H);
+  const glow = (cx, cy, r, col) => { const g = x.createRadialGradient(cx, cy, 0, cx, cy, r); g.addColorStop(0, col); g.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = g; x.fillRect(0, 0, W, H); };
+  glow(1000, 120, 620, 'rgba(63,167,255,.28)'); glow(80, 1280, 700, 'rgba(124,108,255,.30)');
+  const brand = x.createLinearGradient(0, 0, W, 0); brand.addColorStop(0, '#8b7bff'); brand.addColorStop(1, '#3fa7ff');
+  // logotipo
+  rrect(x, 72, 72, 104, 104, 28); const lg = x.createLinearGradient(72, 72, 176, 176); lg.addColorStop(0, '#8b7bff'); lg.addColorStop(1, '#3fa7ff'); x.fillStyle = lg; x.fill();
+  [[100, 62, 62], [122, 62, 40], [144, 62, 18]].forEach(([yy, w, f]) => { x.fillStyle = 'rgba(255,255,255,.3)'; rrect(x, 93, yy, w, 11, 5.5); x.fill(); x.fillStyle = '#fff'; rrect(x, 93, yy, f, 11, 5.5); x.fill(); });
+  x.textBaseline = 'alphabetic'; x.font = `800 54px ${F}`; x.fillStyle = '#fff'; x.fillText('Backlog', 200, 144);
+  const bw = x.measureText('Backlog').width; x.fillStyle = brand; x.fillText('MGR', 200 + bw, 144);
+  // título y cifra principal
+  x.fillStyle = '#fff'; x.font = `800 96px ${F}`; x.fillText(`Mi ${ys.y} en juegos`, 72, 390);
+  x.font = `800 360px ${F}`; x.fillStyle = brand; x.fillText(String(ys.n), 64, 700);
+  x.font = `600 58px ${F}`; x.fillStyle = 'rgba(255,255,255,.72)'; x.fillText(ys.n === 1 ? 'juego completado' : 'juegos completados', 72, 776);
+  let yy = 880;
+  if (goal){
+    x.font = `700 42px ${F}`; x.fillStyle = '#fff'; x.fillText(`Reto: ${ys.n} de ${goal}`, 72, yy);
+    rrect(x, 72, yy + 26, 936, 30, 15); x.fillStyle = 'rgba(255,255,255,.14)'; x.fill();
+    const w = Math.max(30, 936 * Math.min(1, ys.n / goal)); rrect(x, 72, yy + 26, w, 30, 15); x.fillStyle = brand; x.fill();
+    yy += 110;
+  } else yy += 20;
+  const fit = (t, maxW) => { while (t.length > 2 && x.measureText(t).width > maxW) t = t.slice(0, -2).trimEnd() + '…'; return t; };
+  const rows = [
+    ['Nota media', ys.avg ? ys.avg.toFixed(1) + ' ★' : '—'],
+    ['Plataforma estrella', ys.topPlat ? ys.topPlat[0] : '—'],
+    ['Mes más activo', ys.topMonth >= 0 ? MONTHS[ys.topMonth] : '—'],
+    ['Mejor valorado', ys.best ? ys.best.title : '—']
+  ];
+  rows.forEach(([k, v], i) => {
+    const ry = yy + i * 72;
+    x.font = `500 40px ${F}`; x.fillStyle = 'rgba(255,255,255,.6)'; x.textAlign = 'left'; x.fillText(k, 72, ry);
+    x.font = `700 42px ${F}`; x.fillStyle = '#fff'; x.textAlign = 'right'; x.fillText(fit(v, 520), 1008, ry);
+    x.fillStyle = 'rgba(255,255,255,.1)'; x.fillRect(72, ry + 22, 936, 2);
+  });
+  x.textAlign = 'center'; x.font = `500 32px ${F}`; x.fillStyle = 'rgba(255,255,255,.45)'; x.fillText('Hecho con BacklogMGR', W / 2, 1312);
+  return c;
+}
+function openYearCard(y){
+  const goal = metaGoal(y), cv = drawYearCard(yearStats(y), goal), name = `backlogmgr-${y}.png`;
+  const canShare = !!(navigator.canShare && navigator.share);
+  openSheet(`<div class="top"><h2>Resumen de ${y}</h2><button id="x">Atrás</button></div>
+    <img id="ypv" alt="Resumen de ${y}" style="width:100%;border-radius:14px;display:block;box-shadow:0 12px 30px #0008">
+    <div class="btnrow"><button id="yshare" class="pri">${canShare ? 'Compartir' : 'Guardar imagen'}</button>${canShare ? '<button id="ysave">Guardar imagen</button>' : ''}</div>`);
+  $('#ypv').src = cv.toDataURL('image/png');
+  $('#x').onclick = openStats;
+  const save = blob => { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); };
+  $('#yshare').onclick = () => cv.toBlob(async blob => {
+    const file = new File([blob], name, {type:'image/png'});
+    if (canShare && navigator.canShare({files:[file]})){ try { await navigator.share({files:[file], title:`Mi ${y} en juegos`}); return; } catch(e){ if (e.name === 'AbortError') return; } }
+    save(blob);
+  }, 'image/png');
+  const sv = $('#ysave'); if (sv) sv.onclick = () => cv.toBlob(save, 'image/png');
 }
 
 /* --- elegir portada (solo desde SteamGridDB) --- */
@@ -879,25 +1240,79 @@ async function openCovers(g, back){
   if (g.sgdbId){ covers(g.sgdbId); find(g.title, false); } else find(g.title, true);
 }
 
+/* --- copiar listas como texto --- */
+function listsText(onlyTab){
+  const d = new Date(), head = `BacklogMGR · ${d.getDate()} ${MONTHS[d.getMonth()].slice(0, 3)} ${d.getFullYear()}`;
+  const line = g => '• ' + g.title + (g.platform ? ' — ' + g.platform : '') + (g.progress > 0 && g.progress < 100 ? ` — ${g.progress} %` : '') + (g.rating ? ' — ' + '★'.repeat(g.rating) : '');
+  const blocks = (onlyTab ? [ST[onlyTab]] : STATUSES).map(s => {
+    const items = list().filter(g => g.status === s.id).sort(s.id === 'backlog' ? SORTS.manual : SORTS.title);
+    return items.length || onlyTab ? `${s.label} (${items.length})\n${items.map(line).join('\n') || '(vacía)'}` : '';
+  }).filter(Boolean);
+  return head + '\n\n' + blocks.join('\n\n');
+}
+function openTextSheet(t){
+  openSheet(`<div class="top"><h2>Copiar texto</h2><button id="x">Atrás</button></div><div class="hint">No se pudo copiar automáticamente. Selecciona el texto y cópialo:</div><textarea id="ctxt" rows="12" readonly>${esc(t)}</textarea>`);
+  $('#x').onclick = () => openSettings('data'); $('#ctxt').focus(); $('#ctxt').select();
+}
+async function copyLists(tab){ const t = listsText(tab); if (await copyText(t)) toast('Copiado: ya puedes pegarlo donde quieras'); else openTextSheet(t); }
+
+/* --- papelera --- */
+function openTrash(){
+  const items = trashList();
+  openSheet(`<div class="top"><h2>Papelera</h2><button id="x">Atrás</button></div>
+    <div class="hint">Los juegos eliminados se guardan 30 días y se pueden restaurar.</div>
+    <div id="tl">${items.length ? items.map(g => {
+      const d = Math.floor((Date.now() - g.updated) / 864e5), left = Math.max(0, 30 - d);
+      return `<div class="res" data-id="${g.id}"><div class="th">${coverHTML(g)}</div><div class="t"><b>${esc(g.title)}</b><small>${esc([g.platform, ST[g.status] && ST[g.status].label].filter(Boolean).join(' · '))} · ${d === 0 ? 'hoy' : 'hace ' + d + ' d'} · quedan ${left} d</small></div><button data-act="restore">Restaurar</button></div>`;
+    }).join('') : '<div class="hint">La papelera está vacía.</div>'}</div>
+    ${items.length ? '<div class="btnrow"><button id="tempty" class="danger">Vaciar papelera</button></div>' : ''}`);
+  $('#x').onclick = () => openSettings('data');
+  $('#tl').onclick = e => {
+    const b = e.target.closest('[data-act=restore]'); if (!b) return;
+    const g = D.games[b.closest('.res').dataset.id]; if (!g) return;
+    restoreGame(g); toast(`«${g.title}» restaurado`); openTrash();
+  };
+  const te = $('#tempty');
+  if (te) te.onclick = () => {
+    if (!te.dataset.sure){ te.dataset.sure = 1; te.textContent = 'Pulsa otra vez: se borran para siempre'; return; }
+    trashList().forEach(g => strip(g, true)); save(); toast('Papelera vaciada'); openTrash();
+  };
+}
+
 /* --- ajustes --- */
-function openSettings(){
+function openSettings(which){   // which: sección que debe quedar abierta al volver desde otra pantalla ('data' | 'sync')
+  which = typeof which === 'string' ? which : '';
+  const trashN = trashList().length;
   openSheet(`
     <div class="top"><h2>Ajustes</h2><button id="x">Cerrar</button></div>
-    <label>Clave API de SteamGridDB</label>
-    <input id="sk" type="password" value="${esc(S.sgdbKey)}" placeholder="Pega aquí tu clave" autocomplete="off">
-    <div class="hint">Consíguela en <a href="https://www.steamgriddb.com/profile/preferences/api" target="_blank" rel="noopener">steamgriddb.com → Preferences → API</a>. Se guarda solo en este dispositivo.</div>
-    <label>Dirección del Worker</label>
-    <input id="sp" value="${esc(proxyUrl())}" placeholder="${esc(DEFAULT_PROXY)}" autocomplete="off" spellcheck="false">
-    <div class="hint">Ya viene configurada. Solo cámbiala si algún día cambias de Worker.</div>
-    <div class="btnrow"><button id="test">Probar conexión</button></div>
-    <div id="tres"></div>
-    <div id="syncbox"></div>
-    <label style="margin-top:18px">Datos (${list().length} juegos)</label>
-    <div class="btnrow" style="margin-top:0"><button id="exp">Exportar copia</button><button id="imp">Importar copia</button></div>
-    <input id="impf" type="file" accept=".json,application/json" hidden>
-    <div class="hint">Tus datos se guardan en este navegador y, si activas la sincronización, también (cifrados) en tu nube. Haz copias de vez en cuando: al borrar los datos del navegador se pierden los locales.</div>`);
+    <details class="acc" ${S.sgdbKey ? '' : 'open'}><summary>SteamGridDB y Worker</summary><div class="in">
+      <label>Clave API de SteamGridDB</label>
+      <input id="sk" type="password" value="${esc(S.sgdbKey)}" placeholder="Pega aquí tu clave" autocomplete="off">
+      <div class="hint">Consíguela en <a href="https://www.steamgriddb.com/profile/preferences/api" target="_blank" rel="noopener">steamgriddb.com → Preferences → API</a>. Se guarda solo en este dispositivo.</div>
+      <label>Dirección del Worker</label>
+      <input id="sp" value="${esc(proxyUrl())}" placeholder="${esc(DEFAULT_PROXY)}" autocomplete="off" spellcheck="false">
+      <div class="hint">Ya viene configurada. Solo cámbiala si algún día cambias de Worker.</div>
+      <div class="btnrow"><button id="test">Probar conexión</button></div>
+      <div id="tres"></div>
+    </div></details>
+    <details class="acc" ${S.syncCode && which !== 'sync' ? '' : 'open'}><summary>Sincronización <small id="syncsum"></small></summary><div class="in"><div id="syncbox"></div></div></details>
+    <details class="acc"><summary>Apariencia <small>${{auto:'Automático', dark:'Oscuro', light:'Claro'}[S.theme] || 'Oscuro'}</small></summary><div class="in">
+      <label>Tema</label>
+      <div class="seg" id="themeseg">${[['auto', 'Automático'], ['dark', 'Oscuro'], ['light', 'Claro']].map(([v, l]) => `<button data-t="${v}" class="${(S.theme || 'dark') === v ? 'on' : ''}" style="--c:var(--accent)">${l}</button>`).join('')}</div>
+      <div class="hint">Se guarda solo en este dispositivo. «Automático» sigue el modo claro u oscuro de tu móvil o PC.</div>
+    </div></details>
+    <details class="acc" ${which === 'data' ? 'open' : ''}><summary>Datos y copias <small>${list().length} juegos</small></summary><div class="in">
+      <div class="btnrow" style="margin-top:0"><button id="exp">Exportar copia</button><button id="imp">Importar copia</button></div>
+      <input id="impf" type="file" accept=".json,application/json" hidden>
+      <div class="btnrow" style="margin-top:8px"><button id="copyall">Copiar todas las listas</button><button id="copycur">Copiar «${esc(ST[UI.tab].label)}»</button></div>
+      <div class="btnrow" style="margin-top:8px"><button id="trashbtn">Papelera${trashN ? ` (${trashN})` : ''}</button></div>
+      <div class="hint">Tus datos se guardan en este navegador y, si activas la sincronización, también (cifrados) en tu nube. Haz copias de vez en cuando: al borrar los datos del navegador se pierden los locales.</div>
+    </div></details>`);
   $('#x').onclick = closeSheet;
   renderSyncPanel();
+  $('#trashbtn').onclick = openTrash;
+  $('#copyall').onclick = () => copyLists(); $('#copycur').onclick = () => copyLists(UI.tab);
+  $('#themeseg').onclick = e => { const b = e.target.closest('[data-t]'); if (!b) return; S.theme = b.dataset.t; saveS(); applyTheme(); openSettings(which); document.querySelectorAll('details.acc')[2].open = true; };
   const commit = () => { S.sgdbKey = $('#sk').value.trim(); const v = $('#sp').value.trim(); S.proxy = (!v || v === DEFAULT_PROXY) ? '' : v; saveS(); renderSyncPanel(); };
   $('#sk').onchange = commit; $('#sp').onchange = commit;
   $('#test').onclick = async () => {
@@ -906,7 +1321,7 @@ function openSettings(){
     catch(e){ out.innerHTML = `<div class="status-line ko">${esc(e.message)}</div>`; }
   };
   $('#exp').onclick = () => {
-    const blob = new Blob([JSON.stringify({app:'backlog', version:2, games:Object.fromEntries(Object.entries(D.games).filter(([, g]) => !g.deleted))}, null, 1)], {type:'application/json'});
+    const blob = new Blob([JSON.stringify({app:'backlog', version:3, games:Object.fromEntries(Object.entries(D.games).filter(([, g]) => !g.deleted)), meta:D.meta}, null, 1)], {type:'application/json'});
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
     a.download = 'backlog-' + new Date().toISOString().slice(0, 10) + '.json'; document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 2000);
@@ -923,6 +1338,7 @@ function openSettings(){
         const cur = D.games[id];
         if (!cur || cur.deleted || r.updated > (cur.updated || 0)){ if (cur && cur.deleted) r.updated = Date.now(); D.games[id] = r; n++; }
       }
+      if (j.meta){ const rm = cleanMeta(j.meta); if (rm.updated > D.meta.updated) D.meta = rm; }
       save(); render(); toast(`${n} juegos importados`); closeSheet();
     } catch(_){ toast('Ese archivo no parece una copia válida'); }
   };
@@ -936,12 +1352,13 @@ window.addEventListener('hashchange', checkSyncLink);   // enlace pulsado con la
 
 /* «Atrás»: cierra la ventana abierta; si no hay ninguna y no estás en el inicio, vuelve al inicio; en el inicio, sale como siempre */
 const isHome = () => UI.tab === 'playing' && !UI.q && !UI.plat && !UI.tag;
-function goHome(){ UI.tab = 'playing'; UI.q = ''; UI.plat = ''; UI.tag = ''; $('#q').value = ''; render(); $('#main').scrollTop = 0; }
+function goHome(){ endSel(); UI.tab = 'playing'; UI.q = ''; UI.plat = ''; UI.tag = ''; $('#q').value = ''; render(); $('#main').scrollTop = 0; }
 const guard = () => history.pushState({bm:'app'}, '', location.href);
 history.replaceState({bm:'base'}, '', location.href); guard();
 window.addEventListener('popstate', e => {
   if (!e.state) return;   // navegación a un fragmento (#…), no es «atrás»
   if (!$('#wrap').hidden){ closeSheet(); guard(); return; }
+  if (UI.selecting){ setSelecting(false); guard(); return; }
   if (!isHome()){ goHome(); guard(); return; }
   history.back();
 });

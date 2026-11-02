@@ -36,32 +36,70 @@ const text = (msg, status, cors) => new Response(msg, {status, headers: cors});
 const json = (obj, cors) => new Response(JSON.stringify(obj), {headers: {...cors, 'Content-Type': 'application/json'}});
 
 // ---------- sincronización ----------
+// /sync                      → comprobación
+// /sync/<id>                 → GET / PUT / DELETE de los datos cifrados
+// /sync/<id>/snaps           → GET: fechas de las copias diarias
+// /sync/<id>/snap/<AAAAMMDD> → GET / PUT de una copia diaria (caduca a los 14 días)
+const SNAP_TTL = 14 * 24 * 3600;
+
 async function sync(req, env, url, cors) {
   if (!env.SYNC) return text('KV no enlazado: falta el binding SYNC', 500, cors);
-  const id = url.pathname.slice('/sync/'.length);
-  if (url.pathname === '/sync' || url.pathname === '/sync/') return json({ok: true, kv: true}, cors);
+  const parts = url.pathname.split('/').filter(Boolean);      // ['sync', id, ...]
+  if (parts.length === 1) return json({ok: true, kv: true}, cors);
+  const id = parts[1];
   if (!/^[0-9a-f]{64}$/.test(id)) return text('bad id', 400, cors);
   const key = 'd:' + id;
 
-  if (req.method === 'GET') {
-    const v = await env.SYNC.get(key);
-    if (v === null) return text('not found', 404, cors);
-    return new Response(v, {headers: {...cors, 'Content-Type': 'application/json', 'Cache-Control': 'no-store'}});
+  if (parts.length === 2) {
+    if (req.method === 'GET') {
+      const v = await env.SYNC.get(key);
+      if (v === null) return text('not found', 404, cors);
+      return new Response(v, {headers: {...cors, 'Content-Type': 'application/json', 'Cache-Control': 'no-store'}});
+    }
+    if (req.method === 'PUT') {
+      const body = await readBody(req, cors); if (body instanceof Response) return body;
+      await env.SYNC.put(key, body);
+      return json({ok: true}, cors);
+    }
+    if (req.method === 'DELETE') {
+      await env.SYNC.delete(key);
+      const l = await env.SYNC.list({prefix: 's:' + id + ':'});
+      for (const k of l.keys) await env.SYNC.delete(k.name);
+      return json({ok: true}, cors);
+    }
+    return text('method not allowed', 405, cors);
   }
-  if (req.method === 'PUT') {
-    if ((+req.headers.get('Content-Length') || 0) > MAX_BYTES) return text('too large', 413, cors);
-    const body = await req.text();
-    if (body.length > MAX_BYTES) return text('too large', 413, cors);
-    // Comprobación barata (sin interpretar el JSON entero, para no gastar CPU)
-    if (!body.startsWith('{"v":1,"iv":"')) return text('bad body', 400, cors);
-    await env.SYNC.put(key, body);
-    return json({ok: true}, cors);
+
+  if (parts.length === 3 && parts[2] === 'snaps' && req.method === 'GET') {
+    const l = await env.SYNC.list({prefix: 's:' + id + ':'});
+    return json({dates: l.keys.map(k => k.name.slice(-8)).sort().reverse()}, cors);
   }
-  if (req.method === 'DELETE') {
-    await env.SYNC.delete(key);
-    return json({ok: true}, cors);
+
+  if (parts.length === 4 && parts[2] === 'snap' && /^\d{8}$/.test(parts[3])) {
+    const sk = 's:' + id + ':' + parts[3];
+    if (req.method === 'GET') {
+      const v = await env.SYNC.get(sk);
+      if (v === null) return text('not found', 404, cors);
+      return new Response(v, {headers: {...cors, 'Content-Type': 'application/json', 'Cache-Control': 'no-store'}});
+    }
+    if (req.method === 'PUT') {
+      if (await env.SYNC.get(sk) !== null) return json({ok: true, kept: true}, cors);   // la primera copia del día es la que vale
+      const body = await readBody(req, cors); if (body instanceof Response) return body;
+      await env.SYNC.put(sk, body, {expirationTtl: SNAP_TTL});
+      return json({ok: true}, cors);
+    }
+    return text('method not allowed', 405, cors);
   }
-  return text('method not allowed', 405, cors);
+  return text('not found', 404, cors);
+}
+
+async function readBody(req, cors) {
+  if ((+req.headers.get('Content-Length') || 0) > MAX_BYTES) return text('too large', 413, cors);
+  const body = await req.text();
+  if (body.length > MAX_BYTES) return text('too large', 413, cors);
+  // Comprobación barata (sin interpretar el JSON entero, para no gastar CPU)
+  if (!body.startsWith('{"v":1,"iv":"')) return text('bad body', 400, cors);
+  return body;
 }
 
 // ---------- proxy de SteamGridDB ----------
