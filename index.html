@@ -292,7 +292,8 @@ nav .sh{display:none}
 .swatches{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.swatches button{width:34px;height:34px;padding:0;border-radius:50%;border:2px solid transparent}.swatches button.on{border-color:var(--text)}
 .swatches input[type=color]{width:42px;height:34px;padding:2px;border-radius:10px}
 .tnav{display:none}.tonly{display:grid}
-nav button.tnav.on{color:var(--text)}nav button.tnav.on::before{background:linear-gradient(180deg,#ef5b6b,#f5a524 35%,#e8d44d 65%,#3ecf8e)}
+nav button.tnav.on{color:var(--text)}
+nav button.tnav.on .t0{fill:#ef5b6b}nav button.tnav.on .t2{fill:#f5a524}nav button.tnav.on .t3{fill:#3ecf8e}nav button.tnav.on::before{background:linear-gradient(180deg,#ef5b6b,#f5a524 35%,#e8d44d 65%,#3ecf8e)}
 @media(min-width:900px){#tiers{left:228px}.tnav{display:flex}.tonly{display:none!important}.tt{width:70px;height:105px}.tstrip.insend::after{height:105px}.tstrip,.tstrip.pool{min-height:116px}.tlab{width:84px}.tbody{max-width:1100px;width:100%;margin:0 auto}}
 @media(max-width:430px){nav .lg{display:none}nav .sh{display:inline}nav button{font-size:10.5px;padding-left:0;padding-right:0}nav button .n{left:calc(50% + 6px)}}
 @media(min-width:900px){
@@ -338,7 +339,7 @@ nav button.tnav.on{color:var(--text)}nav button.tnav.on::before{background:linea
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><g fill="currentColor" stroke="none"><circle cx="8.5" cy="8.5" r="1.3"/><circle cx="15.5" cy="8.5" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="8.5" cy="15.5" r="1.3"/><circle cx="15.5" cy="15.5" r="1.3"/></g></svg>
     </button>
     <button class="ib tonly" id="btnTier" aria-label="Tier lists" title="Tier lists">
-      <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="0.75" y="0.75" width="4.5" height="4.5" rx="1.2" fill="#ef5b6b"/><rect x="6.75" y="0.75" width="4.5" height="4.5" rx="1.2" fill="#ef5b6b"/><rect x="12.75" y="0.75" width="4.5" height="4.5" rx="1.2" fill="currentColor" opacity=".22"/><rect x="18.75" y="0.75" width="4.5" height="4.5" rx="1.2" fill="currentColor" opacity=".22"/><rect x="0.75" y="6.75" width="4.5" height="4.5" rx="1.2" fill="#f5a524"/><rect x="6.75" y="6.75" width="4.5" height="4.5" rx="1.2" fill="#f5a524"/><rect x="12.75" y="6.75" width="4.5" height="4.5" rx="1.2" fill="#f5a524"/><rect x="18.75" y="6.75" width="4.5" height="4.5" rx="1.2" fill="#f5a524"/><rect x="0.75" y="12.75" width="4.5" height="4.5" rx="1.2" fill="#e8d44d"/><rect x="6.75" y="12.75" width="4.5" height="4.5" rx="1.2" fill="#e8d44d"/><rect x="12.75" y="12.75" width="4.5" height="4.5" rx="1.2" fill="currentColor" opacity=".22"/><rect x="18.75" y="12.75" width="4.5" height="4.5" rx="1.2" fill="currentColor" opacity=".22"/><rect x="0.75" y="18.75" width="4.5" height="4.5" rx="1.2" fill="#3ecf8e"/><rect x="6.75" y="18.75" width="4.5" height="4.5" rx="1.2" fill="#3ecf8e"/><rect x="12.75" y="18.75" width="4.5" height="4.5" rx="1.2" fill="#3ecf8e"/><rect x="18.75" y="18.75" width="4.5" height="4.5" rx="1.2" fill="currentColor" opacity=".22"/></svg>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect class="t0" x="2.8" y="2.6" width="4.8" height="4.8" rx="1.4" fill="currentColor" stroke="none"/><path d="M11 5h10.5"/><rect class="t2" x="2.8" y="9.6" width="4.8" height="4.8" rx="1.4" fill="currentColor" stroke="none"/><path d="M11 12h8"/><rect class="t3" x="2.8" y="16.6" width="4.8" height="4.8" rx="1.4" fill="currentColor" stroke="none"/><path d="M11 19h5.5"/></svg>
     </button>
     <button class="ib" id="btnStats" aria-label="Estadísticas" title="Estadísticas">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 20V11M12 20V4M19 20v-6"/></svg>
@@ -716,9 +717,9 @@ function similar(a, b){
   const A = x.split(' '), B = y.split(' '), n = A.filter(w => B.includes(w)).length; return 2 * n / (A.length + B.length);
 }
 function bestHltb(title, rs){ let best = null, bs = 0; for (const r of rs){ const sc = similar(title, r.name); if (sc > bs){ bs = sc; best = r; } } return bs >= 0.7 ? best : null; }
-async function hltbSearch(title, diag){
+async function hltbSearch(title, diag, page){
   const base = syncBase(); if (!base) throw new Error('Primero pon la dirección del Worker.');
-  let r; try { r = await fetch(base + '/hltb?' + (diag ? 'diag=1' : 'q=' + encodeURIComponent(title))); } catch(_){ throw new Error('No se pudo conectar con el Worker de sincronización.'); }
+  let r; try { r = await fetch(base + '/hltb?' + (diag ? 'diag=1' : 'q=' + encodeURIComponent(title) + (page > 1 ? '&page=' + page : ''))); } catch(_){ throw new Error('No se pudo conectar con el Worker de sincronización.'); }
   const j = await r.json().catch(() => null);
   if (!j) throw new Error('El Worker todavía no admite HowLongToBeat: pega el nuevo worker.js.');
   if (!j.ok){ const e = new Error(j.error==='rate' ? 'HowLongToBeat está limitando las peticiones: inténtalo de nuevo en unos minutos.' : 'HowLongToBeat no ha respondido: puede haber bloqueado al Worker o haber cambiado su web.'); e.steps = j.steps; throw e; }
@@ -840,6 +841,18 @@ function onVisible(el, fn){   // llama a fn cuando el elemento (un marcador al f
   if (!('IntersectionObserver' in window)){ fn(); return; }
   const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)){ io.disconnect(); fn(); } }, {rootMargin:'600px'}); io.observe(el);
 }
+const sgNames = new Map();
+function sgByName(name){   // para juegos que solo conocemos por nombre (de HowLongToBeat): busca su id y portada en SteamGridDB
+  if (!sgNames.has(name)) sgNames.set(name, (async () => {
+    try {
+      const rs = (await sgdb('/search/autocomplete/' + encodeURIComponent(name))) || [];
+      let m = null, bs = 0; for (const r of rs){ const sc = similar(name, r.name); if (sc > bs){ bs = sc; m = r; } }
+      return m && bs >= 0.6 ? {id:m.id, cover:await firstCover(m.id)} : {id:null, cover:''};
+    } catch(_){ return {id:null, cover:''}; }
+  })());
+  return sgNames.get(name);
+}
+const hRow = g => ({id:null, name:g.name, release_date:g.year ? Date.UTC(g.year, 0, 1) / 1000 : 0, h:g});   // fila de un juego que solo sale en HowLongToBeat
 const coverCache = new Map();
 async function grids(id, all, page){
   const q = (all ? '' : '?dimensions=600x900,342x482,660x930&types=static') + (page ? (all ? '?' : '&') + 'page=' + page : '');
@@ -1164,7 +1177,7 @@ function render(){
   const counts = {}; list().forEach(g => counts[g.status] = (counts[g.status] || 0) + 1);
   $('#nav').innerHTML = STATUSES.map(s =>
     `<button data-tab="${s.id}" class="${!q && !UI.tiers && UI.tab === s.id ? 'on' : ''}" style="--c:${s.c}">${IC[s.id]}<span class="lg">${s.label}</span><span class="sh">${s.short}</span><span class="n">${counts[s.id] || 0}</span></button>`).join('') +
-    `<button data-tier class="tnav${UI.tiers ? ' on' : ''}"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="0.75" y="0.75" width="4.5" height="4.5" rx="1.2" fill="#ef5b6b"/><rect x="6.75" y="0.75" width="4.5" height="4.5" rx="1.2" fill="#ef5b6b"/><rect x="12.75" y="0.75" width="4.5" height="4.5" rx="1.2" fill="currentColor" opacity=".22"/><rect x="18.75" y="0.75" width="4.5" height="4.5" rx="1.2" fill="currentColor" opacity=".22"/><rect x="0.75" y="6.75" width="4.5" height="4.5" rx="1.2" fill="#f5a524"/><rect x="6.75" y="6.75" width="4.5" height="4.5" rx="1.2" fill="#f5a524"/><rect x="12.75" y="6.75" width="4.5" height="4.5" rx="1.2" fill="#f5a524"/><rect x="18.75" y="6.75" width="4.5" height="4.5" rx="1.2" fill="#f5a524"/><rect x="0.75" y="12.75" width="4.5" height="4.5" rx="1.2" fill="#e8d44d"/><rect x="6.75" y="12.75" width="4.5" height="4.5" rx="1.2" fill="#e8d44d"/><rect x="12.75" y="12.75" width="4.5" height="4.5" rx="1.2" fill="currentColor" opacity=".22"/><rect x="18.75" y="12.75" width="4.5" height="4.5" rx="1.2" fill="currentColor" opacity=".22"/><rect x="0.75" y="18.75" width="4.5" height="4.5" rx="1.2" fill="#3ecf8e"/><rect x="6.75" y="18.75" width="4.5" height="4.5" rx="1.2" fill="#3ecf8e"/><rect x="12.75" y="18.75" width="4.5" height="4.5" rx="1.2" fill="#3ecf8e"/><rect x="18.75" y="18.75" width="4.5" height="4.5" rx="1.2" fill="currentColor" opacity=".22"/></svg><span class="lg">Tier lists</span><span class="sh">Tier</span></button>`;
+    `<button data-tier class="tnav${UI.tiers ? ' on' : ''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect class="t0" x="2.8" y="2.6" width="4.8" height="4.8" rx="1.4" fill="currentColor" stroke="none"/><path d="M11 5h10.5"/><rect class="t2" x="2.8" y="9.6" width="4.8" height="4.8" rx="1.4" fill="currentColor" stroke="none"/><path d="M11 12h8"/><rect class="t3" x="2.8" y="16.6" width="4.8" height="4.8" rx="1.4" fill="currentColor" stroke="none"/><path d="M11 19h5.5"/></svg><span class="lg">Tier lists</span><span class="sh">Tier</span></button>`;
   $('#title').textContent = q ? 'Resultados' : ST[UI.tab].label;
   // filtros (según los juegos existentes)
   const plats = [...new Set(list().map(g => g.platform).filter(Boolean))].sort(cmpEs);
@@ -1209,7 +1222,7 @@ function scheduleMore(){
   more.timer = setTimeout(async () => {
     const me = ++more.seq; let rows = [];
     try { rows = ((await sgdb('/search/autocomplete/' + encodeURIComponent(t))) || []); } catch(_){}
-    if (me !== more.seq) return; more.term = t; more.rows = rows; renderMore();
+    if (me !== more.seq) return; more.term = t; more.rows = rows; more.hp = 1; more.hDone = !syncBase(); more.seen = new Set(rows.map(r => nrmT(r.name))); renderMore();
   }, 500);
 }
 function renderMore(){
@@ -1219,16 +1232,27 @@ function renderMore(){
   if (S.qNew === false){ box.innerHTML = moreHead(false); return; }
   const rows = more.term === UI.q.trim() ? more.rows.filter(r => !findDup(r.name, r.id)) : [];
   if (more.term !== UI.q.trim()){ box.innerHTML = moreHead(true) + '<div class="hint">Buscando no añadidos…</div>'; return; }
-  if (!rows.length){ box.innerHTML = moreHead(true) + '<div class="hint">No hay más juegos con ese nombre.</div>'; return; }
+  if (!rows.length && more.hDone){ box.innerHTML = moreHead(true) + '<div class="hint">No hay más juegos con ese nombre.</div>'; return; }
   if (more.shownFor !== more.term){ more.shownFor = more.term; more.n = 10; }
   const one = (r, i) => `<div class="res" data-i="${i}"><div class="th"></div><div class="t"><b data-notr>${esc(r.name)}</b><small>${r.release_date ? new Date(r.release_date * 1000).getUTCFullYear() : ''}</small></div></div>`;
-  const cover = i => firstCover(rows[i].id).then(u => { const el = box.querySelector(`.res[data-i="${i}"] .th`); if (el && u) el.innerHTML = `<img src="${esc(u)}" alt="" referrerpolicy="no-referrer">`; });
+  const cover = i => (rows[i].id ? firstCover(rows[i].id) : sgByName(rows[i].name).then(x => x.cover)).then(u => { const el = box.querySelector(`.res[data-i="${i}"] .th`); if (el && u) el.innerHTML = `<img src="${esc(u)}" alt="" referrerpolicy="no-referrer">`; });
   const fill = from => {   // se cargan de 10 en 10 al llegar al final
     const old = box.querySelector('.sent'); if (old) old.remove();
     const to = Math.min(rows.length, Math.max(more.n, from));
     box.insertAdjacentHTML('beforeend', rows.slice(from, to).map((r, k) => one(r, from + k)).join(''));
     for (let i = from; i < to; i++) cover(i);
-    if (to < rows.length){ const e = document.createElement('div'); e.className = 'sent'; e.style.height = '1px'; box.appendChild(e); onVisible(e, () => { if (box.isConnected && more.shownFor === more.term){ more.n = to + 10; fill(to); } }); }
+    const mk = fn => { const e = document.createElement('div'); e.className = 'sent'; e.style.height = '1px'; box.appendChild(e); onVisible(e, fn); };
+    if (to < rows.length) mk(() => { if (box.isConnected && more.shownFor === more.term){ more.n = to + 10; fill(to); } });
+    else if (!more.hDone) mk(async () => {   // SteamGridDB devuelve una lista fija: se sigue con las páginas de HowLongToBeat
+      const term = more.term, pg = more.hp; let batch = null;
+      try { batch = await hltbSearch(term, false, pg); } catch(_){}
+      if (term !== more.term || !box.isConnected) return;
+      more.hp++;
+      if (!batch || !batch.length){ more.hDone = true; if (!rows.length) renderMore(); return; }
+      const fresh = batch.filter(g => g.name && !more.seen.has(nrmT(g.name))); fresh.forEach(g => { more.seen.add(nrmT(g.name)); more.rows.push(hRow(g)); });
+      if (batch.length < 20 || more.hp > 8) more.hDone = true;
+      more.n = rows.length + 10; renderMore();
+    });
   };
   box.innerHTML = moreHead(true); fill(0);
   box.onclick = null;
@@ -1447,28 +1471,43 @@ function openAdd(prefill){
     try {
       const data = (await sgdb('/search/autocomplete/' + encodeURIComponent(term))) || [];
       if (me !== seq || !box.isConnected) return;
-      if (!data.length){ box.innerHTML = '<div class="hint">Sin resultados. Puedes añadirlo a mano abajo.</div>'; return; }
-      const rows = data, hm = new Array(rows.length).fill(null), hpl = rows.map(() => []), hb = rows.map(() => []); let rs = null, shown = 0;
+      if (!data.length && !syncBase()){ box.innerHTML = '<div class="hint">Sin resultados. Puedes añadirlo a mano abajo.</div>'; return; }
+      const rows = data, hm = new Array(rows.length).fill(null), hpl = rows.map(() => []), hb = rows.map(() => []); let rs = null, shown = 0, hp = 1, hDone = !syncBase(); const seenN = new Set(rows.map(r => nrmT(r.name))), hpages = {};
       const rowHTML = (r, i) => `<div class="res" data-i="${i}"><div class="th"></div><div class="t"><b>${esc(r.name)}</b><small>${r.release_date ? new Date(r.release_date * 1000).getUTCFullYear() : ''}${r.verified ? ' · verificado' : ''}${(() => { const d = findDup(r.name, r.id); return d ? ` · <span class="dup">${esc(dupText(d))}</span>` : ''; })()}</small><div class="pls">${platPick('Elegir plataforma')}</div></div></div>`;
       const platStrip = i => {   // todas las de HowLongToBeat en una tira que se desliza; al final, «Otros» con toda tu lista (HowLongToBeat a veces se equivoca)
         const el = box.querySelector(`.res[data-i="${i}"] .pls`); if (!el || !hpl[i].length) return;
         el.innerHTML = hpl[i].map(x => `<button class="pc" data-p="${esc(x)}">${esc(x)}</button>`).join('') + platPick('Otros');
       };
-      const matchH = i => { if (!rs || hm[i]) return; const m = bestHltb(rows[i].name, rs); if (!m) return; hm[i] = m; hpl[i] = mapHplat(m.platforms); hb[i] = mapHplat(m.platforms, false); platStrip(i); };
+      const matchH = i => { if (hm[i]){ platStrip(i); return; } if (!rs) return; const m = bestHltb(rows[i].name, rs); if (!m) return; hm[i] = m; hpl[i] = mapHplat(m.platforms); hb[i] = mapHplat(m.platforms, false); platStrip(i); };
       const more = () => {   // se van cargando de 10 en 10 al llegar al final de la lista
         if (!box.isConnected || me !== seq) return;
         const old = box.querySelector('.sent'); if (old) old.remove();
         const from = shown; shown = Math.min(rows.length, shown + 10);
         box.insertAdjacentHTML('beforeend', rows.slice(from, shown).map((r, k) => rowHTML(r, from + k)).join(''));
         for (let i = from; i < shown; i++){
-          firstCover(rows[i].id).then(u => { const el = box.querySelector(`.res[data-i="${i}"] .th`); if (el && u) el.innerHTML = `<img src="${esc(u)}" alt="" referrerpolicy="no-referrer">`; });
+          (rows[i].id ? firstCover(rows[i].id) : sgByName(rows[i].name).then(x => x.cover)).then(u => { const el = box.querySelector(`.res[data-i="${i}"] .th`); if (el && u) el.innerHTML = `<img src="${esc(u)}" alt="" referrerpolicy="no-referrer">`; });
           matchH(i);
         }
-        if (shown < rows.length){ const e = document.createElement('div'); e.className = 'sent'; e.style.height = '1px'; box.appendChild(e); onVisible(e, more); }
+        const mk = fn => { const e = document.createElement('div'); e.className = 'sent'; e.style.height = '1px'; box.appendChild(e); onVisible(e, fn); };
+        if (shown < rows.length) mk(more);
+        else if (!hDone) mk(async () => { await pullH(); more(); if (!rows.length && hDone) box.innerHTML = '<div class="hint">Sin resultados. Puedes añadirlo a mano abajo.</div>'; });
+      };
+      // SteamGridDB devuelve una lista fija; para seguir cargando al bajar se usan las páginas de HowLongToBeat (juegos que SteamGridDB no lista)
+      const pullH = async () => {
+        if (me !== seq || !box.isConnected) return;
+        const pg = hp; let batch = null;
+        try { batch = await (hpages[pg] || (hpages[pg] = hltbSearch(term, false, pg))); } catch(_){}
+        if (me !== seq) return;
+        hp++;
+        if (!batch || !batch.length){ hDone = true; return; }
+        const fresh = batch.filter(g => g.name && !seenN.has(nrmT(g.name)));
+        fresh.forEach(g => { seenN.add(nrmT(g.name)); const i = rows.length; rows.push(hRow(g)); hm.push(g); hpl.push(mapHplat(g.platforms)); hb.push(mapHplat(g.platforms, false)); });
+        if (batch.length < 20 || hp > 8) hDone = true;
+        if (!fresh.length && !hDone) await pullH();
       };
       box.innerHTML = ''; more();
       // plataformas y duración según HowLongToBeat (una sola consulta; si falla, todo sigue como siempre)
-      if (syncBase()) hltbSearch(term).then(r => {
+      if (syncBase()) (hpages[1] = hltbSearch(term)).then(r => {
         if (me !== seq || !box.isConnected) return;
         rs = r; for (let i = 0; i < shown; i++) matchH(i);
       }).catch(() => {});
@@ -1476,8 +1515,8 @@ function openAdd(prefill){
         const i = +row.dataset.i, r = rows[i];
         if (findDup(r.name, r.id) && !row.dataset.ok){ row.dataset.ok = 1; if (sel) sel.value = ''; row.querySelector('small').innerHTML = '<span class="dup">Ya lo tienes. Pulsa otra vez para añadirlo igualmente</span>'; return; }
         row.classList.add('busy');
-        const cover = await firstCover(r.id);
-        const ng = addGame({title: r.name, sgdbId: r.id, cover, ...opts(plat)}); if (S.hAuto !== false) hltbFill(ng.id, hm[i]);
+        let sid = r.id, cover = ''; if (sid) cover = await firstCover(sid); else { const sg = await sgByName(r.name); sid = sg.id; cover = sg.cover; }
+        const ng = addGame({title: r.name, sgdbId: sid || null, cover, ...opts(plat)}); if (S.hAuto !== false) hltbFill(ng.id, hm[i]);
         row.classList.add('added'); row.querySelector('small').textContent = '✓ añadido' + (plat ? ' · ' + plat : ''); row.querySelector('.pls').innerHTML = ''; toast(`«${r.name}» añadido`);
       };
       box.onclick = e => {

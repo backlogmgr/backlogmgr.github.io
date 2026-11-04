@@ -124,7 +124,7 @@ async function proxy(req, url, cors) {
 }
 
 // ---------- HowLongToBeat (NO oficial) ----------
-// /hltb?q=<título>   → {ok, results:[{id, name, year, main, plus, full, platforms}]}   (horas; 0 = sin dato)
+// /hltb?q=<título>[&page=N]   → {ok, results:[{id, name, year, main, plus, full, platforms}]}   (horas; 0 = sin dato)
 // /hltb?diag=1       → pasos de la consulta, para ver dónde falla si algún día deja de funcionar
 // HowLongToBeat no tiene API pública y renombra su endpoint de vez en cuando (/api/search, /api/find, /api/bleed, /api/search/site…).
 // Por eso, si la ruta conocida da 404, el Worker la vuelve a descubrir leyendo los scripts de su propia web.
@@ -156,7 +156,7 @@ async function hltbDiscover(steps) {   // busca en los scripts de la web la ruta
 }
 
 const incl = (values = []) => ({mode: 'include', values});
-function hltbPayload(variant, terms, auth) {
+function hltbPayload(variant, terms, auth, page = 1) {
   const rt = {min: null, max: null}, gp = {perspective: incl(), flow: incl(), genre: incl()}, base = {userId: 0, sortCategory: 'popular', rangeCategory: 'main', rangeTime: rt, modifier: ''};
   const games = [
     {...base, platform: incl(), gameplay: gp, year: incl()},                                                                  // formato actual (facetas {mode, values})
@@ -166,7 +166,7 @@ function hltbPayload(variant, terms, auth) {
     {...base, platform: incl(), gameplay: {...gp, difficulty: incl()}, rangeYear: {min: '', max: ''}},                        // variante intermedia
     {...base, platform: '', gameplay: {perspective: '', flow: '', genre: '', difficulty: ''}, rangeYear: {min: '', max: ''}}   // formato antiguo
   ][variant];
-  const body = {searchType: 'games', searchTerms: terms, searchPage: 1, size: 20,
+  const body = {searchType: 'games', searchTerms: terms, searchPage: page, size: 20,
     searchOptions: {games, users: {sortCategory: 'postcount'}, lists: {sortCategory: 'follows'}, filter: '', sort: 0, randomizer: 0}, useCache: true};
   if (auth.hpKey) body[auth.hpKey] = auth.hpVal;
   return body;
@@ -195,6 +195,7 @@ async function hltb(url, cors) {
   const diag = url.searchParams.get('diag') === '1';
   const q = (diag ? 'Celeste' : (url.searchParams.get('q') || '')).trim().slice(0, 100);
   if (!q) return json({ok: false, error: 'missing q'}, cors);
+  const page = Math.min(10, Math.max(1, parseInt(url.searchParams.get('page'), 10) || 1));   // páginas de 20 resultados (para seguir cargando al bajar)
   const steps = [], fail = error => json({ok: false, error, steps}, cors);
   try {
     // 1) ruta + token
@@ -210,7 +211,7 @@ async function hltb(url, cors) {
     for (const v of order.slice(0, HLTB_VARIANTS)) {
       const h = {...HLTB_H, 'Content-Type': 'application/json', 'x-auth-token': auth.token};
       if (auth.hpKey) { h['x-hp-key'] = auth.hpKey; h['x-hp-val'] = auth.hpVal; }
-      const r = await fetch(HLTB + auth.path, {method: 'POST', headers: h, body: JSON.stringify(hltbPayload(v, terms, auth))});
+      const r = await fetch(HLTB + auth.path, {method: 'POST', headers: h, body: JSON.stringify(hltbPayload(v, terms, auth, page))});
       steps.push({step: 'search ' + auth.path + ' v' + v, status: r.status});
       if (r.status === 429) return fail('rate');
       if (!r.ok) { if (diag || v === order[0]) { const t = await r.text().catch(() => ''); steps.push({step: 'body v' + v, note: t.replace(/\s+/g, ' ').slice(0, 120)}); } continue; }   // 400/403 también pueden ser «formato no válido»: se prueba el siguiente
