@@ -63,7 +63,8 @@ header .ib{width:42px;height:42px;padding:0;display:grid;place-items:center;bord
 .toolbar{display:flex;flex-wrap:wrap;gap:8px;padding:2px 14px 12px}
 #q{flex:1 1 100%;min-width:0;padding-left:40px;background-repeat:no-repeat;background-position:13px center;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%239096b0' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M20 20l-3.5-3.5'/%3E%3C/svg%3E")}
-.toolbar select{flex:1 1 28%;min-width:0}
+.toolbar select{flex:1 1 40%;min-width:0}
+.sortgrp{flex:1 1 100%;display:flex;gap:8px}.sortgrp select{flex:1 1 0}
 main{flex:1;overflow-y:auto;padding:2px 14px calc(96px + env(safe-area-inset-bottom));scrollbar-width:thin;scrollbar-color:var(--sbar) transparent}
 .sec{display:flex;align-items:baseline;gap:10px;padding:4px 2px 14px}
 .sec h2{margin:0;font-size:24px;font-weight:800;letter-spacing:-.5px;display:flex;align-items:center;gap:10px}
@@ -138,6 +139,14 @@ nav .sh{display:none}
 .prog input[type=range]{padding:0;border:0;background:none;accent-color:var(--accent);height:30px;box-shadow:none}
 .prog input[type=number]{width:76px}
 .res{display:flex;gap:12px;align-items:center;padding:8px;border-radius:14px;background:var(--panel2);border:1px solid var(--line);margin-bottom:8px;cursor:pointer;transition:filter .15s,transform .12s}
+.pls{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.pc{padding:3px 9px;font-size:11px;font-weight:600;border-radius:999px;background:var(--bg);border:1px solid var(--line);color:var(--mute)}
+.pc.one{border-color:var(--accent);color:var(--text)}
+.pc:hover{border-color:var(--accent)}
+.toolbar .dir{flex:none;width:44px;padding:0;font-size:18px;line-height:1;border-radius:12px;background:var(--panel2);border:1px solid var(--line);color:var(--text)}
+.toolbar .dir:disabled{opacity:.35}
+.rnd{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.hnone{margin-top:8px;font-size:13px}.hnone summary{cursor:pointer;color:var(--mute)}.hnone button{display:block;width:100%;text-align:left;padding:6px 8px;margin-top:4px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);color:var(--text);font-size:13px}
 .res:hover{filter:brightness(1.12)}.res:active{transform:scale(.99)}
 .res .th{width:44px;aspect-ratio:2/3;border-radius:7px;overflow:hidden;background:var(--bg);flex:none}
 .res .th img{width:100%;height:100%;object-fit:cover}
@@ -239,7 +248,7 @@ nav .sh{display:none}
   header,.toolbar,main{margin-left:228px;width:calc(100% - 228px)}
   header{flex:none;justify-content:flex-end;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;z-index:8}
   .toolbar{flex:none;max-width:780px;flex-wrap:nowrap}
-  #q{flex:2}.toolbar select{flex:1}
+  #q{flex:2}.toolbar select{flex:1}.sortgrp{flex:1}
   main{padding-bottom:40px;height:calc(100% - 118px);flex:none}
   .grid{grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:18px}
   #selbar{left:calc(228px + 16px);right:16px;bottom:22px;max-width:640px}
@@ -279,16 +288,19 @@ nav .sh{display:none}
     <input id="q" type="search" placeholder="Buscar en mis juegos…" autocomplete="off">
     <select id="fPlat" aria-label="Plataforma"></select>
     <select id="fTag" aria-label="Etiqueta" hidden></select>
-    <select id="fSort" aria-label="Orden">
+    <select id="fDur" aria-label="Duración">
+      <option value="">Cualquier duración</option><option value="u5">Menos de 5 h</option><option value="u15">5–15 h</option><option value="u40">15–40 h</option><option value="o40">Más de 40 h</option><option value="none">Sin duración</option>
+    </select>
+    <div class="sortgrp"><select id="fSort" aria-label="Orden">
       <option value="updated">Recientes</option>
       <option value="title">A–Z</option>
       <option value="progress">Progreso</option>
       <option value="rating">Valoración</option>
-      <option value="time">Duración: corta primero</option>
-      <option value="timeDesc">Duración: larga primero</option>
+      <option value="time">Duración</option>
       <option value="manual">Mi orden</option>
       <option value="added">Añadidos</option>
     </select>
+    <button class="dir" id="fDir" type="button"></button></div>
   </div>
   <main id="main"><div class="sec" id="sec"><h2 id="title"></h2><span id="count"></span><button class="tbtn" id="btnSel" hidden>Seleccionar</button></div><div class="grid" id="grid"></div><div id="empty"></div></main>
   <nav id="nav"></nav>
@@ -335,7 +347,7 @@ const PLATFORMS = [
   // Valve
   'Steam Deck','Steam Machine','Steam Frame',
   // PC y móviles
-  'PC','Mac','Linux','Android','iOS',
+  'PC','Mac','Linux','Móvil','Android','iOS',
   // Clásicas emblemáticas
   'Atari 2600','Atari 5200','Atari 7800','Atari Jaguar','Atari Lynx','Neo Geo','Neo Geo Pocket Color','PC Engine / TurboGrafx-16','3DO','ColecoVision','Intellivision','WonderSwan','WonderSwan Color',
   // Ordenadores clásicos
@@ -344,7 +356,7 @@ const PLATFORMS = [
   'Arcade'
 ];
 // nombres antiguos o abreviados → nombre actual (se aplica al cargar los datos)
-const PLAT_ALIAS = {'otra':'','xbox':'Xbox (original)','xbox original':'Xbox (original)',
+const PLAT_ALIAS = {'otra':'','mobile':'Móvil','movil':'Móvil','teléfono':'Móvil','smartphone':'Móvil','xbox':'Xbox (original)','xbox original':'Xbox (original)',
   '3ds':'Nintendo 3DS','2ds':'Nintendo 3DS','new 3ds':'New Nintendo 3DS',
   'ds':'Nintendo DS (DS Lite, DSi, DSi XL)','nds':'Nintendo DS (DS Lite, DSi, DSi XL)','nintendo ds':'Nintendo DS (DS Lite, DSi, DSi XL)','nintendo dsi':'Nintendo DS (DS Lite, DSi, DSi XL)','dsi':'Nintendo DS (DS Lite, DSi, DSi XL)','ds lite':'Nintendo DS (DS Lite, DSi, DSi XL)','dsi xl':'Nintendo DS (DS Lite, DSi, DSi XL)','ds xl':'Nintendo DS (DS Lite, DSi, DSi XL)',
   'switch':'Nintendo Switch',
@@ -466,7 +478,14 @@ const EN = {
   'No se pudieron descifrar los datos de la nube con este código.':'Could not decrypt the cloud data with this code.'
 };
 const MES_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+Object.assign(EN, {'Todas las plataformas':'All platforms','Todas las etiquetas':'All tags','Cualquier duración':'Any length','Menos de 5 h':'Under 5 h','Más de 40 h':'Over 40 h',
+  'Sin duración':'No length','Móvil':'Mobile','Orden ascendente':'Sort ascending','Orden descendente':'Sort descending','Elige una plataforma':'Choose a platform','Duración':'Length',
+  'Backlog + En espera':'Backlog + On hold','No hay juegos con esos filtros.':'No games match those filters.','Lista':'List','Plataforma':'Platform','Etiqueta':'Tag',
+  'Toca uno para buscarlo a mano o ponerle la duración. También los ves con el filtro «Sin duración».':'Tap one to look it up by hand or set its length. You can also see them with the “No length” filter.'});
 const RULES = [
+  [/^quedan ~(.+)$/, (m, h) => `~${h} left`],
+  [/^Ver los (\d+) juegos? sin duración$/, (m, n) => `Show the ${n} ${n === '1' ? 'game' : 'games'} without a length`],
+  [/^Elegido entre (\d+) juegos?\.$/, (m, n) => `Picked from ${n} ${n === '1' ? 'game' : 'games'}.`],
   [/^Pulsa \+ para añadir un juego a «(.+)»\.$/, (m, l) => `Tap + to add a game to “${EN[l] || l}”.`],
   [/^(\d+(?:\.5)?) de 5$/, (m, n) => `${n} of 5`],
   [/^(\d+) de (\d+)$/, (m, a, b) => `${a} of ${b}`],
@@ -557,7 +576,7 @@ if (compactTrash()) store(KEY, D);
 let syncBusy = false, syncDirty = false, syncTimer = null;
 const save = () => { if (!store(KEY, D)) toast('No se pudo guardar: almacenamiento lleno o bloqueado'); if (syncBusy) syncDirty = true; else scheduleSync(); };
 const saveS = () => store(SKEY, S);
-const UI = {tab:'playing', q:'', plat:'', tag:'', selecting:false, sel:new Set()};
+const UI = {tab:'playing', q:'', plat:'', tag:'', dur:'', selecting:false, sel:new Set()};
 const list = () => Object.values(D.games).filter(g => !g.deleted);   // los borrados se conservan como «lápidas» para poder sincronizarlos
 
 /* ---------- toast ---------- */
@@ -637,11 +656,22 @@ async function hltbSearch(title, diag){
   if (!j.ok){ const e = new Error(j.error==='rate' ? 'HowLongToBeat está limitando las peticiones: inténtalo de nuevo en unos minutos.' : 'HowLongToBeat no ha respondido: puede haber bloqueado al Worker o haber cambiado su web.'); e.steps = j.steps; throw e; }
   return diag ? j : j.results;
 }
+const HPLAT = {'xbox series x/s':'Xbox Series X|S','xbox series x':'Xbox Series X|S','xbox series s':'Xbox Series X|S','xbox':'Xbox (original)','playstation portable':'PlayStation Portable (PSP)','psp':'PlayStation Portable (PSP)',
+  'ps vita':'PlayStation Vita','nintendo ds':'Nintendo DS (DS Lite, DSi, DSi XL)','nintendo dsi':'Nintendo DS (DS Lite, DSi, DSi XL)','super nintendo':'SNES / Super Famicom','snes':'SNES / Super Famicom','nes':'NES / Famicom',
+  'genesis':'Mega Drive / Genesis','sega genesis':'Mega Drive / Genesis','mega drive':'Mega Drive / Genesis','sega mega drive':'Mega Drive / Genesis','sega saturn':'Sega Saturn','sega dreamcast':'Dreamcast','sega master system':'Master System',
+  'sega game gear':'Game Gear','sega cd':'Mega CD / Sega CD','sega 32x':'Sega 32X','mobile':'Móvil','neo geo aes':'Neo Geo','neo geo cd':'Neo Geo','turbografx-16':'PC Engine / TurboGrafx-16','pc engine':'PC Engine / TurboGrafx-16',
+  'atari jaguar cd':'Atari Jaguar','amazon luna':'', 'google stadia':'', 'oculus quest':'', 'meta quest':'', 'geforce now':'', 'ouya':'', 'stadia':''};
+const HPLAT_OWN = Object.fromEntries(PLATFORMS.map(p => [p.toLowerCase(), p]));
+function mapHplat(arr){   // nombres de HowLongToBeat → tus plataformas (las que no existen aquí se ignoran), en el orden de tu lista
+  const out = new Set();
+  for (const n of arr || []){ const k = String(n).trim().toLowerCase(); const v = k in HPLAT ? HPLAT[k] : (HPLAT_OWN[k] || ''); if (v) out.add(v); }
+  return [...out].sort((a, b) => PLATFORMS.indexOf(a) - PLATFORMS.indexOf(b));
+}
 function hltbApply(g, r){ g.hid = r.id || 0; g.hm = r.main || 0; g.hp = r.plus || 0; g.hf = r.full || 0; if (S.hOver) g.est = 0; }
-async function hltbFill(id){   // al añadir un juego: se rellena solo y sin avisar si algo falla
+async function hltbFill(id, known){   // al añadir un juego: se rellena solo y sin avisar si algo falla (si ya se buscó al añadirlo, se reutiliza)
   try {
     const g = D.games[id]; if (!g || g.deleted || hasHltb(g)) return;
-    const m = bestHltb(g.title, await hltbSearch(g.title)); const h = D.games[id];
+    const m = known || bestHltb(g.title, await hltbSearch(g.title)); const h = D.games[id];
     if (m && h && !h.deleted){ hltbApply(h, m); touch(h); }
   } catch(_){}
 }
@@ -655,7 +685,7 @@ function hltbSummary(g){
 let bulkStop = false, bulkRun = false;
 async function hltbBulk(onProg){
   const targets = list().filter(g => g.status !== 'done' && (!hasHltb(g) || (S.hOver && g.est > 0)));
-  const res = {total: targets.length, found: 0, none: 0, err: 0, aborted: '', stopped: false}; let consec = 0, i = 0;
+  const res = {total: targets.length, found: 0, none: 0, noneList: [], err: 0, aborted: '', stopped: false}; let consec = 0, i = 0;
   bulkStop = false; bulkRun = true;
   for (const g of targets){
     if (bulkStop){ res.stopped = true; break; }
@@ -663,7 +693,8 @@ async function hltbBulk(onProg){
     if (hasHltb(g)){ g.est = 0; g.updated = Date.now(); res.found++; continue; }   // ya tenía datos: solo se quita lo manual
     try {
       const m = bestHltb(g.title, await hltbSearch(g.title)); consec = 0;
-      if (m){ hltbApply(g, m); g.updated = Date.now(); res.found++; } else res.none++;
+      if (m){ hltbApply(g, m); g.updated = Date.now(); }
+      if (m && hasHltb(g)) res.found++; else { res.none++; res.noneList.push(g.id); }   // sin coincidencia, o con ficha pero sin ningún tiempo
     } catch(e){ res.err++; if (++consec >= 3){ res.aborted = e.message; break; } }
     if (i % 5 === 0){ save(); render(); }
     await new Promise(r => setTimeout(r, 350));
@@ -970,7 +1001,8 @@ function ph(g){
   const h = hue(g.title);
   return `<div class="ph" style="background:linear-gradient(145deg,hsl(${h} 45% 32%),hsl(${(h + 50) % 360} 50% 20%))">${esc(ini)}</div>`;
 }
-const chip = g => [g.platform, hoursOf(g) ? '~' + fmtH(hoursOf(g)) : ''].filter(Boolean).join(' · ');
+const hrsChip = g => { const h = hoursOf(g); if (!h) return ''; return g.status === 'playing' && g.progress > 0 && g.progress < 100 ? 'quedan ~' + fmtH(h * (1 - g.progress / 100)) : '~' + fmtH(h); };
+const chip = g => [g.platform, hrsChip(g)].filter(Boolean).join(' · ');
 const actOf = g => g.status === 'playing' ? ['done', 'Completar', IC.done] : g.status === 'done' ? ['playing', 'Rejugar', IC.playing] : ['playing', 'Jugar', IC.playing];
 function cardHTML(g, showSt){
   const st = ST[g.status], act = actOf(g), sel = UI.selecting && UI.sel.has(g.id);
@@ -986,7 +1018,7 @@ function cardHTML(g, showSt){
 }
 function rowHTML(g, i, showSt){   // vista compacta de «Mi orden»
   const st = ST[g.status], act = actOf(g), next = i === 0 && g.status === 'backlog';
-  const sub = [showSt ? st.label : '', g.platform, hoursOf(g) ? '~' + fmtH(hoursOf(g)) : '', g.progress ? g.progress + ' %' : ''].filter(Boolean).join(' · ');
+  const sub = [showSt ? st.label : '', g.platform, hrsChip(g), g.progress ? g.progress + ' %' : ''].filter(Boolean).join(' · ');
   return `<div class="row2" data-id="${g.id}" style="--c:${st.c}">
     <span class="pos">${i + 1}</span>
     <div class="rth" data-act="open">${coverHTML(g)}</div>
@@ -1011,10 +1043,20 @@ const SORTS = {
 const DEF_SORT = {playing:'updated', backlog:'updated', wish:'updated', hold:'title', dropped:'updated', done:'rating'};
 if (!S.sorts || typeof S.sorts !== 'object') S.sorts = {};
 if (S.sort === 'manual' && !S.sorts.backlog) S.sorts.backlog = 'manual';   // quien ya usaba «Mi orden» lo conserva en Backlog
-const curSort = () => SORTS[S.sorts[UI.tab]] ? S.sorts[UI.tab] : (DEF_SORT[UI.tab] || 'updated');
+if (!S.rev || typeof S.rev !== 'object') S.rev = {};
+for (const k of Object.keys(S.sorts)) if (S.sorts[k] === 'timeDesc'){ S.sorts[k] = 'time'; S.rev[k] = true; }   // antes eran dos órdenes distintos
+const curSort = () => SORTS[S.sorts[UI.tab]] && S.sorts[UI.tab] !== 'timeDesc' ? S.sorts[UI.tab] : (DEF_SORT[UI.tab] || 'updated');
+const DEF_DIR = {updated:'desc', added:'desc', title:'asc', progress:'desc', rating:'desc', time:'asc'};   // sentido natural de cada orden
+const curRev = () => curSort() !== 'manual' && !!S.rev[UI.tab];
+const curDir = () => curSort() === 'manual' ? 'asc' : ((DEF_DIR[curSort()] === 'asc') !== curRev() ? 'asc' : 'desc');
+function curCmp(){
+  const s = curSort(), f = SORTS[s]; if (!curRev()) return f;
+  return s === 'time' ? SORTS.timeDesc : (a, b) => f(b, a);
+}
+const durOk = (g, d) => { if (!d) return true; const h = hoursOf(g); return d === 'none' ? !h : !!h && (d === 'u5' ? h < 5 : d === 'u15' ? h >= 5 && h < 15 : d === 'u40' ? h >= 15 && h < 40 : h >= 40); };
 function viewItems(){
   const q = UI.q.trim().toLowerCase();
-  return list().filter(g => (q ? g.title.toLowerCase().includes(q) : g.status === UI.tab) && (!UI.plat || g.platform === UI.plat) && (!UI.tag || g.tags.includes(UI.tag))).sort(SORTS[curSort()]);
+  return list().filter(g => (q ? g.title.toLowerCase().includes(q) : g.status === UI.tab) && (!UI.plat || g.platform === UI.plat) && (!UI.tag || g.tags.includes(UI.tag)) && durOk(g, UI.dur)).sort(curCmp());
 }
 function render(){
   const q = UI.q.trim().toLowerCase();
@@ -1026,11 +1068,14 @@ function render(){
   // filtros (según los juegos existentes)
   const plats = [...new Set(list().map(g => g.platform).filter(Boolean))].sort(cmpEs);
   if (UI.plat && !plats.includes(UI.plat)) UI.plat = '';
-  $('#fPlat').innerHTML = '<option value="">Plataforma</option>' + plats.map(p => `<option ${p === UI.plat ? 'selected' : ''}>${esc(p)}</option>`).join('');
+  $('#fPlat').innerHTML = '<option value="">Todas las plataformas</option>' + plats.map(p => `<option value="${esc(p)}"${p === UI.plat ? ' selected' : ''}>${esc(p)}</option>`).join('');
   const tagsAll = [...new Set(list().flatMap(g => g.tags))].sort((a, b) => a.localeCompare(b, 'es'));
   if (UI.tag && !tagsAll.includes(UI.tag)) UI.tag = '';
   const ft = $('#fTag'); ft.hidden = !tagsAll.length;
-  ft.innerHTML = '<option value="">Etiqueta</option>' + tagsAll.map(t => `<option ${t === UI.tag ? 'selected' : ''}>${esc(t)}</option>`).join('');
+  ft.innerHTML = '<option value="">Todas las etiquetas</option>' + tagsAll.map(t => `<option value="${esc(t)}"${t === UI.tag ? ' selected' : ''}>${esc(t)}</option>`).join('');
+  $('#fDur').value = UI.dur;
+  const fd = $('#fDir'); fd.disabled = curSort() === 'manual'; fd.textContent = curDir() === 'asc' ? '↑' : '↓';
+  fd.setAttribute('aria-label', curDir() === 'asc' ? 'Orden ascendente' : 'Orden descendente'); fd.title = fd.getAttribute('aria-label');
   $('#fSort').value = curSort();
   // lista
   const items = viewItems(), listMode = curSort() === 'manual';
@@ -1087,7 +1132,9 @@ $('#nav').addEventListener('click', e => {
 });
 $('#q').addEventListener('input', e => { endSel(); UI.q = e.target.value; render(); });
 $('#fPlat').addEventListener('change', e => { UI.plat = e.target.value; render(); });
-$('#fSort').addEventListener('change', e => { endSel(); S.sorts[UI.tab] = e.target.value; saveS(); render(); });
+$('#fSort').addEventListener('change', e => { endSel(); S.sorts[UI.tab] = e.target.value; delete S.rev[UI.tab]; saveS(); render(); });
+$('#fDur').addEventListener('change', e => { UI.dur = e.target.value; render(); });
+$('#fDir').addEventListener('click', () => { if (curSort() === 'manual') return; if (S.rev[UI.tab]) delete S.rev[UI.tab]; else S.rev[UI.tab] = true; saveS(); render(); });
 $('#fab').addEventListener('click', openAdd);
 $('#fTag').addEventListener('change', e => { UI.tag = e.target.value; render(); });
 $('#btnSettings').addEventListener('click', openSettings);
@@ -1205,7 +1252,7 @@ function openAdd(){
   $('#x').onclick = closeSheet;
   platBind('ap', () => {});
   const aq = $('#aq'); setTimeout(() => aq.focus(), 50);
-  const opts = () => { const p = platVal('ap'); S.lastPlatform = p || S.lastPlatform; saveS(); return {platform: p, status: $('#as').value}; };
+  const opts = forced => { if (forced !== undefined) return {platform: forced, status: $('#as').value}; const p = platVal('ap'); S.lastPlatform = p || S.lastPlatform; saveS(); return {platform: p, status: $('#as').value}; };
   const manLabel = () => { const t = aq.value.trim(), d = t && findDup(t, null); $('#manual').innerHTML = d ? `Ya lo tienes (${esc(dupText(d))}). Pulsa otra vez para añadirlo igualmente` : 'Añadir «<span id="mt"></span>» sin buscar'; if (!d) $('#mt').textContent = t || '…'; delete $('#manual').dataset.ok; };
   manLabel();
   $('#manual').onclick = () => {
@@ -1228,19 +1275,34 @@ function openAdd(){
       const data = (await sgdb('/search/autocomplete/' + encodeURIComponent(term))) || [];
       if (me !== seq || !box.isConnected) return;
       if (!data.length){ box.innerHTML = '<div class="hint">Sin resultados. Puedes añadirlo a mano abajo.</div>'; return; }
-      const rows = data.slice(0, 10);
-      box.innerHTML = rows.map((r, i) => `<div class="res" data-i="${i}"><div class="th"></div><div class="t"><b>${esc(r.name)}</b><small>${r.release_date ? new Date(r.release_date * 1000).getUTCFullYear() : ''}${r.verified ? ' · verificado' : ''}${(() => { const d = findDup(r.name, r.id); return d ? ` · <span class="dup">${esc(dupText(d))}</span>` : ''; })()}</small></div></div>`).join('');
+      const rows = data.slice(0, 10), hm = new Array(rows.length).fill(null), hpl = rows.map(() => []);
+      box.innerHTML = rows.map((r, i) => `<div class="res" data-i="${i}"><div class="th"></div><div class="t"><b>${esc(r.name)}</b><small>${r.release_date ? new Date(r.release_date * 1000).getUTCFullYear() : ''}${r.verified ? ' · verificado' : ''}${(() => { const d = findDup(r.name, r.id); return d ? ` · <span class="dup">${esc(dupText(d))}</span>` : ''; })()}</small><div class="pls"></div></div></div>`).join('');
       rows.forEach((r, i) => firstCover(r.id).then(u => {
         const el = box.querySelector(`.res[data-i="${i}"] .th`);
         if (el && u) el.innerHTML = `<img src="${esc(u)}" alt="" referrerpolicy="no-referrer">`;
       }));
+      // plataformas y duración según HowLongToBeat (una sola consulta; si falla, todo sigue como siempre)
+      if (syncBase()) hltbSearch(term).then(rs => {
+        if (me !== seq || !box.isConnected) return;
+        rows.forEach((r, i) => {
+          const m = bestHltb(r.name, rs); if (!m) return;
+          hm[i] = m; hpl[i] = mapHplat(m.platforms);
+          const el = box.querySelector(`.res[data-i="${i}"] .pls`); if (!el || !hpl[i].length) return;
+          el.innerHTML = hpl[i].slice(0, 10).map(x => `<button class="pc${hpl[i].length === 1 ? ' one' : ''}" data-p="${esc(x)}">${esc(x)}</button>`).join('') + (hpl[i].length > 10 ? `<span class="hint" data-notr>+${hpl[i].length - 10}</span>` : '');
+        });
+      }).catch(() => {});
       box.onclick = async e => {
         const row = e.target.closest('.res'); if (!row || row.classList.contains('added')) return;
-        const r = rows[+row.dataset.i];
+        const i = +row.dataset.i, r = rows[i], chipBtn = e.target.closest('.pc');
+        // plataforma: la que toques; si solo hay una en HowLongToBeat, esa; si hay varias, la que tengas elegida arriba
+        let plat; const sel = platVal('ap');
+        if (chipBtn) plat = chipBtn.dataset.p; else if (hpl[i].length === 1) plat = hpl[i][0]; else if (hpl[i].length > 1 && !sel){ toast('Elige una plataforma'); return; }
         if (findDup(r.name, r.id) && !row.dataset.ok){ row.dataset.ok = 1; row.querySelector('small').innerHTML = '<span class="dup">Ya lo tienes. Pulsa otra vez para añadirlo igualmente</span>'; return; }
+        const o = opts(plat);
+        if (chipBtn){ S.lastPlatform = plat; saveS(); }
         const cover = await firstCover(r.id);
-        const ng = addGame({title: r.name, sgdbId: r.id, cover, ...opts()}); if (S.hAuto !== false) hltbFill(ng.id);
-        row.classList.add('added'); row.querySelector('small').textContent = '✓ añadido'; toast(`«${r.name}» añadido`);
+        const ng = addGame({title: r.name, sgdbId: r.id, cover, ...o}); if (S.hAuto !== false) hltbFill(ng.id, hm[i]);
+        row.classList.add('added'); row.querySelector('small').textContent = '✓ añadido' + (plat ? ' · ' + plat : ''); row.querySelector('.pls').innerHTML = ''; toast(`«${r.name}» añadido`);
       };
     } catch(e){ if (me === seq) box.innerHTML = `<div class="status-line ko">${esc(e.message)}</div>`; }
   }
@@ -1333,18 +1395,34 @@ function openDetail(g){
 }
 
 /* --- ¿a qué juego ahora? --- */
-function openRandom(skipId){
-  const pool = list().filter(g => g.status === 'backlog' && (!UI.plat || g.platform === UI.plat) && (!UI.tag || g.tags.includes(UI.tag)));
-  if (!pool.length){ toast('No hay juegos en tu backlog con esos filtros'); return; }
-  const opts = pool.length > 1 ? pool.filter(g => g.id !== skipId) : pool;
-  const g = opts[Math.floor(Math.random() * opts.length)];
+const RND_SETS = {backlog:['backlog'], wish:['wish'], hold:['hold'], 'backlog+hold':['backlog', 'hold']};
+function openRandom(skipId, keep){
+  if (!keep || !UI.rnd) UI.rnd = {set:'backlog', plat:UI.plat, tag:UI.tag, dur:UI.dur};   // al abrirlo parte de los filtros de la pantalla; luego se cambian aquí
+  const f = UI.rnd, base = list().filter(g => RND_SETS[f.set].includes(g.status));
+  const plats = [...new Set(base.map(g => g.platform).filter(Boolean))].sort(cmpEs), tags = [...new Set(base.flatMap(g => g.tags))].sort((a, b) => a.localeCompare(b, 'es'));
+  if (f.plat && !plats.includes(f.plat)) f.plat = ''; if (f.tag && !tags.includes(f.tag)) f.tag = '';
+  const pool = base.filter(g => (!f.plat || g.platform === f.plat) && (!f.tag || g.tags.includes(f.tag)) && durOk(g, f.dur));
+  const opts = pool.length > 1 ? pool.filter(g => g.id !== skipId) : pool, g = opts.length ? opts[Math.floor(Math.random() * opts.length)] : null;
+  const o = (v, l, cur) => `<option value="${esc(v)}"${v === cur ? ' selected' : ''}>${esc(l)}</option>`;
   openSheet(`<div class="top"><h2>¿A qué juego ahora?</h2><button id="x">Cerrar</button></div>
-    <div class="detail-head"><div class="th">${coverHTML(g)}</div>
+    <div class="rnd">
+      <div><label>Lista</label><select id="rl">${o('backlog', 'Backlog', f.set)}${o('wish', 'Deseados', f.set)}${o('hold', 'En espera', f.set)}${o('backlog+hold', 'Backlog + En espera', f.set)}</select></div>
+      <div><label>Plataforma</label><select id="rp2"><option value="">Todas las plataformas</option>${plats.map(p => o(p, p, f.plat)).join('')}</select></div>
+      <div><label>Duración</label><select id="rd">${[['', 'Cualquier duración'], ['u5', 'Menos de 5 h'], ['u15', '5–15 h'], ['u40', '15–40 h'], ['o40', 'Más de 40 h']].map(([v, l]) => o(v, l, f.dur)).join('')}</select></div>
+      ${tags.length ? `<div><label>Etiqueta</label><select id="rt"><option value="">Todas las etiquetas</option>${tags.map(t => o(t, t, f.tag)).join('')}</select></div>` : '<div></div>'}
+    </div>
+    ${g ? `<div class="detail-head" style="margin-top:14px"><div class="th">${coverHTML(g)}</div>
       <div class="f"><h2 style="font-size:20px;margin:0 0 6px">${esc(g.title)}</h2><div class="hint">${esc(chip(g) || 'Sin plataforma')}</div></div></div>
-    <div class="hint" style="margin-top:12px">Elegido entre ${pool.length} juego${pool.length === 1 ? '' : 's'} de tu backlog${UI.plat || UI.tag ? ' (con los filtros activos)' : ''}.</div>
-    <div class="btnrow"><button id="rr">Otro</button><button id="rp" class="pri">Jugar este</button></div>`);
-  $('#x').onclick = closeSheet; $('#rr').onclick = () => openRandom(g.id);
-  $('#rp').onclick = () => { setStatus(g, 'playing'); closeSheet(); };
+    <div class="hint" style="margin-top:12px">Elegido entre ${pool.length} juego${pool.length === 1 ? '' : 's'}.</div>
+    <div class="btnrow"><button id="rr">Otro</button><button id="rpl" class="pri">Jugar este</button></div>`
+    : '<div class="hint" style="margin-top:14px">No hay juegos con esos filtros.</div>'}`);
+  $('#x').onclick = closeSheet;
+  const again = () => openRandom(null, true);
+  $('#rl').onchange = e => { f.set = e.target.value; again(); };
+  $('#rp2').onchange = e => { f.plat = e.target.value; again(); };
+  $('#rd').onchange = e => { f.dur = e.target.value; again(); };
+  if ($('#rt')) $('#rt').onchange = e => { f.tag = e.target.value; again(); };
+  if (g){ $('#rr').onclick = () => openRandom(g.id, true); $('#rpl').onclick = () => { setStatus(g, 'playing'); closeSheet(); }; }
 }
 
 /* --- estadísticas, reto anual y resumen del año --- */
@@ -1610,7 +1688,9 @@ function openSettings(which){   // which: sección que debe quedar abierta al vo
     const r = await hltbBulk((i, n) => { if (out.isConnected) out.innerHTML = `<div class="status-line">Buscando ${i} de ${n}…</div>`; });
     if (!out.isConnected) return; btn.textContent = 'Buscar horas de todos los juegos';
     out.innerHTML = r.aborted ? `<div class="status-line ko">${esc(r.aborted)}</div>` : !r.total ? '<div class="status-line ok">No hay juegos pendientes de buscar.</div>'
-      : `<div class="status-line ok">${r.found} con horas · ${r.none} sin coincidencia${r.stopped ? ' · cancelado' : ''}</div>`;
+      : `<div class="status-line ok">${r.found} con horas · ${r.none} sin coincidencia${r.stopped ? ' · cancelado' : ''}</div>`
+        + (r.noneList.length ? `<details class="hnone"><summary>Ver los ${r.noneList.length} ${r.noneList.length === 1 ? 'juego' : 'juegos'} sin duración</summary><div data-notr>${r.noneList.map(id => D.games[id] ? `<button data-id="${id}">${esc(D.games[id].title)}</button>` : '').join('')}</div><div class="hint">Toca uno para buscarlo a mano o ponerle la duración. También los ves con el filtro «Sin duración».</div></details>` : '');
+    out.querySelectorAll('.hnone [data-id]').forEach(b => b.onclick = () => { const g = D.games[b.dataset.id]; if (g) openDetail(g); });
   };
   $('#htest').onclick = async () => {
     const out = $('#htres'); out.innerHTML = '<div class="status-line">Probando…</div>';

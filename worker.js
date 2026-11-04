@@ -7,7 +7,7 @@
 const ALLOWED_HOSTS = ['www.steamgriddb.com'];
 // Direcciones desde las que se abre la app (solo https://dominio, sin barra final ni ruta)
 const ALLOWED_ORIGINS = [
-  'https://backlogmgr.github.io',               // la app publicada en GitHub Pages                // dirección antigua de la app (quítala cuando ya no la uses)
+  'https://backlogmgr.github.io',               // la app publicada en GitHub Pages   
   'https://backlogmgr.backlogmgr.workers.dev'   // copia de la app servida desde Cloudflare (quítala si la borras)
 ];
 const MAX_BYTES = 8 * 1024 * 1024;   // tamaño máximo de los datos sincronizados
@@ -158,20 +158,21 @@ async function hltbDiscover(steps) {   // busca en los scripts de la web la ruta
 
 const incl = (values = []) => ({mode: 'include', values});
 function hltbPayload(variant, terms, auth) {
+  const rt = {min: null, max: null}, gp = {perspective: incl(), flow: incl(), genre: incl()}, base = {userId: 0, sortCategory: 'popular', rangeCategory: 'main', rangeTime: rt, modifier: ''};
   const games = [
-    {userId: 0, platform: incl(), sortCategory: 'popular', rangeCategory: 'main', rangeTime: {min: null, max: null},
-      gameplay: {perspective: incl(), flow: incl(), genre: incl()}, year: incl(), modifier: ''},                                   // formato actual
-    {userId: 0, platform: incl(), sortCategory: 'popular', rangeCategory: 'main', rangeTime: {min: null, max: null},
-      gameplay: {perspective: incl(), flow: incl(), genre: incl(), difficulty: incl()}, rangeYear: {min: '', max: ''}, modifier: ''},   // variante
-    {userId: 0, platform: '', sortCategory: 'popular', rangeCategory: 'main', rangeTime: {min: null, max: null},
-      gameplay: {perspective: '', flow: '', genre: '', difficulty: ''}, rangeYear: {min: '', max: ''}, modifier: ''}                     // formato antiguo
+    {...base, platform: incl(), gameplay: gp, year: incl()},                                                                  // formato actual (facetas {mode, values})
+    {...base, platform: incl(), gameplay: gp, year: {min: '', max: ''}},                                                      // año como rango
+    {...base, platform: incl(), gameplay: gp, year: {min: null, max: null}},                                                  // año como rango nulo
+    {...base, platform: incl(), gameplay: gp},                                                                                // sin año
+    {...base, platform: incl(), gameplay: {...gp, difficulty: incl()}, rangeYear: {min: '', max: ''}},                        // variante intermedia
+    {...base, platform: '', gameplay: {perspective: '', flow: '', genre: '', difficulty: ''}, rangeYear: {min: '', max: ''}}   // formato antiguo
   ][variant];
   const body = {searchType: 'games', searchTerms: terms, searchPage: 1, size: 20,
     searchOptions: {games, users: {sortCategory: 'postcount'}, lists: {sortCategory: 'follows'}, filter: '', sort: 0, randomizer: 0}, useCache: true};
   if (auth.hpKey) body[auth.hpKey] = auth.hpVal;
   return body;
 }
-const HLTB_VARIANTS = 3;
+const HLTB_VARIANTS = 6;
 
 async function hltbToken(path, steps) {   // el token lleva la IP de quien lo pide: se pide y se usa desde el mismo Worker
   const r = await fetch(`${HLTB}${path}/init?t=${Date.now()}`, {headers: HLTB_H});
@@ -206,15 +207,14 @@ async function hltb(url, cors) {
     if (rate) return fail('rate');
     if (!auth) return fail('token');
     // 2) búsqueda (se prueba el formato que funcionó y, si da error de formato, los demás)
-    const terms = q.split(/\s+/).filter(Boolean), order = [hltbKnown.variant, ...[0, 1, 2].filter(v => v !== hltbKnown.variant)];
+    const terms = q.split(/\s+/).filter(Boolean), order = [hltbKnown.variant, ...[0, 1, 2, 3, 4, 5].filter(v => v !== hltbKnown.variant)];
     for (const v of order.slice(0, HLTB_VARIANTS)) {
       const h = {...HLTB_H, 'Content-Type': 'application/json', 'x-auth-token': auth.token};
       if (auth.hpKey) { h['x-hp-key'] = auth.hpKey; h['x-hp-val'] = auth.hpVal; }
       const r = await fetch(HLTB + auth.path, {method: 'POST', headers: h, body: JSON.stringify(hltbPayload(v, terms, auth))});
       steps.push({step: 'search ' + auth.path + ' v' + v, status: r.status});
       if (r.status === 429) return fail('rate');
-      if (r.status === 401 || r.status === 403) return fail('search');   // token rechazado: otro formato no lo arregla
-      if (!r.ok) continue;
+      if (!r.ok) { if (diag || v === order[0]) { const t = await r.text().catch(() => ''); steps.push({step: 'body v' + v, note: t.replace(/\s+/g, ' ').slice(0, 120)}); } continue; }   // 400/403 también pueden ser «formato no válido»: se prueba el siguiente
       const d = await r.json().catch(() => null);
       if (!d || !Array.isArray(d.data)) { steps.push({step: 'format', note: 'sin lista de resultados'}); continue; }
       hltbKnown = {path: auth.path, variant: v};
