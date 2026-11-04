@@ -211,6 +211,11 @@ nav .sh{display:none}
 .tags button{padding:6px 12px;font-size:13px;border-radius:16px}
 .tags button.on{background:var(--accent);border-color:var(--accent);color:#fff}
 .link{display:inline-block;margin-top:10px;font-size:13px}
+.chk{display:flex;gap:10px;align-items:center;margin:12px 0 0;font-size:14px;font-weight:500;letter-spacing:0;color:inherit}
+.chk input{width:auto;padding:0;accent-color:var(--accent);flex:none}
+.mini{padding:2px 8px;font-size:11px;font-weight:600;border-radius:8px;margin-left:6px;color:var(--mute)}
+.hl{margin-top:8px;font-size:13px;color:var(--mute)}.hl b{color:inherit}.hl .use{color:var(--accent);font-weight:700}
+.hres .res{cursor:pointer}
 .kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .kpi{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:11px 13px}
 .kpi b{display:block;font-size:24px;font-weight:800;letter-spacing:-.5px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -279,6 +284,8 @@ nav .sh{display:none}
       <option value="title">A–Z</option>
       <option value="progress">Progreso</option>
       <option value="rating">Valoración</option>
+      <option value="time">Duración: corta primero</option>
+      <option value="timeDesc">Duración: larga primero</option>
       <option value="manual">Mi orden</option>
       <option value="added">Añadidos</option>
     </select>
@@ -432,7 +439,25 @@ const EN = {
   'El enlace de sincronización no es válido':'The sync link is not valid','Escribe un título primero':'Enter a title first',
   'No hay juegos en tu backlog con esos filtros':'No games in your backlog with those filters','Pon un número de juegos mayor que 0':'Enter a number of games greater than 0',
   'Copiado: ya puedes pegarlo donde quieras':'Copied: you can paste it anywhere','Papelera vaciada':'Trash emptied','Ese archivo no parece una copia válida':'That file does not look like a valid backup',
-  'Deshacer':'Undo','Toca los juegos que quieras':'Tap the games you want','Recuperar':'Recover','Sin activar':'Not enabled','Error':'Error','Al día':'Up to date','Conectado':'Connected','· verificado':'· verified','Añadir «':'Add «','¡Reto cumplido!':'Goal reached!',
+  'Deshacer':'Undo','hoy':'today','Ocultar':'Hide',
+  'Notas':'Notes','Opinión final':'Final thoughts','Motivo del abandono':'Reason for dropping','Motivo de la pausa':'Reason for pausing','Sin fecha':'No date','Elegido':'Picked',
+  'Pulsa otra vez para confirmar':'Tap again to confirm','Pulsa otra vez: se borran para siempre':'Tap again: they will be deleted forever','✓ añadido':'✓ added','Error de SteamGridDB':'SteamGridDB error',
+  'Al Worker le falta el almacén KV (enlace SYNC). Mira el README.':'The Worker is missing its KV store (SYNC binding). See the README.',
+  'El Worker es una versión antigua sin sincronización: pega el nuevo worker.js.':'The Worker is an old version without sync: paste the new worker.js.',
+  'El Worker no admite esta dirección: añádela a ALLOWED_ORIGINS en worker.js.':'The Worker does not allow this address: add it to ALLOWED_ORIGINS in worker.js.',
+  'Hay demasiados datos para sincronizar (probablemente portadas subidas a mano).':'There is too much data to sync (probably covers uploaded by hand).',
+  'Este enlace conecta este dispositivo con tu nube de BacklogMGR. Los juegos de aquí se unirán a los de la nube.':'This link connects this device to your BacklogMGR cloud. The games here will be merged with the ones in the cloud.',
+  'Este dispositivo ya usa otro código y se cambiará.':'This device already uses another code and it will be replaced.',
+  'Duración: corta primero':'Length: shortest first','Duración: larga primero':'Length: longest first','Duración a mano (h)':'Manual length (h)',
+  'Sin datos de HowLongToBeat.':'No HowLongToBeat data.','Se usa tu duración a mano.':'Your manual length is used.','El punto ● marca el tiempo que se usa.':'The ● marks the time that is used.',
+  'Buscar horas en HowLongToBeat':'Search hours on HowLongToBeat','Quitar horas de HowLongToBeat':'Remove HowLongToBeat hours','Sin resultados en HowLongToBeat para ese nombre.':'No results on HowLongToBeat for that name.',
+  'Historia':'Main story','Historia + extras':'Main + extras','Extras':'Extras','Completista':'Completionist','Duración (HowLongToBeat)':'Length (HowLongToBeat)','Tiempo que prefieres':'Preferred time',
+  'Si un juego no tiene el tiempo que prefieres: con un solo dato se usa ese; con dos, el más grande si prefieres «Completista» y el más pequeño en los otros casos.':'If a game does not have your preferred time: with a single value that one is used; with two, the larger one if you prefer “Completionist” and the smaller one otherwise.',
+  'Buscar las horas al añadir un juego':'Look up the hours when adding a game','Sobrescribir las horas que puse a mano si HowLongToBeat las tiene':'Overwrite the hours I entered by hand if HowLongToBeat has them',
+  'Buscar horas de todos los juegos':'Look up hours for all games','Probar HowLongToBeat':'Test HowLongToBeat','No hay juegos pendientes de buscar.':'No games left to look up.',
+  'HowLongToBeat no tiene API oficial: se consulta a través de tu Worker y puede dejar de funcionar si cambian su web. Lo que escribes a mano se conserva salvo que marques sobrescribir. No se buscan los juegos ya completados.':'HowLongToBeat has no official API: it is queried through your Worker and may stop working if they change their site. What you type by hand is kept unless you tick overwrite. Completed games are not looked up.',
+  'HowLongToBeat no ha respondido: puede haber bloqueado al Worker o haber cambiado su web.':'HowLongToBeat did not respond: it may have blocked the Worker or changed its site.',
+  'El Worker todavía no admite HowLongToBeat: pega el nuevo worker.js.':'The Worker does not support HowLongToBeat yet: paste the new worker.js.','Primero pon la dirección del Worker.':'Enter the Worker address first.','Toca los juegos que quieras':'Tap the games you want','Recuperar':'Recover','Sin activar':'Not enabled','Error':'Error','Al día':'Up to date','Conectado':'Connected','· verificado':'· verified','Añadir «':'Add «','¡Reto cumplido!':'Goal reached!',
   'Mantén tus juegos iguales en el móvil y el PC. Se cifran en este dispositivo antes de enviarse: el servidor solo guarda texto ilegible.':'Keep your games the same on your phone and PC. They are encrypted on this device before being sent: the server only stores unreadable text.','Nota media':'Average rating','Plataforma estrella':'Top platform','Mejor valorado':'Best rated','(vacía)':'(empty)','Falta la clave API de SteamGridDB (Ajustes).':'The SteamGridDB API key is missing (Settings).',
   'No se pudo conectar con el Worker. Revisa tu conexión y que la dirección del Worker en Ajustes sea correcta.':'Could not connect to the Worker. Check your connection and that the Worker address in Settings is correct.',
   'Formato de datos desconocido en la nube.':'Unknown data format in the cloud.','No se pudo conectar con el Worker de sincronización.':'Could not connect to the sync Worker.',
@@ -456,6 +481,16 @@ const RULES = [
   [/^«Recuperar» solo añade lo que falta y no toca nada más\. «Volver a esta versión» deja tu lista como estaba ese día(?:; los (\d+) juegos que tienes ahora y entonces no estaban irían a la papelera)?\.$/, (m, n) => `“Recover” only adds what is missing and touches nothing else. “Restore this version” leaves your list as it was that day${n ? `; the ${n} games you have now that were not there then would go to the trash` : ''}.`],
   [/^(.* · )(Jugando|Deseados|En espera|Abandonados|Completados)$/, (m, a, l) => a + EN[l]],
   [/^(Jugando|Deseados|En espera|Abandonados|Completados)( · .*)$/, (m, l, a) => EN[l] + a],
+  [/^Buscando (\d+) de (\d+)…$/, (m, a, b) => `Looking up ${a} of ${b}…`],
+  [/^(\d+) con horas · (\d+) sin coincidencia( · cancelado)?$/, (m, a, b, c) => `${a} with hours · ${b} without a match${c ? ' · cancelled' : ''}`],
+  [/^HowLongToBeat responde correctamente \((\d+) resultados de prueba\)\.$/, (m, n) => `HowLongToBeat responds correctly (${n} test result${n === '1' ? '' : 's'}).`],
+  [/^Portada de «(.+)»$/, (m, t) => `Cover of «${t}»`],
+  [/^Elegido entre (\d+) juegos? de tu backlog( \(con los filtros activos\))?\.$/, (m, n, f) => `Picked from ${n} ${n === '1' ? 'game' : 'games'} in your backlog${f ? ' (with the active filters)' : ''}.`],
+  [/^Reto (\d+)$/, (m, y) => `Goal ${y}`],
+  [/^plataforma estrella(?: \((\d+)\))?$/, (m, n) => `top platform${n ? ` (${n})` : ''}`],
+  [/^hace (\d+) d$/, (m, n) => `${n} d ago`],
+  [/^quedan (\d+) d$/, (m, n) => `${n} d left`],
+  [/^(.*)· verificado(.*)$/, (m, a, b) => `${a}· verified${b}`],
   [/^completados en (\d+)$/, (m, y) => `completed in ${y}`],
   [/^backlog estimado \((\d+) de (\d+) con duración\)$/, (m, a, b) => `estimated backlog (${a} of ${b} with length)`],
   [/^(\d+) juegos?$/, (m, n) => `${n} ${n === '1' ? 'game' : 'games'}`],
@@ -486,6 +521,7 @@ function T(str){
   const k = str.trim(); if (!k) return str;
   let r = EN[k];
   if (r === undefined) for (const [re, f] of RULES){ const m = k.match(re); if (m){ r = f(...m); break; } }
+  if (r === undefined && k.includes(' · ')){ const t = k.split(' · ').map(x => T(x)).join(' · '); if (t !== k) r = t; }   // listas como «PC · Backlog · hoy · quedan 3 d»
   return r === undefined ? str : str.replace(k, r);
 }
 const TR_ATTRS = ['placeholder', 'aria-label', 'title', 'alt'];
@@ -540,7 +576,9 @@ function norm(g){
   g.tags = Array.isArray(g.tags) ? g.tags.filter(t => typeof t === 'string' && t.trim()) : [];
   g.rating = clamp(Math.round((+g.rating || 0) * 2) / 2, 0, 5);   // de 0,5 en 0,5
   g.plays = Math.max(0, Math.round(+g.plays || 0));
-  g.est = Math.max(0, +g.est || 0);
+  g.est = Math.max(0, +g.est || 0);   // duración puesta a mano
+  for (const k of ['hm', 'hp', 'hf']) g[k] = Math.max(0, +g[k] || 0);   // horas de HowLongToBeat: historia, extras, completista (0 = sin dato)
+  g.hid = Math.max(0, Math.round(+g.hid || 0));
   g.started = typeof g.started === 'string' ? g.started : '';
   g.finished = typeof g.finished === 'string' ? g.finished : '';
   g.notes = typeof g.notes === 'string' ? g.notes : '';
@@ -569,6 +607,68 @@ function addGame(o){
   applyStatus(g, o.status || 'backlog'); D.games[g.id] = g; save(); render(); return g;
 }
 function touch(g){ g.updated = Date.now(); save(); render(); }
+/* ---------- duración: la tuya a mano o la de HowLongToBeat según tu preferencia ---------- */
+const HKEY = {main:'hm', plus:'hp', full:'hf'};
+const hPref = () => HKEY[S.hPref] ? S.hPref : 'main';
+// Si falta el tiempo preferido: con uno solo se usa ese; con dos, el más grande si prefieres «completista» y el más pequeño en otro caso
+function pickHours(g, pref){
+  const v = g[HKEY[pref]]; if (v > 0) return v;
+  const av = [g.hm, g.hp, g.hf].filter(x => x > 0);
+  if (!av.length) return 0;
+  return av.length === 1 ? av[0] : (pref === 'full' ? Math.max(...av) : Math.min(...av));
+}
+const hasHltb = g => g.hm > 0 || g.hp > 0 || g.hf > 0;
+const hoursOf = g => g.est > 0 ? g.est : pickHours(g, hPref());   // lo que pones a mano manda sobre lo automático
+const fmtH = h => (Math.round(h * 10) / 10).toString().replace('.', LANG === 'en' ? '.' : ',') + ' h';
+
+/* ---------- HowLongToBeat (a través de tu Worker; no es una API oficial) ---------- */
+const nrmT = t => String(t).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, ' ').trim();
+function similar(a, b){
+  const x = nrmT(a), y = nrmT(b); if (!x || !y) return 0; if (x === y) return 1;
+  const A = x.split(' '), B = y.split(' '), n = A.filter(w => B.includes(w)).length; return 2 * n / (A.length + B.length);
+}
+function bestHltb(title, rs){ let best = null, bs = 0; for (const r of rs){ const sc = similar(title, r.name); if (sc > bs){ bs = sc; best = r; } } return bs >= 0.7 ? best : null; }
+async function hltbSearch(title, diag){
+  const base = syncBase(); if (!base) throw new Error('Primero pon la dirección del Worker.');
+  let r; try { r = await fetch(base + '/hltb?' + (diag ? 'diag=1' : 'q=' + encodeURIComponent(title))); } catch(_){ throw new Error('No se pudo conectar con el Worker de sincronización.'); }
+  const j = await r.json().catch(() => null);
+  if (!j) throw new Error('El Worker todavía no admite HowLongToBeat: pega el nuevo worker.js.');
+  if (!j.ok){ const e = new Error('HowLongToBeat no ha respondido: puede haber bloqueado al Worker o haber cambiado su web.'); e.steps = j.steps; throw e; }
+  return diag ? j : j.results;
+}
+function hltbApply(g, r){ g.hid = r.id || 0; g.hm = r.main || 0; g.hp = r.plus || 0; g.hf = r.full || 0; if (S.hOver) g.est = 0; }
+async function hltbFill(id){   // al añadir un juego: se rellena solo y sin avisar si algo falla
+  try {
+    const g = D.games[id]; if (!g || g.deleted || hasHltb(g)) return;
+    const m = bestHltb(g.title, await hltbSearch(g.title)); const h = D.games[id];
+    if (m && h && !h.deleted){ hltbApply(h, m); touch(h); }
+  } catch(_){}
+}
+const hparts = o => [['Historia', o.main], ['Extras', o.plus], ['Completista', o.full]].map(([l, v]) => `<span>${l}</span> ${v ? fmtH(v) : '—'}`).join(' · ');
+function hltbSummary(g){
+  if (!hasHltb(g)) return 'Sin datos de HowLongToBeat.';
+  const used = g.est > 0 ? '' : ['main', 'plus', 'full'].find(k => g[HKEY[k]] === pickHours(g, hPref()));
+  const parts = [['main', 'Historia'], ['plus', 'Extras'], ['full', 'Completista']].map(([k, l]) => `<span>${l}</span> ${g[HKEY[k]] ? fmtH(g[HKEY[k]]) : '—'}${used === k ? ' <span class="use">●</span>' : ''}`).join(' · ');
+  return `${parts}<div>${g.est > 0 ? 'Se usa tu duración a mano.' : 'El punto ● marca el tiempo que se usa.'}</div>`;
+}
+let bulkStop = false, bulkRun = false;
+async function hltbBulk(onProg){
+  const targets = list().filter(g => g.status !== 'done' && (!hasHltb(g) || (S.hOver && g.est > 0)));
+  const res = {total: targets.length, found: 0, none: 0, err: 0, aborted: '', stopped: false}; let consec = 0, i = 0;
+  bulkStop = false; bulkRun = true;
+  for (const g of targets){
+    if (bulkStop){ res.stopped = true; break; }
+    onProg(++i, targets.length);
+    if (hasHltb(g)){ g.est = 0; g.updated = Date.now(); res.found++; continue; }   // ya tenía datos: solo se quita lo manual
+    try {
+      const m = bestHltb(g.title, await hltbSearch(g.title)); consec = 0;
+      if (m){ hltbApply(g, m); g.updated = Date.now(); res.found++; } else res.none++;
+    } catch(e){ res.err++; if (++consec >= 3){ res.aborted = e.message; break; } }
+    if (i % 5 === 0){ save(); render(); }
+    await new Promise(r => setTimeout(r, 350));
+  }
+  bulkRun = false; save(); render(); return res;
+}
 function setStatus(g, s, quiet){
   applyStatus(g, s); touch(g);
   if (!quiet) toast(`«${g.title}» → ${ST[s].label}`);
@@ -664,7 +764,7 @@ const TOMB_MS = 90 * 864e5;   // las lápidas se limpian a los 90 días
 function adopt(id, g){        // copia saneada de un juego que viene de fuera (importación o nube)
   if (!g || typeof g.title !== 'string' || !ST[g.status]) return null;
   return norm({id, title:g.title, platform:g.platform, status:g.status, progress:clamp(+g.progress || 0, 0, 100), cover:g.cover, sgdbId:g.sgdbId || null,
-    notes:g.notes, tags:g.tags, rating:g.rating, plays:g.plays, est:g.est, started:g.started, finished:g.finished,
+    notes:g.notes, tags:g.tags, rating:g.rating, plays:g.plays, est:g.est, hm:g.hm, hp:g.hp, hf:g.hf, hid:g.hid, started:g.started, finished:g.finished,
     added:g.added || Date.now(), updated:+g.updated || 0, order:g.order, deleted:g.deleted === true});
 }
 function mergeRemote(remote, remoteMeta){   // gana el cambio más reciente de cada juego
@@ -689,7 +789,7 @@ function mergeRemote(remote, remoteMeta){   // gana el cambio más reciente de c
 const syncBase = () => { try { return new URL(proxyUrl()).origin; } catch(_) { return ''; } };   // el mismo Worker del proxy
 const syncReady = () => !!(S.syncCode && syncBase());
 async function syncFetch(path, opts){
-  const base = syncBase(); if (!base) throw new Error('Primero pon la dirección del Worker en «Proxy CORS».');
+  const base = syncBase(); if (!base) throw new Error('Primero pon la dirección del Worker.');
   try { return await fetch(base + path, opts); }
   catch(_) { throw new Error('No se pudo conectar con el Worker de sincronización.'); }
 }
@@ -869,7 +969,7 @@ function ph(g){
   const h = hue(g.title);
   return `<div class="ph" style="background:linear-gradient(145deg,hsl(${h} 45% 32%),hsl(${(h + 50) % 360} 50% 20%))">${esc(ini)}</div>`;
 }
-const chip = g => [g.platform, g.est ? '~' + g.est + ' h' : ''].filter(Boolean).join(' · ');
+const chip = g => [g.platform, hoursOf(g) ? '~' + fmtH(hoursOf(g)) : ''].filter(Boolean).join(' · ');
 const actOf = g => g.status === 'playing' ? ['done', 'Completar', IC.done] : g.status === 'done' ? ['playing', 'Rejugar', IC.playing] : ['playing', 'Jugar', IC.playing];
 function cardHTML(g, showSt){
   const st = ST[g.status], act = actOf(g), sel = UI.selecting && UI.sel.has(g.id);
@@ -885,7 +985,7 @@ function cardHTML(g, showSt){
 }
 function rowHTML(g, i, showSt){   // vista compacta de «Mi orden»
   const st = ST[g.status], act = actOf(g), next = i === 0 && g.status === 'backlog';
-  const sub = [showSt ? st.label : '', g.platform, g.est ? '~' + g.est + ' h' : '', g.progress ? g.progress + ' %' : ''].filter(Boolean).join(' · ');
+  const sub = [showSt ? st.label : '', g.platform, hoursOf(g) ? '~' + fmtH(hoursOf(g)) : '', g.progress ? g.progress + ' %' : ''].filter(Boolean).join(' · ');
   return `<div class="row2" data-id="${g.id}" style="--c:${st.c}">
     <span class="pos">${i + 1}</span>
     <div class="rth" data-act="open">${coverHTML(g)}</div>
@@ -902,6 +1002,8 @@ const SORTS = {
   title:    (a, b) => a.title.localeCompare(b.title, 'es', {sensitivity:'base'}),
   progress: (a, b) => b.progress - a.progress,
   rating:   (a, b) => b.rating - a.rating || b.updated - a.updated,
+  time:     (a, b) => { const x = hoursOf(a), y = hoursOf(b); return !x && !y ? 0 : !x ? 1 : !y ? -1 : x - y; },       // más corto primero; sin dato al final
+  timeDesc: (a, b) => { const x = hoursOf(a), y = hoursOf(b); return !x && !y ? 0 : !x ? 1 : !y ? -1 : y - x; },
   manual:   (a, b) => okey(a) - okey(b) || a.added - b.added
 };
 // cada panel recuerda su propio orden; por defecto: en espera A–Z, completados por valoración, el resto recientes
@@ -1108,7 +1210,7 @@ function openAdd(){
   $('#manual').onclick = () => {
     const t = aq.value.trim(); if (!t) return toast('Escribe un título primero');
     if (findDup(t, null) && !$('#manual').dataset.ok){ $('#manual').dataset.ok = 1; return; }
-    addGame({title: t, ...opts()}); toast(`«${t}» añadido`); closeSheet();
+    const ng = addGame({title: t, ...opts()}); toast(`«${t}» añadido`); closeSheet(); if (S.hAuto !== false) hltbFill(ng.id);
   };
   let timer, seq = 0;
   aq.addEventListener('input', () => {
@@ -1136,7 +1238,7 @@ function openAdd(){
         const r = rows[+row.dataset.i];
         if (findDup(r.name, r.id) && !row.dataset.ok){ row.dataset.ok = 1; row.querySelector('small').innerHTML = '<span class="dup">Ya lo tienes. Pulsa otra vez para añadirlo igualmente</span>'; return; }
         const cover = await firstCover(r.id);
-        addGame({title: r.name, sgdbId: r.id, cover, ...opts()});
+        const ng = addGame({title: r.name, sgdbId: r.id, cover, ...opts()}); if (S.hAuto !== false) hltbFill(ng.id);
         row.classList.add('added'); row.querySelector('small').textContent = '✓ añadido'; toast(`«${r.name}» añadido`);
       };
     } catch(e){ if (me === seq) box.innerHTML = `<div class="status-line ko">${esc(e.message)}</div>`; }
@@ -1164,13 +1266,16 @@ function openDetail(g){
     <div class="stars" id="dstars">${[1, 2, 3, 4, 5].map(n => `<button data-r="${n}" class="${g.rating >= n ? 'on' : g.rating === n - 0.5 ? 'half' : ''}" aria-label="${n} de 5"><span>★</span></button>`).join('')}</div>
     <div class="hint" style="margin-top:4px">Toca la mitad izquierda de una estrella para media nota (p. ej. 2,5).</div>
     <div class="two">
-      <div><label>Empezado</label><input id="dd1" type="date" value="${esc(g.started)}"></div>
-      <div><label>Terminado</label><input id="dd2" type="date" value="${esc(g.finished)}"></div>
+      <div><label>Empezado${g.started ? '<button class="mini" data-clr="started">Quitar</button>' : ''}</label><input id="dd1" type="date" value="${esc(g.started)}"></div>
+      <div><label>Terminado${g.finished ? '<button class="mini" data-clr="finished">Quitar</button>' : ''}</label><input id="dd2" type="date" value="${esc(g.finished)}"></div>
     </div>
     <div class="two">
-      <div><label>Duración estimada (h)</label><input id="de" type="number" min="0" step="0.5" value="${g.est || ''}" placeholder="p. ej. 25"></div>
+      <div><label>Duración a mano (h)</label><input id="de" type="number" min="0" step="0.5" value="${g.est || ''}" placeholder="p. ej. 25"></div>
       <div><label>Veces completado</label><input id="dpl" type="number" min="0" step="1" value="${g.plays}"></div>
     </div>
+    <div class="hl" id="dhl">${hltbSummary(g)}</div>
+    <div class="btnrow" style="margin-top:8px"><button id="dhs">Buscar horas en HowLongToBeat</button>${hasHltb(g) ? '<button id="dhx">Quitar horas de HowLongToBeat</button>' : ''}</div>
+    <div class="hres" id="dhr"></div>
     <a class="link" target="_blank" rel="noopener" href="https://howlongtobeat.com/?q=${encodeURIComponent(g.title)}">Consultar duración en HowLongToBeat ↗</a>
     <label>Etiquetas</label>
     <div class="tags" id="dtags">${allTags().map(t => `<button data-t="${esc(t)}" class="${g.tags.includes(t) ? 'on' : ''}">${esc(t)}</button>`).join('')}</div>
@@ -1191,9 +1296,20 @@ function openDetail(g){
     r.onchange = () => { setProgress(g, +r.value); draw(); };
     n.onchange = () => { setProgress(g, clamp(+n.value || 0, 0, 100)); draw(); };
     $('#dstars').onclick = e => { const b = e.target.closest('[data-r]'); if (!b) return; const r = b.getBoundingClientRect(), v = +b.dataset.r - (e.clientX - r.left < r.width * 0.45 ? 0.5 : 0); g.rating = g.rating === v ? 0 : v; touch(g); draw(); };
-    $('#dd1').onchange = e => { g.started = e.target.value; touch(g); };
-    $('#dd2').onchange = e => { g.finished = e.target.value; touch(g); };
-    $('#de').onchange = e => { g.est = Math.max(0, +e.target.value || 0); touch(g); };
+    $('#sheet').querySelectorAll('[data-clr]').forEach(b => b.onclick = e => { e.preventDefault(); g[b.dataset.clr] = ''; touch(g); draw(); });
+    $('#dd1').onchange = e => { g.started = e.target.value; touch(g); draw(); };
+    $('#dd2').onchange = e => { g.finished = e.target.value; touch(g); draw(); };
+    $('#de').onchange = e => { g.est = Math.max(0, +e.target.value || 0); touch(g); draw(); };
+    $('#dhs').onclick = async () => {
+      const box = $('#dhr'); box.innerHTML = '<div class="hint">Buscando…</div>';
+      try {
+        const rs = await hltbSearch(g.title); if (!box.isConnected) return;
+        if (!rs.length){ box.innerHTML = '<div class="hint">Sin resultados en HowLongToBeat para ese nombre.</div>'; return; }
+        box.innerHTML = rs.slice(0, 6).map((r, i) => `<div class="res" data-i="${i}"><div class="t"><b>${esc(r.name)}</b><small>${r.year ? r.year + ' · ' : ''}${hparts(r)}</small></div></div>`).join('');
+        box.onclick = ev => { const row = ev.target.closest('.res'); if (!row) return; hltbApply(g, rs[+row.dataset.i]); touch(g); draw(); };
+      } catch(e){ if (box.isConnected) box.innerHTML = `<div class="status-line ko">${esc(e.message)}</div>`; }
+    };
+    if ($('#dhx')) $('#dhx').onclick = () => { g.hm = g.hp = g.hf = g.hid = 0; touch(g); draw(); };
     $('#dpl').onchange = e => { g.plays = Math.max(0, Math.round(+e.target.value || 0)); touch(g); };
     $('#dtags').onclick = e => {
       const b = e.target.closest('[data-t]'); if (!b) return; const t = b.dataset.t;
@@ -1231,7 +1347,7 @@ function openRandom(skipId){
 }
 
 /* --- estadísticas, reto anual y resumen del año --- */
-const MONTHS = LANG === 'en' ? MES_EN.map(m => m.toLowerCase()) : ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const MONTHS = LANG === 'en' ? MES_EN : ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 let statsYear = new Date().getFullYear();
 function yearStats(y){
   const done = list().filter(g => g.status === 'done' && (g.finished || '').startsWith(String(y)));
@@ -1257,8 +1373,8 @@ function openStats(){
   const avg = rated.length ? (rated.reduce((a, g) => a + g.rating, 0) / rated.length).toFixed(1) + ' ★' : '—';
   const spans = done.filter(g => g.started && g.finished).map(g => (Date.parse(g.finished) - Date.parse(g.started)) / 864e5).filter(d => d >= 0);
   const avgDays = spans.length ? Math.round(spans.reduce((a, b) => a + b, 0) / spans.length) + ' días' : '—';
-  const bl = all.filter(g => g.status === 'backlog'), blN = bl.filter(g => g.est).length;
-  const blH = bl.reduce((a, g) => a + g.est, 0);
+  const bl = all.filter(g => g.status === 'backlog'), blN = bl.filter(g => hoursOf(g)).length;
+  const blH = bl.reduce((a, g) => a + hoursOf(g), 0);
   const bars = (rows, color = 'var(--accent)') => {
     const max = Math.max(1, ...rows.map(r => r[1]));
     return rows.map(r => `<div class="sb" style="--c:${r[2] || color}"><span>${esc(r[0])}</span><div class="t"><i style="width:${r[1] / max * 100}%"></i></div><em>${r[1]}</em></div>`).join('') || '<div class="hint">Sin datos todavía.</div>';
@@ -1458,6 +1574,18 @@ function openSettings(which){   // which: sección que debe quedar abierta al vo
       <label>Idioma</label>
       <div class="seg" id="langseg" data-notr>${[['es', 'Español'], ['en', 'English']].map(([v, l]) => `<button data-l="${v}" class="${LANG === v ? 'on' : ''}" style="--c:var(--accent)">${l}</button>`).join('')}</div>
     </div></details>
+    <details class="acc" ${which === 'hltb' ? 'open' : ''}><summary>Duración (HowLongToBeat) <small>${{main: 'Historia', plus: 'Extras', full: 'Completista'}[hPref()]}</small></summary><div class="in">
+      <label>Tiempo que prefieres</label>
+      <div class="seg" id="hprefseg">${[['main', 'Historia'], ['plus', 'Historia + extras'], ['full', 'Completista']].map(([v, l]) => `<button data-h="${v}" class="${hPref() === v ? 'on' : ''}" style="--c:var(--accent)">${l}</button>`).join('')}</div>
+      <div class="hint">Si un juego no tiene el tiempo que prefieres: con un solo dato se usa ese; con dos, el más grande si prefieres «Completista» y el más pequeño en los otros casos.</div>
+      <label class="chk"><input type="checkbox" id="hauto" ${S.hAuto !== false ? 'checked' : ''}> Buscar las horas al añadir un juego</label>
+      <label class="chk"><input type="checkbox" id="hover" ${S.hOver ? 'checked' : ''}> Sobrescribir las horas que puse a mano si HowLongToBeat las tiene</label>
+      <div class="btnrow"><button id="hbulk">Buscar horas de todos los juegos</button></div>
+      <div id="hprog"></div>
+      <div class="btnrow" style="margin-top:8px"><button id="htest">Probar HowLongToBeat</button></div>
+      <div id="htres"></div>
+      <div class="hint">HowLongToBeat no tiene API oficial: se consulta a través de tu Worker y puede dejar de funcionar si cambian su web. Lo que escribes a mano se conserva salvo que marques sobrescribir. No se buscan los juegos ya completados.</div>
+    </div></details>
     <details class="acc" ${which === 'data' ? 'open' : ''}><summary>Datos y copias <small>${list().length} juegos</small></summary><div class="in">
       <div class="btnrow" style="margin-top:0"><button id="exp">Exportar copia</button><button id="imp">Importar copia</button></div>
       <input id="impf" type="file" accept=".json,application/json" hidden>
@@ -1471,6 +1599,23 @@ function openSettings(which){   // which: sección que debe quedar abierta al vo
   $('#copyall').onclick = () => copyLists(); $('#copycur').onclick = () => copyLists(UI.tab);
   $('#themeseg').onclick = e => { const b = e.target.closest('[data-t]'); if (!b) return; S.theme = b.dataset.t; saveS(); applyTheme(); openSettings(which); document.querySelectorAll('details.acc')[2].open = true; };
   $('#langseg').onclick = e => { const b = e.target.closest('[data-l]'); if (!b || b.dataset.l === LANG) return; S.lang = b.dataset.l; saveS(); location.reload(); };
+  $('#hprefseg').onclick = e => { const b = e.target.closest('[data-h]'); if (!b) return; S.hPref = b.dataset.h; saveS(); render(); openSettings('hltb'); };
+  $('#hauto').onchange = e => { S.hAuto = e.target.checked; saveS(); };
+  $('#hover').onchange = e => { S.hOver = e.target.checked; saveS(); };
+  $('#hbulk').onclick = async () => {
+    const btn = $('#hbulk'), out = $('#hprog');
+    if (bulkRun){ bulkStop = true; return; }
+    btn.textContent = 'Cancelar';
+    const r = await hltbBulk((i, n) => { if (out.isConnected) out.innerHTML = `<div class="status-line">Buscando ${i} de ${n}…</div>`; });
+    if (!out.isConnected) return; btn.textContent = 'Buscar horas de todos los juegos';
+    out.innerHTML = r.aborted ? `<div class="status-line ko">${esc(r.aborted)}</div>` : !r.total ? '<div class="status-line ok">No hay juegos pendientes de buscar.</div>'
+      : `<div class="status-line ok">${r.found} con horas · ${r.none} sin coincidencia${r.stopped ? ' · cancelado' : ''}</div>`;
+  };
+  $('#htest').onclick = async () => {
+    const out = $('#htres'); out.innerHTML = '<div class="status-line">Probando…</div>';
+    try { const j = await hltbSearch('', true); out.innerHTML = `<div class="status-line ok">HowLongToBeat responde correctamente (${j.results.length} resultados de prueba).</div>`; }
+    catch(e){ out.innerHTML = `<div class="status-line ko">${esc(e.message)}${e.steps ? `<br><small data-notr>${esc(e.steps.map(x => x.step + (x.status ? ' → ' + x.status : '')).join(' · '))}</small>` : ''}</div>`; }
+  };
   const commit = () => { S.sgdbKey = $('#sk').value.trim(); const v = $('#sp').value.trim(); S.proxy = (!v || v === DEFAULT_PROXY) ? '' : v; saveS(); renderSyncPanel(); };
   $('#sk').onchange = commit; $('#sp').onchange = commit;
   $('#test').onclick = async () => {

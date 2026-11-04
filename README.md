@@ -18,6 +18,8 @@ Gestor personal de backlog de videojuegos. Web instalable (PWA): funciona en And
 - **Versiones de la nube:** una copia diaria durante 14 días; recupera juegos borrados o vuelve a cómo estaba la lista.
 - **Tema** automático, oscuro o claro; **copiar tus listas como texto**; aviso si añades un juego que ya tienes.
 - **Idioma** español o inglés (Ajustes → Apariencia). **Valoración con medias estrellas** (toca la mitad izquierda de la estrella) y orden por valoración. **Cada lista recuerda su propio orden** (por defecto: en espera A–Z, completados por valoración, el resto recientes). «Añadir a» parte de la lista en la que estás.
+- **Duración automática (HowLongToBeat):** al añadir un juego se buscan sus horas (historia, extras y completista) a través de tu Worker. En Ajustes → Duración eliges cuál prefieres; si falta, con un solo dato se usa ese y con dos, el más grande si prefieres «Completista» y el más pequeño en los otros casos. Lo que escribas a mano manda, salvo que marques «sobrescribir». Hay un botón para buscar las horas de todos los juegos (no completados), un selector de resultados en cada juego, orden por duración y un botón «Probar HowLongToBeat» que dice dónde falla si algún día deja de responder. **Requiere pegar de nuevo el `worker.js` en Cloudflare.** HowLongToBeat no tiene API oficial y puede cambiar su web.
+- Las fechas de inicio y fin de un juego se pueden quitar desde sus detalles.
 - Exportar e importar copia de seguridad.
 - Botón «atrás» del móvil: cierra la ventana abierta y, si no hay ninguna, lleva al inicio (Jugando).
 

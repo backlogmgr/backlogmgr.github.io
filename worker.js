@@ -1,4 +1,4 @@
-// Worker de BacklogMGR para Cloudflare: proxy de SteamGridDB + sincronización.
+// Worker de BacklogMGR para Cloudflare: proxy de SteamGridDB + sincronización + duraciones de HowLongToBeat.
 //
 // Sincronización: guarda un texto CIFRADO por la app (el Worker nunca ve tus juegos) bajo un identificador
 // derivado de tu código. Necesita un almacén KV enlazado con el nombre SYNC (ver README).
@@ -28,6 +28,7 @@ export default {
     if (!allowed) return text('forbidden origin: ' + origin, 403, cors);
 
     if (url.pathname === '/sync' || url.pathname.startsWith('/sync/')) return sync(req, env, url, cors);
+    if (url.pathname === '/hltb') return hltb(url, cors);
     return proxy(req, url, cors);
   }
 };
@@ -121,5 +122,59 @@ async function proxy(req, url, cors) {
     return res;
   } catch (e) {
     return text('upstream error: ' + e.message, 502, cors);
+  }
+}
+
+// ---------- HowLongToBeat (NO oficial) ----------
+// /hltb?q=<título>   → {ok, results:[{id, name, year, main, plus, full}]}   (horas; 0 = sin dato)
+// /hltb?diag=1       → pasos de la consulta, para ver dónde falla si algún día deja de funcionar
+// HowLongToBeat no tiene API pública: esto usa los mismos endpoints que su web y puede romperse si ellos los cambian.
+const HLTB = 'https://howlongtobeat.com';
+const HLTB_H = {
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+  'Accept': 'application/json, text/plain, */*', 'Origin': HLTB, 'Referer': HLTB + '/'
+};
+const hrs = s => { s = +s || 0; return s > 0 ? Math.max(0.5, Math.round(s / 1800) / 2) : 0; };   // segundos → horas (de 0,5 en 0,5)
+
+async function hltb(url, cors) {
+  const diag = url.searchParams.get('diag') === '1';
+  const q = (diag ? 'Celeste' : (url.searchParams.get('q') || '')).trim().slice(0, 100);
+  if (!q) return json({ok: false, error: 'missing q'}, cors);
+  const steps = [], fail = (error) => json({ok: false, error, steps}, cors);
+  try {
+    // 1) token de búsqueda (lleva la IP de quien lo pide: por eso se pide y se usa desde el mismo Worker)
+    let auth = null;
+    for (const path of ['/api/search', '/api/find']) {
+      const r = await fetch(`${HLTB}${path}/init?t=${Date.now()}`, {headers: HLTB_H});
+      steps.push({step: 'init ' + path, status: r.status});
+      if (!r.ok) continue;
+      const j = await r.json().catch(() => null);
+      if (j && j.token) { auth = {path, token: j.token, hpKey: j.hpKey, hpVal: j.hpVal}; break; }
+      steps.push({step: 'init ' + path, note: 'sin token en la respuesta'});
+    }
+    if (!auth) return fail('token');
+    // 2) búsqueda
+    const body = {
+      searchType: 'games', searchTerms: q.split(/\s+/).filter(Boolean), searchPage: 1, size: 20,
+      searchOptions: {
+        games: {userId: 0, platform: '', sortCategory: 'popular', rangeCategory: 'main', rangeTime: {min: null, max: null},
+          gameplay: {perspective: '', flow: '', genre: '', difficulty: ''}, rangeYear: {min: '', max: ''}, modifier: ''},
+        users: {sortCategory: 'postcount'}, lists: {sortCategory: 'follows'}, filter: '', sort: 0, randomizer: 0
+      },
+      useCache: true
+    };
+    const h = {...HLTB_H, 'Content-Type': 'application/json', 'x-auth-token': auth.token};
+    if (auth.hpKey) { h['x-hp-key'] = auth.hpKey; h['x-hp-val'] = auth.hpVal; body[auth.hpKey] = auth.hpVal; }
+    const r = await fetch(HLTB + auth.path, {method: 'POST', headers: h, body: JSON.stringify(body)});
+    steps.push({step: 'search ' + auth.path, status: r.status});
+    if (!r.ok) return fail('search');
+    const d = await r.json().catch(() => null);
+    if (!d || !Array.isArray(d.data)) return fail('format');
+    const results = d.data.slice(0, 20).map(g => ({id: +g.game_id || 0, name: String(g.game_name || ''), year: +g.release_world || 0, main: hrs(g.comp_main), plus: hrs(g.comp_plus), full: hrs(g.comp_100)}));
+    steps.push({step: 'ok', results: results.length});
+    return new Response(JSON.stringify({ok: true, results, ...(diag ? {steps} : {})}), {headers: {...cors, 'Content-Type': 'application/json', 'Cache-Control': diag ? 'no-store' : 'public, max-age=21600'}});
+  } catch (e) {
+    steps.push({step: 'error', note: String(e && e.message || e).slice(0, 120)});
+    return fail('network');
   }
 }
