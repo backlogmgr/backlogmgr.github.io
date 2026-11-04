@@ -70,7 +70,7 @@ header .ib{width:42px;height:42px;padding:0;display:grid;place-items:center;bord
 .tbdot{display:none;position:absolute;top:5px;right:5px;width:8px;height:8px;border-radius:50%;background:var(--accent2);border:2px solid var(--panel2);box-sizing:content-box}.tbdot.on{display:block}
 #tbx{display:none}.toolbar.open #tbx{display:flex}
 @media(max-width:899px){
-  header{padding-bottom:6px}header .ib{width:38px;height:38px}.brand .logo{width:32px;height:32px}
+  header{padding-bottom:6px;gap:6px;padding-left:12px;padding-right:12px}header .ib{width:36px;height:36px;border-radius:12px}.brand{font-size:19px;gap:8px;letter-spacing:-.6px}.brand .logo{width:30px;height:30px}.brand span{white-space:nowrap}
   .toolbar{gap:6px;padding:2px 12px 7px;margin:0 -14px;will-change:transform}
   .toolbar #q,.toolbar select,.toolbar .dir{height:36px;padding-top:0;padding-bottom:0;font-size:14px;border-radius:11px}
   .toolbar #q{padding-left:36px;background-position:11px center;background-size:16px}
@@ -292,6 +292,7 @@ nav .sh{display:none}
 .swatches{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.swatches button{width:34px;height:34px;padding:0;border-radius:50%;border:2px solid transparent}.swatches button.on{border-color:var(--text)}
 .swatches input[type=color]{width:42px;height:34px;padding:2px;border-radius:10px}
 .tnav{display:none}.tonly{display:grid}
+nav button.tnav.on{color:var(--text)}nav button.tnav.on::before{background:linear-gradient(180deg,#ef5b6b,#f5a524 35%,#e8d44d 65%,#3ecf8e)}
 @media(min-width:900px){#tiers{left:228px}.tnav{display:flex}.tonly{display:none!important}.tt{width:70px;height:105px}.tstrip.insend::after{height:105px}.tstrip,.tstrip.pool{min-height:116px}.tlab{width:84px}.tbody{max-width:1100px;width:100%;margin:0 auto}}
 @media(max-width:430px){nav .lg{display:none}nav .sh{display:inline}nav button{font-size:10.5px;padding-left:0;padding-right:0}nav button .n{left:calc(50% + 6px)}}
 @media(min-width:900px){
@@ -337,7 +338,7 @@ nav .sh{display:none}
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><g fill="currentColor" stroke="none"><circle cx="8.5" cy="8.5" r="1.3"/><circle cx="15.5" cy="8.5" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="8.5" cy="15.5" r="1.3"/><circle cx="15.5" cy="15.5" r="1.3"/></g></svg>
     </button>
     <button class="ib tonly" id="btnTier" aria-label="Tier lists" title="Tier lists">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 6h16M4 12h11M4 18h6"/></svg>
+      <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="0.75" y="0.75" width="4.5" height="4.5" rx="1.2" fill="#ef5b6b"/><rect x="6.75" y="0.75" width="4.5" height="4.5" rx="1.2" fill="#ef5b6b"/><rect x="12.75" y="0.75" width="4.5" height="4.5" rx="1.2" fill="currentColor" opacity=".22"/><rect x="18.75" y="0.75" width="4.5" height="4.5" rx="1.2" fill="currentColor" opacity=".22"/><rect x="0.75" y="6.75" width="4.5" height="4.5" rx="1.2" fill="#f5a524"/><rect x="6.75" y="6.75" width="4.5" height="4.5" rx="1.2" fill="#f5a524"/><rect x="12.75" y="6.75" width="4.5" height="4.5" rx="1.2" fill="#f5a524"/><rect x="18.75" y="6.75" width="4.5" height="4.5" rx="1.2" fill="#f5a524"/><rect x="0.75" y="12.75" width="4.5" height="4.5" rx="1.2" fill="#e8d44d"/><rect x="6.75" y="12.75" width="4.5" height="4.5" rx="1.2" fill="#e8d44d"/><rect x="12.75" y="12.75" width="4.5" height="4.5" rx="1.2" fill="currentColor" opacity=".22"/><rect x="18.75" y="12.75" width="4.5" height="4.5" rx="1.2" fill="currentColor" opacity=".22"/><rect x="0.75" y="18.75" width="4.5" height="4.5" rx="1.2" fill="#3ecf8e"/><rect x="6.75" y="18.75" width="4.5" height="4.5" rx="1.2" fill="#3ecf8e"/><rect x="12.75" y="18.75" width="4.5" height="4.5" rx="1.2" fill="#3ecf8e"/><rect x="18.75" y="18.75" width="4.5" height="4.5" rx="1.2" fill="currentColor" opacity=".22"/></svg>
     </button>
     <button class="ib" id="btnStats" aria-label="Estadísticas" title="Estadísticas">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 20V11M12 20V4M19 20v-6"/></svg>
@@ -796,7 +797,7 @@ function setProgress(g, v){
    Pasado ese tiempo queda una «lápida» mínima, para que el borrado llegue a los demás dispositivos. */
 const trashList = () => Object.values(D.games).filter(g => g.deleted && g.title).sort((a, b) => b.updated - a.updated);
 function cleanRefs(a){
-  return (Array.isArray(a) ? a : []).slice(0, 400).map(r => r && typeof r.g === 'string' ? {g:r.g.slice(0, 64)} : r && typeof r.t === 'string' && r.t.trim() ? {t:r.t.trim().slice(0, 80)} : null).filter(Boolean);
+  return (Array.isArray(a) ? a : []).slice(0, 400).map(r => r && typeof r.g === 'string' ? {g:r.g.slice(0, 64)} : r && typeof r.t === 'string' && r.t.trim() ? (typeof r.c === 'string' && /^https?:\/\//.test(r.c) && r.c.length <= 400 ? {t:r.t.trim().slice(0, 80), c:r.c} : {t:r.t.trim().slice(0, 80)}) : null).filter(Boolean);
 }
 function cleanMeta(m){
   const goals = {}; for (const [y, n] of Object.entries((m && m.goals) || {})) if (/^\d{4}$/.test(y) && +n > 0) goals[y] = Math.min(999, Math.round(+n));
@@ -1163,7 +1164,7 @@ function render(){
   const counts = {}; list().forEach(g => counts[g.status] = (counts[g.status] || 0) + 1);
   $('#nav').innerHTML = STATUSES.map(s =>
     `<button data-tab="${s.id}" class="${!q && !UI.tiers && UI.tab === s.id ? 'on' : ''}" style="--c:${s.c}">${IC[s.id]}<span class="lg">${s.label}</span><span class="sh">${s.short}</span><span class="n">${counts[s.id] || 0}</span></button>`).join('') +
-    `<button data-tier class="tnav${UI.tiers ? ' on' : ''}" style="--c:#f5a524"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h11M4 18h6"/></svg><span class="lg">Tier lists</span><span class="sh">Tier</span></button>`;
+    `<button data-tier class="tnav${UI.tiers ? ' on' : ''}"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="0.75" y="0.75" width="4.5" height="4.5" rx="1.2" fill="#ef5b6b"/><rect x="6.75" y="0.75" width="4.5" height="4.5" rx="1.2" fill="#ef5b6b"/><rect x="12.75" y="0.75" width="4.5" height="4.5" rx="1.2" fill="currentColor" opacity=".22"/><rect x="18.75" y="0.75" width="4.5" height="4.5" rx="1.2" fill="currentColor" opacity=".22"/><rect x="0.75" y="6.75" width="4.5" height="4.5" rx="1.2" fill="#f5a524"/><rect x="6.75" y="6.75" width="4.5" height="4.5" rx="1.2" fill="#f5a524"/><rect x="12.75" y="6.75" width="4.5" height="4.5" rx="1.2" fill="#f5a524"/><rect x="18.75" y="6.75" width="4.5" height="4.5" rx="1.2" fill="#f5a524"/><rect x="0.75" y="12.75" width="4.5" height="4.5" rx="1.2" fill="#e8d44d"/><rect x="6.75" y="12.75" width="4.5" height="4.5" rx="1.2" fill="#e8d44d"/><rect x="12.75" y="12.75" width="4.5" height="4.5" rx="1.2" fill="currentColor" opacity=".22"/><rect x="18.75" y="12.75" width="4.5" height="4.5" rx="1.2" fill="currentColor" opacity=".22"/><rect x="0.75" y="18.75" width="4.5" height="4.5" rx="1.2" fill="#3ecf8e"/><rect x="6.75" y="18.75" width="4.5" height="4.5" rx="1.2" fill="#3ecf8e"/><rect x="12.75" y="18.75" width="4.5" height="4.5" rx="1.2" fill="#3ecf8e"/><rect x="18.75" y="18.75" width="4.5" height="4.5" rx="1.2" fill="currentColor" opacity=".22"/></svg><span class="lg">Tier lists</span><span class="sh">Tier</span></button>`;
   $('#title').textContent = q ? 'Resultados' : ST[UI.tab].label;
   // filtros (según los juegos existentes)
   const plats = [...new Set(list().map(g => g.platform).filter(Boolean))].sort(cmpEs);
@@ -1748,6 +1749,7 @@ const TS = {sel:null, scroll:{}};   // sel: {r: id de fila o 'pool', i: posició
 const curTier = () => D.meta.tiers.find(t => t.id === UI.tid);
 const tierArr = (t, rid) => rid === 'pool' ? t.pool : (t.rows.find(r => r.id === rid) || {}).items;
 const refTitle = r => r.g ? (D.games[r.g] ? D.games[r.g].title : '') : r.t;
+const refCover = r => r.g ? (D.games[r.g] ? D.games[r.g].cover : '') : (r.c || '');
 const refKey = r => r.g ? 'g:' + r.g : 't:' + r.t.toLowerCase();
 const isLight = c => { const n = parseInt(c.slice(1), 16); return ((n >> 16) * 299 + ((n >> 8) & 255) * 587 + (n & 255) * 114) / 1000 > 150; };
 function touchTiers(t){ if (t) t.updated = Date.now(); D.meta.updated = Date.now(); save(); }
@@ -1762,8 +1764,8 @@ function newTier(){
 function openTiers(){ UI.tiers = true; UI.tid = null; TS.sel = null; $('#tiers').hidden = false; render(); renderTiers(); }
 function closeTiers(){ UI.tiers = false; UI.tid = null; TS.sel = null; $('#tiers').hidden = true; render(); }
 function tileHTML(ref, rid, i){
-  const g = ref.g ? D.games[ref.g] : null, title = refTitle(ref), sel = TS.sel && TS.sel.r === rid && TS.sel.i === i;
-  return `<div class="tt${sel ? ' sel' : ''}" data-r="${rid}" data-i="${i}" title="${esc(title)}">${g && g.cover ? `<img src="${esc(g.cover)}" alt="" draggable="false" referrerpolicy="no-referrer" loading="lazy">` : `<span>${esc(title)}</span>`}</div>`;
+  const cov = refCover(ref), title = refTitle(ref), sel = TS.sel && TS.sel.r === rid && TS.sel.i === i;
+  return `<div class="tt${sel ? ' sel' : ''}" data-r="${rid}" data-i="${i}" title="${esc(title)}">${cov ? `<img src="${esc(cov)}" alt="" draggable="false" referrerpolicy="no-referrer" loading="lazy">` : `<span>${esc(title)}</span>`}</div>`;
 }
 function renderTiers(){
   const el = $('#tiers'); if (!UI.tiers){ el.hidden = true; return; }
@@ -1817,10 +1819,11 @@ function tierEditRow(t, rid){
 }
 function tierAddSheet(t){
   const used = () => new Set([...t.pool, ...t.rows.flatMap(r => r.items)].map(refKey));
-  const picked = new Set(); let q = '', st = 'all';
+  const picked = new Set(), pn = new Map(); let q = '', st = 'all', nres = [], nterm = '', nShown = 10, nseq = 0, ntm = 0;
   openSheet(`<div class="top"><h2>Añadir juegos</h2><button id="x">Hecho</button></div>
     <div style="display:flex;gap:8px"><input id="tq" type="search" placeholder="Buscar en mis juegos…" autocomplete="off"><select id="ts" style="max-width:150px"><option value="all">Todas las listas</option>${STATUSES.map(s => `<option value="${s.id}">${s.label}</option>`).join('')}</select></div>
     <div id="tl" style="margin-top:8px"></div>
+    <div id="tn"></div>
     <div class="btnrow"><button id="tall">Marcar todos</button><button id="tgo" class="pri">Añadir</button></div>
     <label>O escribe uno a mano</label>
     <div style="display:flex;gap:8px"><input id="tm" maxlength="80" placeholder="Título del juego" autocomplete="off"><button id="tma">Añadir</button></div>`);
@@ -1828,14 +1831,46 @@ function tierAddSheet(t){
   const draw = () => {
     const rows = shown();
     $('#tl').innerHTML = rows.map(g => `<div class="tgr${picked.has(g.id) ? ' on' : ''}" data-id="${esc(g.id)}"><div class="th">${g.cover ? `<img src="${esc(g.cover)}" alt="" referrerpolicy="no-referrer" loading="lazy">` : ''}</div><b>${esc(g.title)}<small>${esc(ST[g.status].label)}</small></b><i>${picked.has(g.id) ? '✓' : ''}</i></div>`).join('') || '<div class="hint">No hay juegos que añadir con este filtro.</div>';
-    $('#tgo').textContent = picked.size ? `Añadir ${picked.size}` : 'Añadir'; $('#tgo').disabled = !picked.size;
+    const n = picked.size + pn.size; $('#tgo').textContent = n ? `Añadir ${n}` : 'Añadir'; $('#tgo').disabled = !n;
+  };
+  const drawN = () => {   // juegos de SteamGridDB que no tienes en tus listas
+    const box = $('#tn'); if (!box) return;
+    if (st !== 'all' || q.length < 2 || !S.sgdbKey){ box.innerHTML = ''; return; }
+    if (nterm !== q){ box.innerHTML = '<div class="mh">No añadidos</div><div class="hint">Buscando no añadidos…</div>'; return; }
+    const u = used(), rows = nres.filter(r => !u.has('t:' + r.name.toLowerCase()) && !findDup(r.name, r.id));
+    if (!rows.length){ box.innerHTML = ''; return; }
+    box.innerHTML = '<div class="mh">No añadidos</div><div id="tnl"></div>'; const lst = $('#tnl');
+    const one = r => `<div class="tgr${pn.has(r.id) ? ' on' : ''}" data-n="${r.id}"><div class="th"></div><b data-notr>${esc(r.name)}<small>${r.release_date ? new Date(r.release_date * 1000).getUTCFullYear() : ''}</small></b><i>${pn.has(r.id) ? '✓' : ''}</i></div>`;
+    const fill = from => {   // de 10 en 10 al llegar al final
+      const old = box.querySelector('.sent'); if (old) old.remove();
+      const to = Math.min(rows.length, Math.max(nShown, from));
+      lst.insertAdjacentHTML('beforeend', rows.slice(from, to).map(one).join(''));
+      for (let i = from; i < to; i++) firstCover(rows[i].id).then(c => { const el = lst.querySelector(`.tgr[data-n="${rows[i].id}"] .th`); if (el && c) el.innerHTML = `<img src="${esc(c)}" alt="" referrerpolicy="no-referrer">`; });
+      if (to < rows.length){ const e = document.createElement('div'); e.className = 'sent'; e.style.height = '1px'; box.appendChild(e); onVisible(e, () => { if (box.isConnected){ nShown = to + 10; fill(to); } }); }
+    };
+    fill(0);
+  };
+  const fetchN = () => {
+    clearTimeout(ntm); drawN(); if (q.length < 2 || !S.sgdbKey || st !== 'all' || nterm === q) return;
+    ntm = setTimeout(async () => {
+      const me = ++nseq, term = q; let r = [];
+      try { r = (await sgdb('/search/autocomplete/' + encodeURIComponent(term))) || []; } catch(_){}
+      if (me !== nseq || !$('#tn')) return; nres = r; nterm = term; nShown = 10; drawN();
+    }, 500);
   };
   $('#x').onclick = closeSheet;
-  $('#tq').oninput = e => { q = e.target.value.trim().toLowerCase(); draw(); };
-  $('#ts').onchange = e => { st = e.target.value; draw(); };
+  $('#tq').oninput = e => { q = e.target.value.trim().toLowerCase(); draw(); fetchN(); };
+  $('#ts').onchange = e => { st = e.target.value; draw(); fetchN(); };
+  $('#tn').onclick = e => { const r = e.target.closest('.tgr[data-n]'); if (!r) return; const id = +r.dataset.n, g = nres.find(x => x.id === id); if (!g) return; pn.has(id) ? pn.delete(id) : pn.set(id, g); r.classList.toggle('on', pn.has(id)); r.querySelector('i').textContent = pn.has(id) ? '✓' : ''; const n = picked.size + pn.size; $('#tgo').textContent = n ? `Añadir ${n}` : 'Añadir'; $('#tgo').disabled = !n; };
   $('#tl').onclick = e => { const r = e.target.closest('.tgr'); if (!r) return; const id = r.dataset.id; picked.has(id) ? picked.delete(id) : picked.add(id); draw(); };
   $('#tall').onclick = () => { shown().forEach(g => picked.add(g.id)); draw(); };
-  $('#tgo').onclick = () => { if (!picked.size) return; const n = picked.size; picked.forEach(id => t.pool.push({g:id})); touchTiers(t); renderTiers(); closeSheet(); toast(`${n} juego${n === 1 ? '' : 's'} añadido${n === 1 ? '' : 's'}`); };
+  $('#tgo').onclick = async () => {
+    const n = picked.size + pn.size; if (!n) return; $('#tgo').disabled = true;
+    picked.forEach(id => t.pool.push({g:id}));
+    const adds = [...pn.values()], cov = await Promise.all(adds.map(r => firstCover(r.id).catch(() => '')));
+    adds.forEach((r, i) => { if (!used().has('t:' + r.name.toLowerCase())) t.pool.push(cov[i] ? {t:r.name, c:cov[i]} : {t:r.name}); });
+    touchTiers(t); renderTiers(); closeSheet(); toast(`${n} juego${n === 1 ? '' : 's'} añadido${n === 1 ? '' : 's'}`);
+  };
   const manual = () => { const v = $('#tm').value.trim(); if (!v) return; if (used().has('t:' + v.toLowerCase())){ toast('Ya está en la tier list'); return; } t.pool.push({t:v}); touchTiers(t); renderTiers(); $('#tm').value = ''; toast(`«${v}» añadido`); };
   $('#tma').onclick = manual; $('#tm').onkeydown = e => { if (e.key === 'Enter'){ e.preventDefault(); manual(); } };
   draw();
@@ -1846,7 +1881,7 @@ async function drawTier(t){
   const per = Math.max(1, Math.floor((W - PAD * 2 - LW - GAP + GAP) / (TW + GAP)));
   const hOf = r => Math.max(1, Math.ceil(r.items.length / per)) * (TH + GAP) + GAP;
   const H = TOP + t.rows.reduce((n, r) => n + hOf(r) + 6, 0) + FOOT;
-  const urls = [...new Set(t.rows.flatMap(r => r.items).map(r => r.g && D.games[r.g] ? D.games[r.g].cover : '').filter(Boolean))];
+  const urls = [...new Set(t.rows.flatMap(r => r.items).map(refCover).filter(Boolean))];
   const imgs = {}; for (let i = 0; i < urls.length; i += 12) await Promise.all(urls.slice(i, i + 12).map(async u => { imgs[u] = await loadImg(u); }));
   const c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d');
   const bg = x.createLinearGradient(0, 0, W, H); bg.addColorStop(0, '#1d1a4a'); bg.addColorStop(.5, '#14162b'); bg.addColorStop(1, '#0f1017'); x.fillStyle = bg; x.fillRect(0, 0, W, H);
@@ -1862,7 +1897,7 @@ async function drawTier(t){
     let fs = r.label.length <= 2 ? 64 : 40; x.font = `800 ${fs}px ${F}`; while (fs > 16 && x.measureText(r.label).width > LW - 20){ fs -= 2; x.font = `800 ${fs}px ${F}`; }
     x.fillText(r.label, PAD + LW / 2, y + h / 2); x.restore();
     r.items.forEach((it, i) => {
-      const cx = PAD + LW + GAP + (i % per) * (TW + GAP), cy = y + GAP + Math.floor(i / per) * (TH + GAP), g = it.g ? D.games[it.g] : null, im = g && g.cover ? imgs[g.cover] : null;
+      const cx = PAD + LW + GAP + (i % per) * (TW + GAP), cy = y + GAP + Math.floor(i / per) * (TH + GAP), im = refCover(it) ? imgs[refCover(it)] : null;
       x.save(); rrect(x, cx, cy, TW, TH, 10); x.clip();
       if (im){ const s = Math.max(TW / im.width, TH / im.height), w = im.width * s, hh = im.height * s; x.drawImage(im, cx + (TW - w) / 2, cy + (TH - hh) / 2, w, hh); }
       else {
