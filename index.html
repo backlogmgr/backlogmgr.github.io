@@ -456,6 +456,7 @@ const EN = {
   'Buscar las horas al añadir un juego':'Look up the hours when adding a game','Sobrescribir las horas que puse a mano si HowLongToBeat las tiene':'Overwrite the hours I entered by hand if HowLongToBeat has them',
   'Buscar horas de todos los juegos':'Look up hours for all games','Probar HowLongToBeat':'Test HowLongToBeat','No hay juegos pendientes de buscar.':'No games left to look up.',
   'HowLongToBeat no tiene API oficial: se consulta a través de tu Worker y puede dejar de funcionar si cambian su web. Lo que escribes a mano se conserva salvo que marques sobrescribir. No se buscan los juegos ya completados.':'HowLongToBeat has no official API: it is queried through your Worker and may stop working if they change their site. What you type by hand is kept unless you tick overwrite. Completed games are not looked up.',
+  'HowLongToBeat está limitando las peticiones: inténtalo de nuevo en unos minutos.':'HowLongToBeat is limiting requests: try again in a few minutes.',
   'HowLongToBeat no ha respondido: puede haber bloqueado al Worker o haber cambiado su web.':'HowLongToBeat did not respond: it may have blocked the Worker or changed its site.',
   'El Worker todavía no admite HowLongToBeat: pega el nuevo worker.js.':'The Worker does not support HowLongToBeat yet: paste the new worker.js.','Primero pon la dirección del Worker.':'Enter the Worker address first.','Toca los juegos que quieras':'Tap the games you want','Recuperar':'Recover','Sin activar':'Not enabled','Error':'Error','Al día':'Up to date','Conectado':'Connected','· verificado':'· verified','Añadir «':'Add «','¡Reto cumplido!':'Goal reached!',
   'Mantén tus juegos iguales en el móvil y el PC. Se cifran en este dispositivo antes de enviarse: el servidor solo guarda texto ilegible.':'Keep your games the same on your phone and PC. They are encrypted on this device before being sent: the server only stores unreadable text.','Nota media':'Average rating','Plataforma estrella':'Top platform','Mejor valorado':'Best rated','(vacía)':'(empty)','Falta la clave API de SteamGridDB (Ajustes).':'The SteamGridDB API key is missing (Settings).',
@@ -633,7 +634,7 @@ async function hltbSearch(title, diag){
   let r; try { r = await fetch(base + '/hltb?' + (diag ? 'diag=1' : 'q=' + encodeURIComponent(title))); } catch(_){ throw new Error('No se pudo conectar con el Worker de sincronización.'); }
   const j = await r.json().catch(() => null);
   if (!j) throw new Error('El Worker todavía no admite HowLongToBeat: pega el nuevo worker.js.');
-  if (!j.ok){ const e = new Error('HowLongToBeat no ha respondido: puede haber bloqueado al Worker o haber cambiado su web.'); e.steps = j.steps; throw e; }
+  if (!j.ok){ const e = new Error(j.error==='rate' ? 'HowLongToBeat está limitando las peticiones: inténtalo de nuevo en unos minutos.' : 'HowLongToBeat no ha respondido: puede haber bloqueado al Worker o haber cambiado su web.'); e.steps = j.steps; throw e; }
   return diag ? j : j.results;
 }
 function hltbApply(g, r){ g.hid = r.id || 0; g.hm = r.main || 0; g.hp = r.plus || 0; g.hf = r.full || 0; if (S.hOver) g.est = 0; }
