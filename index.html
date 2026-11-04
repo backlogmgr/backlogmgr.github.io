@@ -110,7 +110,8 @@ nav .sh{display:none}
 .cover::after{content:"";position:absolute;inset:auto 0 0 0;height:46%;background:linear-gradient(transparent,#000b);pointer-events:none;z-index:1}
 .cover::before{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--c);z-index:2}
 .ph{width:100%;height:100%;display:grid;place-items:center;font-size:36px;font-weight:800;letter-spacing:-1px;color:#ffffffa8;padding:10px;text-align:center}
-.chip{position:absolute;left:8px;bottom:9px;z-index:3;color:#fff;background:#000a;backdrop-filter:blur(4px);border:1px solid #ffffff1f;border-radius:8px;padding:2px 8px;font-size:11px;font-weight:600;max-width:calc(100% - 16px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip{position:absolute;left:8px;bottom:9px;z-index:3;color:#fff;background:#000a;backdrop-filter:blur(4px);border:1px solid #ffffff1f;border-radius:8px;padding:2px 8px;font-size:11px;font-weight:600;max-width:calc(100% - 16px);display:flex;flex-wrap:wrap;column-gap:0;line-height:1.35}
+.chip .cp{min-width:0;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chip .ch{flex:none;max-width:100%;white-space:nowrap}.chip .sp{font-style:normal;white-space:pre}.chip.two .sp{color:transparent}
 .badge{position:absolute;right:8px;top:8px;z-index:3;border-radius:8px;padding:2px 8px;font-size:11px;font-weight:700;color:#fff;background:var(--c)}
 .rate{position:absolute;left:8px;top:8px;z-index:3;background:#000a;border-radius:8px;padding:2px 7px;font-size:11px;font-weight:700;color:#ffc53d}
 .meta{padding:10px 11px 11px;display:flex;flex-direction:column;gap:8px}
@@ -156,7 +157,6 @@ nav .sh{display:none}
 .pls{display:flex;flex-wrap:nowrap;gap:5px;margin-top:7px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;padding:1px 14px 1px 0;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 18px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 18px),transparent)}
 .pls::-webkit-scrollbar{display:none}.pls>*{flex:none}
 .pc{white-space:nowrap;padding:3px 9px;font-size:11px;font-weight:600;border-radius:999px;background:var(--bg);border:1px solid var(--line);color:var(--mute)}
-.pc.one{border-color:var(--accent);color:var(--text)}
 .pc:hover{border-color:var(--accent)}
 .pls select{width:auto;flex:none;min-width:0;padding:3px 24px 3px 10px;font-size:11px;font-weight:600;border-radius:999px;color:var(--mute)}
 .toolbar .dir{flex:none;width:44px;padding:0;font-size:18px;line-height:1;border-radius:12px;background:var(--panel2);border:1px solid var(--line);color:var(--text)}
@@ -754,7 +754,7 @@ async function hltbFill(id, known){   // al añadir un juego: se rellena solo y 
   try {
     const g = D.games[id]; if (!g || g.deleted || hasHltb(g)) return;
     const m = known || await hltbFind(g.title); const h = D.games[id];
-    if (usable(m) && h && !h.deleted){ hltbApply(h, m); if (!h.platform){ const b = mapHplat(m.platforms, false); if (b.length === 1) h.platform = b[0]; } touch(h); }
+    if (usable(m) && h && !h.deleted){ hltbApply(h, m); touch(h); }
   } catch(_){}
 }
 const hparts = o => [['Historia', o.main], ['Extras', o.plus], ['Completista', o.full]].map(([l, v]) => `<span>${l}</span> ${v ? fmtH(v) : '—'}`).join(' · ');
@@ -1096,11 +1096,16 @@ function ph(g){
 }
 const hrsChip = g => { const h = hoursOf(g); if (!h) return ''; return g.status === 'playing' && g.progress > 0 && g.progress < 100 ? 'quedan ~' + fmtH(h * (1 - g.progress / 100)) : '~' + fmtH(h); };
 const chip = g => [g.platform, hrsChip(g)].filter(Boolean).join(' · ');
+const chipHTML = g => { const p = g.platform, h = hrsChip(g); if (!p && !h) return ''; return `<span class="chip">${p ? `<span class="cp">${esc(p)}${h ? '<i class="sp"> · </i>' : ''}</span>` : ''}${h ? `<span class="ch">${esc(h)}</span>` : ''}</span>`; };
+function fitChips(){   // una línea si cabe; si no, la plataforma arriba (puede recortarse) y la duración debajo, siempre entera
+  document.querySelectorAll('.chip').forEach(c => { const p = c.querySelector('.cp'), h = c.querySelector('.ch'); if (p && h) c.classList.toggle('two', h.offsetTop > p.offsetTop + 2); });
+}
+window.addEventListener('resize', () => requestAnimationFrame(fitChips));
 const actOf = g => g.status === 'playing' ? ['done', 'Completar', IC.done] : g.status === 'done' ? ['playing', 'Rejugar', IC.playing] : ['playing', 'Jugar', IC.playing];
 function cardHTML(g, showSt){
   const st = ST[g.status], act = actOf(g), sel = UI.selecting && UI.sel.has(g.id);
   return `<article class="card${sel ? ' sel' : ''}" data-id="${g.id}" style="--c:${st.c}">
-    <div class="cover" data-act="open">${coverHTML(g)}<span class="ck"></span>${showSt ? `<span class="badge">${st.label}</span>` : ''}${g.rating ? `<span class="rate">★ ${g.rating}</span>` : ''}${chip(g) ? `<span class="chip">${esc(chip(g))}</span>` : ''}</div>
+    <div class="cover" data-act="open">${coverHTML(g)}<span class="ck"></span>${showSt ? `<span class="badge">${st.label}</span>` : ''}${g.rating ? `<span class="rate">★ ${g.rating}</span>` : ''}${chipHTML(g)}</div>
     <div class="meta">
       <h3 data-act="open">${esc(g.title)}</h3>
       <div class="pg"><div class="bar" role="slider" aria-label="Progreso" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${g.progress}"><i style="width:${g.progress}%"></i></div><span class="pct">${g.progress}%</span></div>
@@ -1182,7 +1187,7 @@ function render(){
   const items = viewItems(), listMode = curSort() === 'manual';
   if (UI.selecting) UI.sel = new Set([...UI.sel].filter(id => items.some(g => g.id === id)));
   const grid = $('#grid'); grid.className = 'grid' + (listMode ? ' list' : '');
-  grid.innerHTML = items.map((g, i) => listMode ? rowHTML(g, i, !!q) : cardHTML(g, !!q)).join('');
+  grid.innerHTML = items.map((g, i) => listMode ? rowHTML(g, i, !!q) : cardHTML(g, !!q)).join(''); fitChips(); requestAnimationFrame(fitChips);
   $('#count').textContent = items.length + (items.length === 1 ? ' juego' : ' juegos');
   $('#sec').style.setProperty('--c', q ? 'var(--accent)' : ST[UI.tab].c);
   const bs = $('#btnSel'); bs.hidden = listMode || !items.length; bs.textContent = UI.selecting ? 'Listo' : 'Seleccionar';
@@ -1446,7 +1451,7 @@ function openAdd(prefill){
       const rowHTML = (r, i) => `<div class="res" data-i="${i}"><div class="th"></div><div class="t"><b>${esc(r.name)}</b><small>${r.release_date ? new Date(r.release_date * 1000).getUTCFullYear() : ''}${r.verified ? ' · verificado' : ''}${(() => { const d = findDup(r.name, r.id); return d ? ` · <span class="dup">${esc(dupText(d))}</span>` : ''; })()}</small><div class="pls">${platPick('Elegir plataforma')}</div></div></div>`;
       const platStrip = i => {   // todas las de HowLongToBeat en una tira que se desliza; al final, «Otros» con toda tu lista (HowLongToBeat a veces se equivoca)
         const el = box.querySelector(`.res[data-i="${i}"] .pls`); if (!el || !hpl[i].length) return;
-        el.innerHTML = hpl[i].map(x => `<button class="pc${hb[i].length === 1 && hb[i][0] === x ? ' one' : ''}" data-p="${esc(x)}">${esc(x)}</button>`).join('') + platPick('Otros');
+        el.innerHTML = hpl[i].map(x => `<button class="pc" data-p="${esc(x)}">${esc(x)}</button>`).join('') + platPick('Otros');
       };
       const matchH = i => { if (!rs || hm[i]) return; const m = bestHltb(rows[i].name, rs); if (!m) return; hm[i] = m; hpl[i] = mapHplat(m.platforms); hb[i] = mapHplat(m.platforms, false); platStrip(i); };
       const more = () => {   // se van cargando de 10 en 10 al llegar al final de la lista
@@ -1477,9 +1482,8 @@ function openAdd(prefill){
       box.onclick = e => {
         const row = e.target.closest('.res'); if (!row || row.classList.contains('added') || row.classList.contains('busy') || e.target.closest('select')) return;
         const i = +row.dataset.i, chipBtn = e.target.closest('.pc');
-        // plataforma: la que toques; si solo hay una en HowLongToBeat, esa; si hay varias, hay que tocar una
-        let plat = '';
-        if (chipBtn) plat = chipBtn.dataset.p; else if (hb[i].length === 1) plat = hb[i][0]; else if (hb[i].length > 1){ toast('Elige una plataforma'); return; }
+        // la plataforma solo se pone si tocas una de la tira o eliges «Otros»; si no, se añade sin plataforma (HowLongToBeat a veces se equivoca)
+        const plat = chipBtn ? chipBtn.dataset.p : '';
         addRow(row, plat);
       };
       box.onchange = e => {   // plataforma elegida a mano en el desplegable de la fila
