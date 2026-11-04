@@ -60,11 +60,13 @@ header{display:flex;gap:8px;align-items:center;padding:calc(12px + env(safe-area
 .brand .logo{width:36px;height:36px;flex:none;filter:drop-shadow(0 4px 10px #7c6cff55)}
 .brand em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 header .ib{width:42px;height:42px;padding:0;display:grid;place-items:center;border-radius:14px;background:var(--panel)}
-.toolbar{display:flex;flex-wrap:wrap;gap:8px;padding:2px 14px 12px}
-#q{flex:1 1 100%;min-width:0;padding-left:40px;background-repeat:no-repeat;background-position:13px center;
+.toolbar{position:sticky;top:0;z-index:4;display:flex;flex-direction:column;gap:8px;margin:0 -14px;padding:4px 14px 10px;background:var(--hdr);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:transform .22s ease}
+.trow{display:flex;gap:8px;min-width:0}.trow>select{flex:1 1 0;min-width:0}
+#q{flex:1 1 0;min-width:0;padding-left:40px;background-repeat:no-repeat;background-position:13px center;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%239096b0' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M20 20l-3.5-3.5'/%3E%3C/svg%3E")}
-.toolbar select{flex:1 1 40%;min-width:0}
-.sortgrp{flex:1 1 100%;display:flex;gap:8px}.sortgrp select{flex:1 1 0}
+.sortgrp{flex:1.25 1 0;display:flex;gap:8px;min-width:0}.sortgrp select{flex:1 1 0;min-width:0}
+#qSc{flex:0 0 38%}#qSc[hidden],#fTag[hidden]{display:none}
+@media(max-width:899px){.toolbar.away{transform:translateY(-115%)}}
 main{flex:1;overflow-y:auto;padding:2px 14px calc(96px + env(safe-area-inset-bottom));scrollbar-width:thin;scrollbar-color:var(--sbar) transparent}
 .sec{display:flex;align-items:baseline;gap:10px;padding:4px 2px 14px}
 .sec h2{margin:0;font-size:24px;font-weight:800;letter-spacing:-.5px;display:flex;align-items:center;gap:10px}
@@ -139,10 +141,13 @@ nav .sh{display:none}
 .prog input[type=range]{padding:0;border:0;background:none;accent-color:var(--accent);height:30px;box-shadow:none}
 .prog input[type=number]{width:76px}
 .res{display:flex;gap:12px;align-items:center;padding:8px;border-radius:14px;background:var(--panel2);border:1px solid var(--line);margin-bottom:8px;cursor:pointer;transition:filter .15s,transform .12s}
+.mh{margin:22px 2px 10px;font-size:17px;font-weight:800;display:flex;align-items:center;gap:10px}.mh::before{content:"";width:5px;height:18px;border-radius:3px;background:var(--mute)}
+#more .res .t small{color:var(--mute)}
 .pls{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
 .pc{padding:3px 9px;font-size:11px;font-weight:600;border-radius:999px;background:var(--bg);border:1px solid var(--line);color:var(--mute)}
 .pc.one{border-color:var(--accent);color:var(--text)}
 .pc:hover{border-color:var(--accent)}
+.pls select{width:auto;flex:none;min-width:0;padding:3px 24px 3px 10px;font-size:11px;font-weight:600;border-radius:999px;color:var(--mute)}
 .toolbar .dir{flex:none;width:44px;padding:0;font-size:18px;line-height:1;border-radius:12px;background:var(--panel2);border:1px solid var(--line);color:var(--text)}
 .toolbar .dir:disabled{opacity:.35}
 .rnd{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
@@ -245,11 +250,11 @@ nav .sh{display:none}
   nav button.on{background:var(--panel2)}
   nav button.on::before{left:0;right:auto;top:22%;bottom:22%;width:3px;height:auto;border-radius:0 3px 3px 0}
   nav button .n{position:static;margin-left:auto}
-  header,.toolbar,main{margin-left:228px;width:calc(100% - 228px)}
+  header,main{margin-left:228px;width:calc(100% - 228px)}
   header{flex:none;justify-content:flex-end;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;z-index:8}
-  .toolbar{flex:none;max-width:780px;flex-wrap:nowrap}
-  #q{flex:2}.toolbar select{flex:1}.sortgrp{flex:1}
-  main{padding-bottom:40px;height:calc(100% - 118px);flex:none}
+  .toolbar{flex-direction:row;flex-wrap:wrap}.trow{display:contents}
+  #q{flex:2 1 170px}.toolbar select{flex:1 1 110px;min-width:100px}#qSc{flex:1 1 110px}.sortgrp{flex:1.4 1 170px}
+  main{padding-bottom:40px;height:calc(100% - 66px);flex:none}
   .grid{grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:18px}
   #selbar{left:calc(228px + 16px);right:16px;bottom:22px;max-width:640px}
   .fab{bottom:26px;right:30px}
@@ -284,14 +289,13 @@ nav .sh{display:none}
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
     </button>
   </header>
-  <div class="toolbar">
-    <input id="q" type="search" placeholder="Buscar en mis juegos…" autocomplete="off">
-    <select id="fPlat" aria-label="Plataforma"></select>
-    <select id="fTag" aria-label="Etiqueta" hidden></select>
-    <select id="fDur" aria-label="Duración">
+  <main id="main"><div class="toolbar" id="toolbar">
+    <div class="trow"><input id="q" type="search" placeholder="Buscar en mis juegos…" autocomplete="off"><select id="qSc" aria-label="Buscar en" hidden></select></div>
+    <div class="trow"><select id="fPlat" aria-label="Plataforma"></select><select id="fTag" aria-label="Etiqueta" hidden></select></div>
+    <div class="trow"><select id="fDur" aria-label="Duración">
       <option value="">Cualquier duración</option><option value="u5">Menos de 5 h</option><option value="u15">5–15 h</option><option value="u40">15–40 h</option><option value="o40">Más de 40 h</option><option value="none">Sin duración</option>
     </select>
-    <div class="sortgrp"><select id="fSort" aria-label="Orden">
+      <div class="sortgrp"><select id="fSort" aria-label="Orden">
       <option value="updated">Recientes</option>
       <option value="title">A–Z</option>
       <option value="progress">Progreso</option>
@@ -299,14 +303,12 @@ nav .sh{display:none}
       <option value="time">Duración</option>
       <option value="manual">Mi orden</option>
       <option value="added">Añadidos</option>
-    </select>
-    <button class="dir" id="fDir" type="button"></button></div>
-  </div>
-  <main id="main"><div class="sec" id="sec"><h2 id="title"></h2><span id="count"></span><button class="tbtn" id="btnSel" hidden>Seleccionar</button></div><div class="grid" id="grid"></div><div id="empty"></div></main>
+    </select><button class="dir" id="fDir" type="button"></button></div></div>
+  </div><div class="sec" id="sec"><h2 id="title"></h2><span id="count"></span><button class="tbtn" id="btnSel" hidden>Seleccionar</button></div><div class="grid" id="grid"></div><div id="empty"></div><div id="more"></div></main>
   <nav id="nav"></nav>
   <button class="fab" id="fab" aria-label="Añadir juego" title="Añadir juego"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><span>Añadir juego</span></button>
 </div>
-<div id="selbar" hidden><span id="selcount"></span><button id="selall">Todos</button><button id="selx">Cancelar</button><select id="selmove" aria-label="Mover a"></select><button id="seldel" class="danger">Eliminar</button></div>
+<div id="selbar" hidden><span id="selcount"></span><button id="selall">Todos</button><button id="selx">Cancelar</button><button id="selhl" title="Buscar horas en HowLongToBeat" aria-label="Buscar horas en HowLongToBeat">Horas</button><select id="selmove" aria-label="Mover a"></select><button id="seldel" class="danger">Eliminar</button></div>
 <div class="wrap" id="wrap" hidden><div class="sheet" id="sheet"></div></div>
 
 <script>
@@ -478,11 +480,13 @@ const EN = {
   'No se pudieron descifrar los datos de la nube con este código.':'Could not decrypt the cloud data with this code.'
 };
 const MES_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-Object.assign(EN, {'Todas las plataformas':'All platforms','Todas las etiquetas':'All tags','Cualquier duración':'Any length','Menos de 5 h':'Under 5 h','Más de 40 h':'Over 40 h',
+Object.assign(EN, {'Elegir plataforma':'Choose platform','Otra…':'Other…','Ocultar':'Hide','Mostrar':'Show','Todas las listas':'All lists','Mostrar no añadidos':'Show not added','No añadidos':'Not added','Buscando no añadidos…':'Looking for games you haven\'t added…','Buscar en':'Search in',
+  'Horas':'Hours','No hay más juegos con ese nombre.':'No other games with that name.','Primero pon la dirección del Worker.':'Set the Worker address first.','Todas las plataformas':'All platforms','Todas las etiquetas':'All tags','Cualquier duración':'Any length','Menos de 5 h':'Under 5 h','Más de 40 h':'Over 40 h',
   'Sin duración':'No length','Móvil':'Mobile','Orden ascendente':'Sort ascending','Orden descendente':'Sort descending','Elige una plataforma':'Choose a platform','Duración':'Length',
   'Backlog + En espera':'Backlog + On hold','No hay juegos con esos filtros.':'No games match those filters.','Lista':'List','Plataforma':'Platform','Etiqueta':'Tag',
   'Toca uno para buscarlo a mano o ponerle la duración. También los ves con el filtro «Sin duración».':'Tap one to look it up by hand or set its length. You can also see them with the “No length” filter.'});
 const RULES = [
+  [/^Sin resultados con el título completo\. Resultados similares para «(.+)»:$/, (m, q) => `No results for the full title. Similar results for «${q}»:`],
   [/^quedan ~(.+)$/, (m, h) => `~${h} left`],
   [/^Ver los (\d+) juegos? sin duración$/, (m, n) => `Show the ${n} ${n === '1' ? 'game' : 'games'} without a length`],
   [/^Elegido entre (\d+) juegos?\.$/, (m, n) => `Picked from ${n} ${n === '1' ? 'game' : 'games'}.`],
@@ -662,17 +666,32 @@ const HPLAT = {'xbox series x/s':'Xbox Series X|S','xbox series x':'Xbox Series 
   'sega game gear':'Game Gear','sega cd':'Mega CD / Sega CD','sega 32x':'Sega 32X','mobile':'Móvil','neo geo aes':'Neo Geo','neo geo cd':'Neo Geo','turbografx-16':'PC Engine / TurboGrafx-16','pc engine':'PC Engine / TurboGrafx-16',
   'atari jaguar cd':'Atari Jaguar','amazon luna':'', 'google stadia':'', 'oculus quest':'', 'meta quest':'', 'geforce now':'', 'ouya':'', 'stadia':''};
 const HPLAT_OWN = Object.fromEntries(PLATFORMS.map(p => [p.toLowerCase(), p]));
-function mapHplat(arr){   // nombres de HowLongToBeat → tus plataformas (las que no existen aquí se ignoran), en el orden de tu lista
+function mapHplat(arr, expand = true){   // nombres de HowLongToBeat → tus plataformas (las que no existen aquí se ignoran), en el orden de tu lista
   const out = new Set();
   for (const n of arr || []){ const k = String(n).trim().toLowerCase(); const v = k in HPLAT ? HPLAT[k] : (HPLAT_OWN[k] || ''); if (v) out.add(v); }
+  if (expand && out.has('PC')){ out.add('Steam Deck'); out.add('Steam Machine'); }   // lo que sale en PC también se juega en Steam Deck y Steam Machine
   return [...out].sort((a, b) => PLATFORMS.indexOf(a) - PLATFORMS.indexOf(b));
+}
+// «Game of the Year Edition», «Definitive Edition»…: HowLongToBeat no los lleva en el nombre
+const EDITION_A = /\b(?:the\s+)?(?:game of the year|goty|definitive|ultimate|deluxe|enhanced|legendary|collector'?s|anniversary|premium|director'?s cut)(?:\s+(?:edition|version|cut))?\b/gi;
+const EDITION_B = /\b(?:complete|special|gold|standard|digital)\s+(?:edition|version)\b|\b(?:edition|version)\b/gi;
+const cleanTitle = t => String(t).replace(/\([^)]*\)|\[[^\]]*\]/g, ' ').replace(EDITION_A, ' ').replace(EDITION_B, ' ').replace(/[\s\-–:,]+$/g, '').replace(/^[\s\-–:,]+/g, '').replace(/\s+/g, ' ').trim();
+function shortTitles(t){   // para ofrecer resultados parecidos: sin edición, sin subtítulo, primeras palabras
+  const c = cleanTitle(t), out = [c, c.split(/\s*[:\-–]\s+/)[0], c.split(/\s+/).slice(0, 3).join(' ')];
+  const seen = new Set([nrmT(t)]); return out.filter(x => { const k = nrmT(x); if (k.length < 2 || seen.has(k)) return false; seen.add(k); return true; });
+}
+const usable = m => !!m && (m.main > 0 || m.plus > 0 || m.full > 0);
+async function hltbFind(title){   // busca con el título tal cual y, si no coincide, sin la «edición»
+  const rs = await hltbSearch(title), m = bestHltb(title, rs); if (usable(m)) return m;
+  const c = cleanTitle(title); if (c && nrmT(c) !== nrmT(title)){ const m2 = bestHltb(c, await hltbSearch(c)); if (usable(m2)) return m2; }
+  return null;
 }
 function hltbApply(g, r){ g.hid = r.id || 0; g.hm = r.main || 0; g.hp = r.plus || 0; g.hf = r.full || 0; if (S.hOver) g.est = 0; }
 async function hltbFill(id, known){   // al añadir un juego: se rellena solo y sin avisar si algo falla (si ya se buscó al añadirlo, se reutiliza)
   try {
     const g = D.games[id]; if (!g || g.deleted || hasHltb(g)) return;
-    const m = known || bestHltb(g.title, await hltbSearch(g.title)); const h = D.games[id];
-    if (m && h && !h.deleted){ hltbApply(h, m); touch(h); }
+    const m = known || await hltbFind(g.title); const h = D.games[id];
+    if (usable(m) && h && !h.deleted){ hltbApply(h, m); if (!h.platform){ const b = mapHplat(m.platforms, false); if (b.length === 1) h.platform = b[0]; } touch(h); }
   } catch(_){}
 }
 const hparts = o => [['Historia', o.main], ['Extras', o.plus], ['Completista', o.full]].map(([l, v]) => `<span>${l}</span> ${v ? fmtH(v) : '—'}`).join(' · ');
@@ -683,18 +702,18 @@ function hltbSummary(g){
   return `${parts}<div>${g.est > 0 ? 'Se usa tu duración a mano.' : 'El punto ● marca el tiempo que se usa.'}</div>`;
 }
 let bulkStop = false, bulkRun = false;
-async function hltbBulk(onProg){
-  const targets = list().filter(g => g.status !== 'done' && (!hasHltb(g) || (S.hOver && g.est > 0)));
+async function hltbBulk(onProg, ids){   // sin «ids»: los pendientes (menos completados); con «ids»: justo esos (la selección), también los completados
+  const targets = ids ? ids.map(id => D.games[id]).filter(g => g && !g.deleted) : list().filter(g => g.status !== 'done' && (!hasHltb(g) || (S.hOver && g.est > 0)));
   const res = {total: targets.length, found: 0, none: 0, noneList: [], err: 0, aborted: '', stopped: false}; let consec = 0, i = 0;
   bulkStop = false; bulkRun = true;
   for (const g of targets){
     if (bulkStop){ res.stopped = true; break; }
     onProg(++i, targets.length);
-    if (hasHltb(g)){ g.est = 0; g.updated = Date.now(); res.found++; continue; }   // ya tenía datos: solo se quita lo manual
+    if (!ids && hasHltb(g)){ g.est = 0; g.updated = Date.now(); res.found++; continue; }   // ya tenía datos: solo se quita lo manual
     try {
-      const m = bestHltb(g.title, await hltbSearch(g.title)); consec = 0;
+      const m = await hltbFind(g.title); consec = 0;
       if (m){ hltbApply(g, m); g.updated = Date.now(); }
-      if (m && hasHltb(g)) res.found++; else { res.none++; res.noneList.push(g.id); }   // sin coincidencia, o con ficha pero sin ningún tiempo
+      if (m || hasHltb(g)) res.found++; else { res.none++; res.noneList.push(g.id); }   // si no se encuentra, se conserva lo que tuviera   // sin coincidencia, o con ficha pero sin ningún tiempo
     } catch(e){ res.err++; if (++consec >= 3){ res.aborted = e.message; break; } }
     if (i % 5 === 0){ save(); render(); }
     await new Promise(r => setTimeout(r, 350));
@@ -1054,9 +1073,10 @@ function curCmp(){
   return s === 'time' ? SORTS.timeDesc : (a, b) => f(b, a);
 }
 const durOk = (g, d) => { if (!d) return true; const h = hoursOf(g); return d === 'none' ? !h : !!h && (d === 'u5' ? h < 5 : d === 'u15' ? h >= 5 && h < 15 : d === 'u40' ? h >= 15 && h < 40 : h >= 40); };
+const qScope = () => S.qSc && ST[S.qSc] ? S.qSc : 'all';
 function viewItems(){
   const q = UI.q.trim().toLowerCase();
-  return list().filter(g => (q ? g.title.toLowerCase().includes(q) : g.status === UI.tab) && (!UI.plat || g.platform === UI.plat) && (!UI.tag || g.tags.includes(UI.tag)) && durOk(g, UI.dur)).sort(curCmp());
+  return list().filter(g => (q ? g.title.toLowerCase().includes(q) && (qScope() === 'all' || g.status === qScope()) : g.status === UI.tab) && (!UI.plat || g.platform === UI.plat) && (!UI.tag || g.tags.includes(UI.tag)) && durOk(g, UI.dur)).sort(curCmp());
 }
 function render(){
   const q = UI.q.trim().toLowerCase();
@@ -1077,6 +1097,9 @@ function render(){
   const fd = $('#fDir'); fd.disabled = curSort() === 'manual'; fd.textContent = curDir() === 'asc' ? '↑' : '↓';
   fd.setAttribute('aria-label', curDir() === 'asc' ? 'Orden ascendente' : 'Orden descendente'); fd.title = fd.getAttribute('aria-label');
   $('#fSort').value = curSort();
+  $('#qSc').hidden = !q;
+  $('#qSc').innerHTML = '<option value="all">Todas las listas</option>' + STATUSES.map(st => `<option value="${st.id}"${st.id === qScope() ? ' selected' : ''}>${st.label}</option>`).join('');
+  $('#qSc').value = qScope();
   // lista
   const items = viewItems(), listMode = curSort() === 'manual';
   if (UI.selecting) UI.sel = new Set([...UI.sel].filter(id => items.some(g => g.id === id)));
@@ -1085,10 +1108,37 @@ function render(){
   $('#count').textContent = items.length + (items.length === 1 ? ' juego' : ' juegos');
   $('#sec').style.setProperty('--c', q ? 'var(--accent)' : ST[UI.tab].c);
   const bs = $('#btnSel'); bs.hidden = listMode || !items.length; bs.textContent = UI.selecting ? 'Listo' : 'Seleccionar';
-  updateSelBar();
+  updateSelBar(); scheduleMore();
   $('#empty').innerHTML = items.length ? '' : (q
     ? `<div class="empty">${EMPTY_IC}<b>Sin resultados</b>No hay juegos tuyos con ese nombre.</div>`
     : `<div class="empty">${EMPTY_IC}<b>Aquí no hay nada todavía</b>Pulsa + para añadir un juego a «${ST[UI.tab].label}».</div>`);
+}
+
+/* ---------- «No añadidos»: lo que la búsqueda encuentra en SteamGridDB y todavía no tienes ---------- */
+const more = {term:'', rows:[], seq:0, timer:0};
+const moreWanted = () => UI.q.trim().length >= 2 && S.qNew !== false && !!S.sgdbKey;
+const moreHead = on => `<div class="mh">No añadidos<button class="mini" id="moreTgl" style="margin-left:auto">${on ? 'Ocultar' : 'Mostrar'}</button></div>`;
+function scheduleMore(){
+  clearTimeout(more.timer); const t = UI.q.trim();
+  if (!moreWanted() || t === more.term){ renderMore(); return; }
+  renderMore();
+  more.timer = setTimeout(async () => {
+    const me = ++more.seq; let rows = [];
+    try { rows = ((await sgdb('/search/autocomplete/' + encodeURIComponent(t))) || []).slice(0, 15); } catch(_){}
+    if (me !== more.seq) return; more.term = t; more.rows = rows; renderMore();
+  }, 500);
+}
+function renderMore(){
+  const box = $('#more'); if (!box) return;
+  box.onclick = null;
+  if (UI.q.trim().length < 2 || !S.sgdbKey){ box.innerHTML = ''; return; }
+  if (S.qNew === false){ box.innerHTML = moreHead(false); return; }
+  const rows = more.term === UI.q.trim() ? more.rows.filter(r => !findDup(r.name, r.id)) : [];
+  if (more.term !== UI.q.trim()){ box.innerHTML = moreHead(true) + '<div class="hint">Buscando no añadidos…</div>'; return; }
+  if (!rows.length){ box.innerHTML = moreHead(true) + '<div class="hint">No hay más juegos con ese nombre.</div>'; return; }
+  box.innerHTML = moreHead(true) + '' + rows.map((r, i) => `<div class="res" data-i="${i}"><div class="th"></div><div class="t"><b data-notr>${esc(r.name)}</b><small>${r.release_date ? new Date(r.release_date * 1000).getUTCFullYear() : ''}</small></div></div>`).join('');
+  rows.forEach((r, i) => firstCover(r.id).then(u => { const el = box.querySelector(`.res[data-i="${i}"] .th`); if (el && u) el.innerHTML = `<img src="${esc(u)}" alt="" referrerpolicy="no-referrer">`; }));
+  box.onclick = null;
 }
 
 /* ---------- selección múltiple ---------- */
@@ -1096,8 +1146,8 @@ function updateSelBar(){
   const b = $('#selbar'); b.hidden = !UI.selecting; document.body.classList.toggle('selecting', UI.selecting);
   if (!UI.selecting) return;
   const n = UI.sel.size;
-  $('#selcount').textContent = n ? `${n} seleccionado${n === 1 ? '' : 's'}` : 'Toca los juegos que quieras';
-  $('#selmove').disabled = $('#seldel').disabled = !n;
+  $('#selcount').textContent = UI.busy || (n ? `${n} seleccionado${n === 1 ? '' : 's'}` : 'Toca los juegos que quieras');
+  $('#selmove').disabled = $('#seldel').disabled = $('#selhl').disabled = !n;
   const m = $('#selmove'); if (!m.options.length) m.innerHTML = '<option value="">Mover a…</option>' + STATUSES.map(s => `<option value="${s.id}">${s.label}</option>`).join('');
 }
 function endSel(){ UI.selecting = false; UI.sel.clear(); }
@@ -1130,6 +1180,12 @@ $('#nav').addEventListener('click', e => {
   const b = e.target.closest('[data-tab]'); if (!b) return;
   endSel(); UI.tab = b.dataset.tab; UI.q = ''; $('#q').value = ''; render(); $('#main').scrollTop = 0;
 });
+$('#more').addEventListener('click', e => {
+  if (e.target.closest('#moreTgl')){ S.qNew = S.qNew === false; saveS(); render(); return; }
+  const row = e.target.closest('.res'); if (!row) return;
+  const rows = more.rows.filter(r => !findDup(r.name, r.id)); const r = rows[+row.dataset.i]; if (r) openAdd(r.name);
+});
+$('#qSc').addEventListener('change', e => { endSel(); S.qSc = e.target.value; saveS(); render(); });
 $('#q').addEventListener('input', e => { endSel(); UI.q = e.target.value; render(); });
 $('#fPlat').addEventListener('change', e => { UI.plat = e.target.value; render(); });
 $('#fSort').addEventListener('change', e => { endSel(); S.sorts[UI.tab] = e.target.value; delete S.rev[UI.tab]; saveS(); render(); });
@@ -1140,6 +1196,15 @@ $('#fTag').addEventListener('change', e => { UI.tag = e.target.value; render(); 
 $('#btnSettings').addEventListener('click', openSettings);
 $('#btnStats').addEventListener('click', openStats);
 $('#btnRandom').addEventListener('click', () => openRandom());
+(() => {
+  const m = $('#main'), tb = $('#toolbar'); let last = 0, up = 0;
+  m.addEventListener('scroll', () => {
+    const y = m.scrollTop, d = y - last; last = y;
+    if (y < 90){ tb.classList.remove('away'); up = 0; return; }
+    if (d > 2){ up = 0; if (!tb.contains(document.activeElement)) tb.classList.add('away'); }
+    else if (d < 0){ up -= d; if (up > 30) tb.classList.remove('away'); }
+  }, {passive: true});
+})();
 $('#btnSel').addEventListener('click', () => setSelecting(!UI.selecting));
 $('#selx').addEventListener('click', () => setSelecting(false));
 $('#selall').addEventListener('click', () => {
@@ -1150,6 +1215,15 @@ $('#selmove').addEventListener('change', e => {
   const ids = [...UI.sel], now = Date.now();
   ids.forEach(id => { const g = D.games[id]; if (g){ applyStatus(g, v); g.updated = now; } });
   save(); setSelecting(false); toast(`${ids.length} juego${ids.length === 1 ? '' : 's'} → ${ST[v].label}`);
+});
+$('#selhl').addEventListener('click', async () => {
+  if (bulkRun){ bulkStop = true; return; }
+  const ids = [...UI.sel]; if (!ids.length) return;
+  if (!syncBase()){ toast('Primero pon la dirección del Worker.'); return; }
+  const btn = $('#selhl'); btn.textContent = 'Cancelar';
+  const r = await hltbBulk((i, n) => { UI.busy = `Buscando ${i} de ${n}…`; $('#selcount').textContent = UI.busy; }, ids);
+  UI.busy = ''; btn.textContent = 'Horas'; setSelecting(false);
+  toast(r.aborted ? r.aborted : `${r.found} con horas · ${r.none} sin coincidencia${r.stopped ? ' · cancelado' : ''}`);
 });
 $('#seldel').addEventListener('click', () => {
   const ids = [...UI.sel], now = Date.now(); if (!ids.length) return;
@@ -1237,22 +1311,19 @@ const platVal = id => { const sel = $('#' + id); return sel.value === '__other' 
 /* --- añadir juego --- */
 const normTitle = t => String(t).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
 function findDup(title, sgdbId){ const nt = normTitle(title); return list().find(g => (sgdbId && g.sgdbId === sgdbId) || normTitle(g.title) === nt) || null; }
+const platPick = label => `<select class="ps" aria-label="Elegir plataforma"><option value="">${label}</option>${platList().map(x => `<option value="${esc(x)}">${esc(x)}</option>`).join('')}</select>`;
 const dupText = d => `ya en ${ST[d.status].label}${d.platform ? ' (' + d.platform + ')' : ''}`;
-function openAdd(){
+function openAdd(prefill){
   openSheet(`
     <div class="top"><h2>Añadir juego</h2><button id="x">Cerrar</button></div>
     <label>Buscar en SteamGridDB</label>
     <input id="aq" type="search" placeholder="Nombre del juego…" autocomplete="off">
-    <div style="display:flex;gap:8px">
-      <div style="flex:1"><label>Plataforma</label>${platSelect('ap', S.lastPlatform)}</div>
-      <div style="flex:1"><label>Añadir a</label><select id="as">${STATUSES.map(s => `<option value="${s.id}" ${s.id === UI.tab ? 'selected' : ''}>${s.label}</option>`).join('')}</select></div>
-    </div>
+    <label>Añadir a</label><select id="as">${STATUSES.map(s => `<option value="${s.id}" ${s.id === UI.tab ? 'selected' : ''}>${s.label}</option>`).join('')}</select>
     <div id="ares" style="margin-top:12px"></div>
     <div class="btnrow"><button id="manual">Añadir «<span id="mt">…</span>» sin buscar</button></div>`);
   $('#x').onclick = closeSheet;
-  platBind('ap', () => {});
   const aq = $('#aq'); setTimeout(() => aq.focus(), 50);
-  const opts = forced => { if (forced !== undefined) return {platform: forced, status: $('#as').value}; const p = platVal('ap'); S.lastPlatform = p || S.lastPlatform; saveS(); return {platform: p, status: $('#as').value}; };
+  const opts = plat => ({platform: plat || '', status: $('#as').value});   // la plataforma sale de HowLongToBeat (se puede cambiar luego en el detalle)
   const manLabel = () => { const t = aq.value.trim(), d = t && findDup(t, null); $('#manual').innerHTML = d ? `Ya lo tienes (${esc(dupText(d))}). Pulsa otra vez para añadirlo igualmente` : 'Añadir «<span id="mt"></span>» sin buscar'; if (!d) $('#mt').textContent = t || '…'; delete $('#manual').dataset.ok; };
   manLabel();
   $('#manual').onclick = () => {
@@ -1265,6 +1336,7 @@ function openAdd(){
     manLabel();
     clearTimeout(timer); timer = setTimeout(run, 400);
   });
+  if (prefill){ aq.value = prefill; manLabel(); setTimeout(run, 0); }
   async function run(){
     const term = aq.value.trim(), me = ++seq; const box = $('#ares');
     if (!box || !aq.isConnected) return;               // la hoja ya se cerró
@@ -1275,8 +1347,8 @@ function openAdd(){
       const data = (await sgdb('/search/autocomplete/' + encodeURIComponent(term))) || [];
       if (me !== seq || !box.isConnected) return;
       if (!data.length){ box.innerHTML = '<div class="hint">Sin resultados. Puedes añadirlo a mano abajo.</div>'; return; }
-      const rows = data.slice(0, 10), hm = new Array(rows.length).fill(null), hpl = rows.map(() => []);
-      box.innerHTML = rows.map((r, i) => `<div class="res" data-i="${i}"><div class="th"></div><div class="t"><b>${esc(r.name)}</b><small>${r.release_date ? new Date(r.release_date * 1000).getUTCFullYear() : ''}${r.verified ? ' · verificado' : ''}${(() => { const d = findDup(r.name, r.id); return d ? ` · <span class="dup">${esc(dupText(d))}</span>` : ''; })()}</small><div class="pls"></div></div></div>`).join('');
+      const rows = data.slice(0, 10), hm = new Array(rows.length).fill(null), hpl = rows.map(() => []), hb = rows.map(() => []);
+      box.innerHTML = rows.map((r, i) => `<div class="res" data-i="${i}"><div class="th"></div><div class="t"><b>${esc(r.name)}</b><small>${r.release_date ? new Date(r.release_date * 1000).getUTCFullYear() : ''}${r.verified ? ' · verificado' : ''}${(() => { const d = findDup(r.name, r.id); return d ? ` · <span class="dup">${esc(dupText(d))}</span>` : ''; })()}</small><div class="pls">${platPick('Elegir plataforma')}</div></div></div>`).join('');
       rows.forEach((r, i) => firstCover(r.id).then(u => {
         const el = box.querySelector(`.res[data-i="${i}"] .th`);
         if (el && u) el.innerHTML = `<img src="${esc(u)}" alt="" referrerpolicy="no-referrer">`;
@@ -1286,23 +1358,30 @@ function openAdd(){
         if (me !== seq || !box.isConnected) return;
         rows.forEach((r, i) => {
           const m = bestHltb(r.name, rs); if (!m) return;
-          hm[i] = m; hpl[i] = mapHplat(m.platforms);
+          hm[i] = m; hpl[i] = mapHplat(m.platforms); hb[i] = mapHplat(m.platforms, false);
           const el = box.querySelector(`.res[data-i="${i}"] .pls`); if (!el || !hpl[i].length) return;
-          el.innerHTML = hpl[i].slice(0, 10).map(x => `<button class="pc${hpl[i].length === 1 ? ' one' : ''}" data-p="${esc(x)}">${esc(x)}</button>`).join('') + (hpl[i].length > 10 ? `<span class="hint" data-notr>+${hpl[i].length - 10}</span>` : '');
+          el.innerHTML = hpl[i].slice(0, 10).map(x => `<button class="pc${hb[i].length === 1 && hb[i][0] === x ? ' one' : ''}" data-p="${esc(x)}">${esc(x)}</button>`).join('') + (hpl[i].length > 10 ? `<span class="hint" data-notr>+${hpl[i].length - 10}</span>` : '') + platPick('Otra…');
         });
       }).catch(() => {});
-      box.onclick = async e => {
-        const row = e.target.closest('.res'); if (!row || row.classList.contains('added')) return;
-        const i = +row.dataset.i, r = rows[i], chipBtn = e.target.closest('.pc');
-        // plataforma: la que toques; si solo hay una en HowLongToBeat, esa; si hay varias, la que tengas elegida arriba
-        let plat; const sel = platVal('ap');
-        if (chipBtn) plat = chipBtn.dataset.p; else if (hpl[i].length === 1) plat = hpl[i][0]; else if (hpl[i].length > 1 && !sel){ toast('Elige una plataforma'); return; }
-        if (findDup(r.name, r.id) && !row.dataset.ok){ row.dataset.ok = 1; row.querySelector('small').innerHTML = '<span class="dup">Ya lo tienes. Pulsa otra vez para añadirlo igualmente</span>'; return; }
-        const o = opts(plat);
-        if (chipBtn){ S.lastPlatform = plat; saveS(); }
+      const addRow = async (row, plat, sel) => {
+        const i = +row.dataset.i, r = rows[i];
+        if (findDup(r.name, r.id) && !row.dataset.ok){ row.dataset.ok = 1; if (sel) sel.value = ''; row.querySelector('small').innerHTML = '<span class="dup">Ya lo tienes. Pulsa otra vez para añadirlo igualmente</span>'; return; }
+        row.classList.add('busy');
         const cover = await firstCover(r.id);
-        const ng = addGame({title: r.name, sgdbId: r.id, cover, ...o}); if (S.hAuto !== false) hltbFill(ng.id, hm[i]);
+        const ng = addGame({title: r.name, sgdbId: r.id, cover, ...opts(plat)}); if (S.hAuto !== false) hltbFill(ng.id, hm[i]);
         row.classList.add('added'); row.querySelector('small').textContent = '✓ añadido' + (plat ? ' · ' + plat : ''); row.querySelector('.pls').innerHTML = ''; toast(`«${r.name}» añadido`);
+      };
+      box.onclick = e => {
+        const row = e.target.closest('.res'); if (!row || row.classList.contains('added') || row.classList.contains('busy') || e.target.closest('select')) return;
+        const i = +row.dataset.i, chipBtn = e.target.closest('.pc');
+        // plataforma: la que toques; si solo hay una en HowLongToBeat, esa; si hay varias, hay que tocar una
+        let plat = '';
+        if (chipBtn) plat = chipBtn.dataset.p; else if (hb[i].length === 1) plat = hb[i][0]; else if (hb[i].length > 1){ toast('Elige una plataforma'); return; }
+        addRow(row, plat);
+      };
+      box.onchange = e => {   // plataforma elegida a mano en el desplegable de la fila
+        const sel = e.target.closest('.ps'); if (!sel || !sel.value) return;
+        const row = sel.closest('.res'); if (row && !row.classList.contains('added') && !row.classList.contains('busy')) addRow(row, sel.value, sel);
       };
     } catch(e){ if (me === seq) box.innerHTML = `<div class="status-line ko">${esc(e.message)}</div>`; }
   }
@@ -1366,9 +1445,11 @@ function openDetail(g){
     $('#dhs').onclick = async () => {
       const box = $('#dhr'); box.innerHTML = '<div class="hint">Buscando…</div>';
       try {
-        const rs = await hltbSearch(g.title); if (!box.isConnected) return;
+        let rs = await hltbSearch(g.title), alt = '';
+        if (!rs.length) for (const q of shortTitles(g.title)){ if (!box.isConnected) return; rs = await hltbSearch(q); if (rs.length){ alt = q; break; } }
+        if (!box.isConnected) return;
         if (!rs.length){ box.innerHTML = '<div class="hint">Sin resultados en HowLongToBeat para ese nombre.</div>'; return; }
-        box.innerHTML = rs.slice(0, 6).map((r, i) => `<div class="res" data-i="${i}"><div class="t"><b>${esc(r.name)}</b><small>${r.year ? r.year + ' · ' : ''}${hparts(r)}</small></div></div>`).join('');
+        box.innerHTML = (alt ? `<div class="hint">Sin resultados con el título completo. Resultados similares para «${esc(alt)}»:</div>` : '') + rs.slice(0, 6).map((r, i) => `<div class="res" data-i="${i}"><div class="t"><b>${esc(r.name)}</b><small>${r.year ? r.year + ' · ' : ''}${hparts(r)}</small></div></div>`).join('');
         box.onclick = ev => { const row = ev.target.closest('.res'); if (!row) return; hltbApply(g, rs[+row.dataset.i]); touch(g); draw(); };
       } catch(e){ if (box.isConnected) box.innerHTML = `<div class="status-line ko">${esc(e.message)}</div>`; }
     };
