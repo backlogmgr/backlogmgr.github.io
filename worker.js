@@ -27,6 +27,7 @@ export default {
 
     if (url.pathname === '/sync' || url.pathname.startsWith('/sync/')) return sync(req, env, url, cors);
     if (url.pathname === '/hltb') return hltb(url, cors);
+    if (url.pathname === '/img') return img(url, cors);
     return proxy(req, url, cors);
   }
 };
@@ -99,6 +100,23 @@ async function readBody(req, cors) {
   // Comprobación barata (sin interpretar el JSON entero, para no gastar CPU)
   if (!body.startsWith('{"v":1,"iv":"')) return text('bad body', 400, cors);
   return body;
+}
+
+// ---------- portadas de SteamGridDB (reserva) ----------
+// /img?u=<https://cdn2.steamgriddb.com/…>  → la imagen. La app solo lo usa cuando su red no consigue cargar el CDN directamente
+// (por ejemplo, durante los bloqueos por fútbol de ciertas IPs de Cloudflare en España).
+async function img(url, cors) {
+  let t;
+  try { t = new URL(url.searchParams.get('u')); } catch (_) { return text('bad url', 400, cors); }
+  if (t.protocol !== 'https:' || !/(^|\.)steamgriddb\.com$/.test(t.hostname)) return text('forbidden host', 403, cors);
+  try {
+    const r = await fetch(t.toString(), {headers: {'User-Agent': 'mi-backlog-proxy', 'Accept': 'image/*'}, cf: {cacheEverything: true, cacheTtl: 604800}});
+    const ct = r.headers.get('Content-Type') || '';
+    if (!r.ok || !ct.startsWith('image/')) return text('upstream ' + r.status, r.ok ? 415 : r.status, cors);
+    return new Response(r.body, {headers: {...cors, 'Content-Type': ct, 'Cache-Control': 'public, max-age=604800'}});
+  } catch (e) {
+    return text('upstream error: ' + e.message, 502, cors);
+  }
 }
 
 // ---------- proxy de SteamGridDB ----------

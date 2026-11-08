@@ -847,6 +847,37 @@ function compactTrash(){ const lim = Date.now() - TRASH_MS; let n = 0; for (cons
 function removeGame(g){ g.deleted = true; g.updated = Date.now(); save(); render(); }
 function restoreGame(g){ delete g.deleted; g.updated = Date.now(); save(); render(); }
 
+/* ---------- portadas bloqueadas por la red: reserva a través del Worker ---------- */
+const SG_IMG = /^https:\/\/([\w-]+\.)?steamgriddb\.com\//;
+const px = {map:new Map(), run:0, dead:0};
+function viaWorker(url){   // descarga la imagen con el Worker (cuando la red bloquea el CDN) y devuelve una URL local, o null
+  if (px.map.has(url)) return px.map.get(url);
+  const p = (async () => {
+    if (px.dead > 8) return null;                       // el Worker tampoco responde: no insistimos
+    while (px.run >= 4) await new Promise(r => setTimeout(r, 60));
+    px.run++;
+    try {
+      const r = await fetch(syncBase() + '/img?u=' + encodeURIComponent(url));
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const keep = r.clone(), b = await r.blob();
+      try { (await caches.open('backlog-img-v2')).put(url, keep); } catch(_){}   // la próxima vez sale de la caché, sin red
+      px.dead = 0;
+      return URL.createObjectURL(b);
+    } catch(_){ px.dead++; return null; }
+    finally { px.run--; }
+  })();
+  px.map.set(url, p); return p;
+}
+document.addEventListener('error', e => {   // en fase de captura: los errores de imagen no burbujean
+  const im = e.target;
+  if (!(im instanceof HTMLImageElement)) return;
+  if (im.dataset.px) { im.dataset.px = 'x'; return; }   // ya se intentó por el Worker: este fallo es definitivo
+  const u = im.currentSrc || im.src;
+  if (!SG_IMG.test(u)) return;
+  im.dataset.px = '1';                                   // «1» = reintentando por el Worker
+  viaWorker(u).then(b => { if (b && im.isConnected) im.src = b; else { im.dataset.px = 'x'; im.dispatchEvent(new Event('error')); } });
+}, true);
+
 /* ---------- API de SteamGridDB ---------- */
 const SGDB = 'https://www.steamgriddb.com/api/v2';
 async function sgdb(path){
@@ -1391,7 +1422,7 @@ $('#grid').addEventListener('click', e => {
   else if (a.dataset.act === 'top') moveToTop(g);
 });
 $('#grid').addEventListener('error', e => {   // portada rota → marcador de posición
-  if (e.target.tagName !== 'IMG') return;
+  if (e.target.tagName !== 'IMG' || e.target.dataset.px === '1') return;   // «1»: se está reintentando por el Worker
   const card = e.target.closest('[data-id]'); const g = card && D.games[card.dataset.id];
   if (g) e.target.parentElement.insertAdjacentHTML('afterbegin', ph(g)), e.target.remove();
 }, true);
@@ -1953,7 +1984,16 @@ function tierAddSheet(t){
   $('#tma').onclick = manual; $('#tm').onkeydown = e => { if (e.key === 'Enter'){ e.preventDefault(); manual(); } };
   draw();
 }
-const loadImg = url => new Promise(res => { const im = new Image(); im.crossOrigin = 'anonymous'; im.referrerPolicy = 'no-referrer'; const to = setTimeout(() => res(null), 10000); im.onload = () => { clearTimeout(to); res(im); }; im.onerror = () => { clearTimeout(to); res(null); }; im.src = url; });
+const loadImg = url => new Promise(res => {
+  const go = (u, retry) => {
+    const im = new Image(); im.crossOrigin = 'anonymous'; im.referrerPolicy = 'no-referrer';
+    const to = setTimeout(() => res(null), 10000);
+    im.onload = () => { clearTimeout(to); res(im); };
+    im.onerror = () => { clearTimeout(to); if (retry && SG_IMG.test(url)) viaWorker(url).then(b => b ? go(b, false) : res(null)); else res(null); };
+    im.src = u;
+  };
+  go(url, true);
+});
 async function drawTier(t){
   const W = 1080, PAD = 24, LW = 170, TW = 112, TH = 168, GAP = 8, TOP = 120, FOOT = 74, F = 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
   const per = Math.max(1, Math.floor((W - PAD * 2 - LW - GAP + GAP) / (TW + GAP)));

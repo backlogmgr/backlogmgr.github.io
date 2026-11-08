@@ -1,5 +1,5 @@
 // Service worker: la app funciona sin conexión y las portadas ya vistas se guardan.
-const V = 'backlog-shell-v31', IMG = 'backlog-img-v1';
+const V = 'backlog-shell-v32', IMG = 'backlog-img-v2';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icon.svg', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
 
 self.addEventListener('install', e => {
@@ -19,8 +19,13 @@ self.addEventListener('fetch', e => {
     e.respondWith(caches.open(IMG).then(async c => {
       const hit = await c.match(r);
       if (hit) return hit;
-      try { const res = await fetch(r); c.put(r, res.clone()); return res; }
-      catch (_) { return Response.error(); }
+      const ac = new AbortController(), to = setTimeout(() => ac.abort(), 12000);   // si el CDN está bloqueado no esperamos eternamente
+      try {
+        const res = await fetch(r, {signal: ac.signal});
+        if (res.ok || res.type === 'opaque') c.put(r, res.clone());   // las respuestas de error no se guardan
+        return res;
+      } catch (_) { return Response.error(); }
+      finally { clearTimeout(to); }
     }));
     return;
   }

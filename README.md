@@ -49,6 +49,8 @@ Un único Worker hace las dos cosas. Si ya tienes uno funcionando como proxy (`b
 
 La dirección del Worker **ya viene escrita en la app** (constante `DEFAULT_PROXY` de `index.html`, ahora `https://backlog-proxy.backlogmgr.workers.dev/?url=`), así que no hay que configurarla en cada dispositivo. Si algún día cambias de Worker o del subdominio de `workers.dev`, cámbiala en esa línea y sube el archivo, o escríbela en Ajustes → «Dirección del Worker». La sincronización usa ese mismo Worker.
 
+**Portadas bloqueadas por la red:** si tu operador bloquea el CDN de SteamGridDB (por ejemplo, los bloqueos por fútbol de IPs de Cloudflare en España), la app pide esa portada al Worker (`/img?u=…`), que la descarga por ti, y la guarda en la caché del dispositivo. Solo se usa cuando falla la carga directa, así que apenas gasta cuota del Worker. Requiere tener `worker.js` actualizado.
+
 ## Sincronizar móvil y PC
 
 1. En el primer dispositivo: Ajustes → *Sincronización* → **Crear código nuevo**. Se sube todo a la nube.
