@@ -101,3 +101,9 @@ Importar desde Steam, el resto de la hoja de ruta y, más adelante, cuentas con 
 - Completados: orden por fecha de fin o de inicio (sin fecha, al final) y filtro por año.
 - Pulsación larga en una portada para empezar a seleccionar; «Horas» salta los juegos que ya tienen datos.
 - Horas a mano con ✎, las de HowLongToBeat con «~». Deseados → botón «Al backlog». Aleatorio también desde Jugando.
+
+## Novedades de la versión 35
+- Etiquetas con lista central (color, renombrar, fusionar, borrar en todos los juegos): Ajustes → Datos y copias → Gestionar etiquetas.
+- Autocompletado al escribir una etiqueta en la ficha del juego; el botón «Etiquetas» de la selección múltiple las pone o quita a varios juegos a la vez.
+- Filtro de etiquetas con incluir (✓) / excluir (✕) y modo «todas» o «cualquiera».
+- Historial de cambios por versión en Ajustes → Datos y copias. Para versiones futuras, añade una entrada al principio de `CHANGELOG` y sube `APP_VER`.

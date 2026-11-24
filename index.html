@@ -39,6 +39,22 @@ button:hover{filter:brightness(1.18)}
 button:active{transform:scale(.97)}
 button:focus-visible,a:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
 textarea{max-width:100%;resize:vertical}
+.fsel{background-color:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 34px 10px 12px;width:100%;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background-repeat:no-repeat;background-position:right 12px center;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%239096b0' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")}
+.fsel[hidden]{display:none}.trow>.fsel{flex:1 1 0;min-width:0}.fsel.act{border-color:var(--accent);color:#fff}
+.tags button{--tc:var(--accent);display:inline-flex;align-items:center;gap:6px}
+.tags button::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--tc);flex:none}
+.tags button.on{background:var(--tc);border-color:var(--tc);color:#fff}.tags button.on::before{background:#fff}
+.tags button.inc::before{content:"✓";background:none;width:auto;height:auto;color:var(--tc);font-weight:800}.tags button.inc{border-color:var(--tc);color:var(--text)}
+.tags button.exc{border-color:#ff6b81;color:#ff8da0;text-decoration:line-through}.tags button.exc::before{content:"✕";background:none;width:auto;height:auto;color:#ff6b81;text-decoration:none;font-weight:800}
+.tags button.some{border-style:dashed;border-color:var(--tc)}.tags button small{opacity:.65;font-size:11px}
+.tags button.new{border-style:dashed;color:var(--mute)}.tags button.new::before{content:"+";background:none;width:auto;height:auto}
+.tadd{display:flex;gap:8px;margin:6px 0 10px}.tadd button{flex:none}
+.tli{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid var(--line)}.tli .dot{width:12px;height:12px;border-radius:50%;background:var(--tc);flex:none}
+.tli b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}.tli small{color:var(--mute)}.tli button{padding:6px 12px;font-size:13px}
+.sw{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 12px}.sw button{width:30px;height:30px;border-radius:50%;border:3px solid transparent;background:var(--tc);padding:0}.sw button.on{border-color:#fff}
+.seg{display:flex;gap:6px;margin:6px 0 10px}.seg button{flex:1}.seg button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.hist h3{margin:16px 0 6px;font-size:15px}.hist ul{margin:0;padding-left:20px;color:var(--text)}.hist li{margin:4px 0;font-size:13.5px;line-height:1.4}.hist .cur{font-size:11px;color:var(--accent);margin-left:6px}
+
 input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none;width:20px;height:20px;cursor:pointer;opacity:.75;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b8bdd6' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18'/%3E%3C/svg%3E") center/14px no-repeat}
 input,select,textarea{background-color:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;width:100%;transition:border-color .15s,box-shadow .15s}
 input:focus,select:focus,textarea:focus{outline:0;border-color:var(--accent);box-shadow:0 0 0 3px #7c6cff33}
@@ -67,16 +83,16 @@ header .ib{width:42px;height:42px;padding:0;display:grid;place-items:center;bord
 #q{flex:1 1 0;min-width:0;padding-left:40px;background-repeat:no-repeat;background-position:13px center;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%239096b0' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M20 20l-3.5-3.5'/%3E%3C/svg%3E")}
 .sortgrp{flex:1.25 1 0;display:flex;gap:8px;min-width:0}.sortgrp select{flex:1 1 0;min-width:0}
-#qSc[hidden],#fTag[hidden]{display:none}
+#qSc[hidden],#fTag[hidden],#fYear[hidden]{display:none}
 .tbm{position:relative;flex:none;width:38px;height:36px;padding:0;display:grid;place-items:center;border-radius:11px;background:var(--panel2)}.tbm svg{transition:transform .2s}.toolbar.open .tbm svg{transform:rotate(180deg)}
 .tbdot{display:none;position:absolute;top:5px;right:5px;width:8px;height:8px;border-radius:50%;background:var(--accent2);border:2px solid var(--panel2);box-sizing:content-box}.tbdot.on{display:block}
 #tbx{display:none}.toolbar.open #tbx{display:flex}
 @media(max-width:899px){
   header{padding-bottom:6px;gap:6px;padding-left:12px;padding-right:12px}header .ib{width:36px;height:36px;border-radius:12px}.brand{font-size:19px;gap:8px;letter-spacing:-.6px}.brand .logo{width:30px;height:30px}.brand span{white-space:nowrap}
   .toolbar{gap:6px;padding:2px 12px 7px;margin:0 -14px;will-change:transform}
-  .toolbar #q,.toolbar select,.toolbar .dir{height:36px;padding-top:0;padding-bottom:0;font-size:14px;border-radius:11px}
+  .toolbar #q,.toolbar select,.toolbar .fsel,.toolbar .dir{height:36px;padding-top:0;padding-bottom:0;font-size:14px;border-radius:11px}
   .toolbar #q{padding-left:36px;background-position:11px center;background-size:16px}
-  .toolbar select{padding-left:11px;padding-right:30px;background-position:right 10px center}
+  .toolbar select,.toolbar .fsel{padding-left:11px;padding-right:30px;background-position:right 10px center}
   .toolbar .dir{width:38px;font-size:16px}.trow{gap:6px}.sortgrp{gap:6px}
 }
 main{flex:1;overflow-y:auto;padding:2px 14px calc(96px + env(safe-area-inset-bottom));scrollbar-width:thin;scrollbar-color:var(--sbar) transparent}
@@ -316,7 +332,7 @@ nav button.tnav.on .t0{fill:#ef5b6b}nav button.tnav.on .t2{fill:#f5a524}nav butt
   header,main{margin-left:228px;width:calc(100% - 228px)}
   header{flex:none;justify-content:flex-end;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;z-index:8}
   .toolbar{flex-direction:row;flex-wrap:wrap}.trow{display:contents}
-  #q{flex:2 1 170px}.toolbar select{flex:1 1 110px;min-width:100px}.sortgrp{flex:1.4 1 170px}
+  #q{flex:2 1 170px}.toolbar select,.toolbar .fsel{flex:1 1 110px;min-width:100px}.sortgrp{flex:1.4 1 170px}
   .tbm{display:none}#tbx{display:contents!important}
   main{padding-bottom:40px;height:calc(100% - 66px);flex:none}
   .grid{grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:18px}
@@ -330,9 +346,9 @@ nav button.tnav.on .t0{fill:#ef5b6b}nav button.tnav.on .t2{fill:#f5a524}nav butt
 }
 @media(min-width:1100px){   /* PC: la barra de búsqueda y los filtros suben a la fila de la cabecera, junto a los botones */
   .toolbar{position:fixed;top:12px;left:calc(228px + 14px);right:184px;z-index:8;margin:0;padding:0;background:none;backdrop-filter:none;-webkit-backdrop-filter:none;flex-wrap:nowrap;gap:8px;align-items:center;transition:none}
-  .toolbar #q,.toolbar select,.toolbar .dir,.toolbar .tbm{height:42px;padding-top:0;padding-bottom:0;font-size:14px;border-radius:13px}
+  .toolbar #q,.toolbar select,.toolbar .fsel,.toolbar .dir,.toolbar .tbm{height:42px;padding-top:0;padding-bottom:0;font-size:14px;border-radius:13px}
   .toolbar #q{padding-left:40px;flex:1.5 1 160px;min-width:140px}
-  .toolbar select{padding-left:12px;padding-right:30px}
+  .toolbar select,.toolbar .fsel{padding-left:12px;padding-right:30px}
   .toolbar #fPlat{flex:1 0 194px;min-width:194px}
   .toolbar .sortgrp{flex:1.2 0 205px;gap:8px}
   .toolbar .dir{width:42px}
@@ -411,7 +427,7 @@ nav button.tnav.on .t0{fill:#ef5b6b}nav button.tnav.on .t2{fill:#f5a524}nav butt
       <option value="fin">Terminado</option>
       <option value="ini">Empezado</option>
     </select><button class="dir" id="fDir" type="button"></button></div></div>
-    <div class="trow" id="tbx"><select id="fYear" aria-label="Año de fin" hidden></select><select id="fTag" aria-label="Etiqueta" hidden></select><select id="fDur" aria-label="Duración">
+    <div class="trow" id="tbx"><select id="fYear" aria-label="Año de fin" hidden></select><button id="fTag" class="fsel" type="button" aria-label="Etiquetas" hidden></button><select id="fDur" aria-label="Duración">
       <option value="">Cualquier duración</option><option value="u5">Menos de 5 h</option><option value="u15">5–15 h</option><option value="u40">15–40 h</option><option value="o40">Más de 40 h</option><option value="none">Sin duración</option>
     </select><select id="qSc" aria-label="Buscar en" hidden></select></div>
   </div><div class="sec" id="sec"><h2 id="title"></h2><span id="count"></span><button class="tbtn" id="btnSel" hidden>Seleccionar</button></div><div class="grid" id="grid"></div><div id="empty"></div><div id="more"></div></main>
@@ -419,7 +435,7 @@ nav button.tnav.on .t0{fill:#ef5b6b}nav button.tnav.on .t2{fill:#f5a524}nav butt
   <button class="fab" id="fab" aria-label="Añadir juego" title="Añadir juego"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><span>Añadir juego</span></button>
 </div>
 <div id="tiers" hidden></div>
-<div id="selbar" hidden><span id="selcount"></span><button id="selall">Todos</button><button id="selx">Cancelar</button><button id="selhl" title="Buscar horas en HowLongToBeat" aria-label="Buscar horas en HowLongToBeat">Horas</button><select id="selmove" aria-label="Mover a"></select><button id="seldel" class="danger">Eliminar</button></div>
+<div id="selbar" hidden><span id="selcount"></span><button id="selall">Todos</button><button id="selx">Cancelar</button><button id="seltag">Etiquetas</button><button id="selhl" title="Buscar horas en HowLongToBeat" aria-label="Buscar horas en HowLongToBeat">Horas</button><select id="selmove" aria-label="Mover a"></select><button id="seldel" class="danger">Eliminar</button></div>
 <div class="wrap" id="wrap" hidden><div class="sheet" id="sheet"></div></div>
 
 <script>
@@ -597,6 +613,15 @@ Object.assign(EN, {'Elegir plataforma':'Choose platform','Otra…':'Other…','O
   'Backlog + En espera':'Backlog + On hold','No hay juegos con esos filtros.':'No games match those filters.','Lista':'List','Plataforma':'Platform','Etiqueta':'Tag',
   'Toca uno para buscarlo a mano o ponerle la duración. También los ves con el filtro «Sin duración».':'Tap one to look it up by hand or set its length. You can also see them with the “No length” filter.'});
 Object.assign(EN, {'Tier lists':'Tier lists','Ampliar o reducir':'Expand or collapse','Tier list':'Tier list','Tier':'Tier','Nueva tier list':'New tier list','Mi tier list':'My tier list','(copia)':'(copy)','Sin colocar':'Unplaced','+ Añadir juegos':'+ Add games','+ Añadir fila':'+ Add row','Exportar':'Export','Fila':'Row','Nombre':'Name','Color':'Color','↑ Subir':'↑ Move up','↓ Bajar':'↓ Move down','Vaciar fila':'Empty row','Eliminar fila':'Delete row','Añadir juegos':'Add games','Hecho':'Done','Marcar todos':'Select all','Añadir':'Add','O escribe uno a mano':'Or type one by hand','Título del juego':'Game title','Toca una fila para colocarlo':'Tap a row to place it','Duplicar':'Duplicate','Devolver todo a «Sin colocar»':'Move everything back to «Unplaced»','Eliminar tier list':'Delete tier list','Tier list eliminada':'Tier list deleted','Generando imagen…':'Generating image…','No se pudo generar la imagen':'Couldn\'t generate the image','Compartir':'Share','Ya está en la tier list':'Already in the tier list','Fila vaciada: los juegos vuelven a «Sin colocar»':'Row emptied: games go back to «Unplaced»','Fila eliminada':'Row deleted','Ordena tus juegos por niveles (S, A, B…) y compártelo como imagen.':'Rank your games in tiers (S, A, B…) and share it as an image.','Nombre de la tier list':'Tier list name','Más opciones':'More options','No hay juegos que añadir con este filtro.':'No games to add with this filter.','Añade juegos y colócalos en las filas.':'Add games and place them in the rows.','Color personalizado':'Custom color','Hecho con BacklogMGR':'Made with BacklogMGR'});
+Object.assign(EN, {'Gestionar etiquetas':'Manage tags','Historial de cambios':'Changelog','Etiquetas':'Tags','Nueva etiqueta':'New tag','Crear':'Create','Editar':'Edit','Editar etiqueta':'Edit tag','Nombre':'Name','Color':'Color','Borrar':'Delete','Todas las marcadas':'All marked','Cualquiera':'Any','Quitar filtro':'Clear filter','Filtrar por etiquetas':'Filter by tags','Buscar o crear etiqueta…':'Search or create a tag…','Sin etiquetas':'No tags','Todavía no hay etiquetas.':'No tags yet.','Nueva etiqueta para todos':'New tag for all','Añadir':'Add','Listo':'Done','Todas las etiquetas':'All tags','actual':'current',
+'Lista central: aquí las creas, les das color, las renombras o las borras en todos los juegos a la vez. Si renombras una al nombre de otra, se fusionan.':'Central list: create tags here, give them a color, rename them or delete them across all games at once. Renaming one to another’s name merges them.',
+'Toca una vez para incluir (✓), otra para excluir (✕) y otra para quitarla.':'Tap once to include (✓), again to exclude (✕), and again to clear it.',
+'Toca una etiqueta para ponerla a todos (o quitarla si ya la tienen todos). Las de borde discontinuo las tienen solo algunos.':'Tap a tag to add it to all (or remove it if all already have it). Dashed ones are on only some.',
+'Etiquetas con lista central: créalas, dales color, renómbralas, fusiónalas o bórralas en todos los juegos a la vez (Ajustes → Datos y copias → Gestionar etiquetas).':'Tags now have a central list: create them, give them colors, rename, merge or delete them across all games at once (Settings → Data and backups → Manage tags).',
+'En la ficha de un juego, el campo de etiquetas busca mientras escribes y te deja crear una nueva al momento.':'In a game’s page, the tag field searches as you type and lets you create a new tag on the spot.',
+'Filtro de etiquetas nuevo: incluir (✓), excluir (✕), y elegir si deben estar todas las marcadas o cualquiera.':'New tag filter: include (✓), exclude (✕), and choose whether all marked tags or any of them must match.',
+'Al seleccionar varios juegos, el botón «Etiquetas» les pone o quita una etiqueta a todos a la vez.':'When you select several games, the “Tags” button adds or removes a tag on all of them at once.',
+'Ajustes → Datos y copias → «Historial de cambios» muestra todas las novedades por versión.':'Settings → Data and backups → “Changelog” shows every update by version.'});
 Object.assign(EN, {'Sin tags':'No tags','Cualquier año':'Any year','Año de fin':'Year finished','Terminado':'Finished','Empezado':'Started','Al backlog':'To backlog','Sin fecha':'No date',
 'Buscador con ✕ para borrar y que ignora tildes. Los filtros enseñan cuántos juegos hay en cada plataforma o tag, con «Sin plataforma» y «Sin tags», y las plataformas más usadas salen primero.':'Search box with a ✕ to clear it, ignoring accents. Filters show how many games each platform or tag has, with “No platform” and “No tags”, and the most used platforms come first.',
 'Completados se ordena por fecha de fin o de inicio (los que no tienen fecha, al final) y se puede filtrar por año.':'Completed can be sorted by finish or start date (undated ones last) and filtered by year.',
@@ -605,6 +630,16 @@ Object.assign(EN, {'Sin tags':'No tags','Cualquier año':'Any year','Año de fin
 Object.assign(EN, {"Importar lista (txt, CSV, JSON)":"Import list (txt, CSV, JSON)","Importar una lista…":"Import a list…","Importar lista":"Import list","Un juego por línea (txt), una tabla (CSV) o una lista (JSON). Antes de añadir nada verás una pantalla para revisarlo.":"One game per line (txt), a table (CSV) or a list (JSON). Before adding anything you will get a screen to review it.","Elegir archivo":"Choose file","O pega aquí tu lista":"Or paste your list here","Revisar":"Review","Formatos admitidos":"Supported formats","Texto (txt): un juego por línea. Opcional: Título — Plataforma — estado — 40 % — ★★★★ — 12 h. Una línea con un estado («Completados», «# Backlog») fija el estado de las siguientes. También entiende el texto de «Copiar todas las listas».":"Text (txt): one game per line. Optional: Title — Platform — status — 40 % — ★★★★ — 12 h. A line with a status («Completed», «# Backlog») sets the status of the following ones. It also understands the text from «Copy all lists».","CSV: primera fila con los nombres de las columnas: título, plataforma, estado, nota, progreso, horas, inicio, fin, etiquetas, notas, veces, portada. Solo el título es obligatorio. Vale con coma, punto y coma o tabulador.":"CSV: first row with the column names: title, platform, status, rating, progress, hours, start, end, tags, notes, plays, cover. Only the title is required. Comma, semicolon or tab all work.","JSON: una lista de títulos, una lista de objetos con esos mismos campos, o una copia de BacklogMGR.":"JSON: a list of titles, a list of objects with those same fields, or a BacklogMGR backup.","Descargar plantilla CSV":"Download CSV template","Pega una lista o elige un archivo":"Paste a list or choose a file","No he podido leer ese archivo":"I could not read that file","No he encontrado juegos en ese texto":"I did not find any games in that text","Revisar importación":"Review import","Estado de todos los juegos":"Status of all games","Según el archivo":"As in the file","Si el archivo no lo dice":"If the file does not say","Plataforma si el archivo no la dice":"Platform if the file does not say","Buscar portadas (SteamGridDB)":"Look up covers (SteamGridDB)","Buscar horas (HowLongToBeat)":"Look up hours (HowLongToBeat)","Todos":"All","Ninguno":"None","Solo avisos":"Warnings only","Nada seleccionado":"Nothing selected","No hay avisos: todo se ha reconocido.":"No warnings: everything was recognised.","Estado por defecto":"Default status","Plataforma por defecto":"Default platform","Repetido en la lista":"Repeated in the list","Importación hecha":"Import done","Parar la búsqueda":"Stop the search","Deshacer importación":"Undo import","Listo":"Done","Portadas al día":"Covers up to date","Búsqueda parada":"Search stopped","Importación deshecha: los juegos están en la papelera":"Import undone: the games are in the trash","Novedades":"What's new","Entendido":"Got it","Ver novedades":"See what's new","Importa listas desde txt, CSV o JSON, con una pantalla para revisarlas antes de añadir (Ajustes → Datos y copias, o desde «Añadir juego»).":"Import lists from txt, CSV or JSON, with a screen to review them before adding (Settings → Data and backups, or from «Add game»).","Si tu red bloquea las portadas de SteamGridDB, la app las pide a través de tu Worker (hay que actualizar worker.js).":"If your network blocks SteamGridDB covers, the app requests them through your Worker (you need to update worker.js).","La app avisa cuando se actualiza y enseña las novedades una sola vez.":"The app tells you when it updates and shows what is new just once."});
 const RULES = [
   [/^(.+?) \((\d+)\)$/, (m, l, n) => `${T(l)} (${n})`],
+  [/^Versión (\d+)$/, (m, n) => `Version ${n}`],
+  [/^Etiquetas · (\d+)$/, (m, n) => `Tags · ${n}`],
+  [/^Etiquetas de (\d+) juegos?$/, (m, n) => `Tags of ${n} ${n === '1' ? 'game' : 'games'}`],
+  [/^Crear «(.+)»$/, (m, t) => `Create “${t}”`],
+  [/^Ya existe «(.+)»: se fusionarán\.$/, (m, t) => `“${t}” already exists: they will be merged.`],
+  [/^(\d+) juegos? (?:la tiene|la tienen)\.$/, (m, n) => `${n} ${n === '1' ? 'game has' : 'games have'} it.`],
+  [/^(\d+) de (\d+) juegos con este filtro\.$/, (m, a, b) => `${a} of ${b} games match this filter.`],
+  [/^Etiqueta «(.+)» borrada$/, (m, t) => `Tag “${t}” deleted`],
+  [/^Quitarla de (\d+) juegos?: confirmar$/, (m, n) => `Remove from ${n} ${n === '1' ? 'game' : 'games'}: confirm`],
+  [/^(\d+) (juego|juegos)$/, (m, n) => `${n} ${n === '1' ? 'game' : 'games'}`],
   [/^(\d+) de (\d+) juegos$/, (m, a, b) => `${a} of ${b} games`],
   [/^(.*?) · (\d+) ya las tenían$/, (m, a, n) => `${T(a)} · ${n} already had them`],
 
@@ -718,7 +753,7 @@ if (compactTrash()) store(KEY, D);
 let syncBusy = false, syncDirty = false, syncTimer = null;
 const save = () => { if (!store(KEY, D)) toast('No se pudo guardar: almacenamiento lleno o bloqueado'); if (syncBusy) syncDirty = true; else scheduleSync(); };
 const saveS = () => store(SKEY, S);
-const UI = {tab:'playing', q:'', plat:'', tag:'', dur:'', year:'', selecting:false, sel:new Set()};
+const UI = {tab:'playing', q:'', plat:'', tg:{inc:[], exc:[], or:false}, dur:'', year:'', selecting:false, sel:new Set()};
 const list = () => Object.values(D.games).filter(g => !g.deleted);   // los borrados se conservan como «lápidas» para poder sincronizarlos
 
 /* ---------- toast ---------- */
@@ -879,7 +914,8 @@ function cleanMeta(m){
     id:t.id.slice(0, 64), name:String(t.name || '').slice(0, 60),
     rows:(Array.isArray(t.rows) ? t.rows : []).slice(0, 20).map(r => ({id:String((r && r.id) || uid()).slice(0, 64), label:String((r && r.label) || '').slice(0, 40), color:/^#[0-9a-f]{6}$/i.test(r && r.color) ? r.color : '#9096b0', items:cleanRefs(r && r.items)})),
     pool:cleanRefs(t.pool)}));
-  return {goals, tiers, updated: +(m && m.updated) || 0};
+  const seen = new Set(), tags = (Array.isArray(m && m.tags) ? m.tags : []).filter(t => t && typeof t.name === 'string' && t.name.trim() && !seen.has(t.name.trim().toLowerCase()) && seen.add(t.name.trim().toLowerCase())).slice(0, 300).map(t => ({name:t.name.trim().slice(0, 24), c:Math.max(0, Math.min(9, Math.round(+t.c) || 0))}));
+  return {goals, tiers, tags, updated: +(m && m.updated) || 0};
 }
 const metaGoal = y => +D.meta.goals[y] || 0;
 function setGoal(y, n){
@@ -1276,7 +1312,9 @@ function curCmp(){
 const durOk = (g, d) => { if (!d) return true; const h = hoursOf(g); return d === 'none' ? !h : !!h && (d === 'u5' ? h < 5 : d === 'u15' ? h >= 5 && h < 15 : d === 'u40' ? h >= 15 && h < 40 : h >= 40); };
 const qScope = () => S.qSc && ST[S.qSc] ? S.qSc : 'all';
 const platOk = g => !UI.plat || (UI.plat === '__none' ? !g.platform : g.platform === UI.plat);
-const tagOk = g => !UI.tag || (UI.tag === '__none' ? !g.tags.length : g.tags.includes(UI.tag));
+const tgOn = () => UI.tg.inc.length + UI.tg.exc.length > 0;
+const hasTg = (g, t) => t === '__none' ? !g.tags.length : g.tags.includes(t);
+const tagOk = (g, f = UI.tg) => !f.exc.some(t => hasTg(g, t)) && (!f.inc.length || (f.or ? f.inc.some(t => hasTg(g, t)) : f.inc.every(t => hasTg(g, t))));
 const yearOk = g => !UI.year || (UI.year === '__none' ? !g.finished : (g.finished || '').startsWith(UI.year));
 const inView = (g, q) => q ? nrmT(g.title).includes(q) && (qScope() === 'all' || g.status === qScope()) : g.status === UI.tab;   // búsqueda sin tildes ni mayúsculas
 function viewItems(){
@@ -1286,7 +1324,7 @@ function viewItems(){
 function render(){
   const q = nrmT(UI.q);
   // navegación
-  const filt = !!(UI.plat || UI.tag || UI.dur), counts = {}; list().forEach(g => { if (!filt || (platOk(g) && tagOk(g) && durOk(g, UI.dur))) counts[g.status] = (counts[g.status] || 0) + 1; });
+  const filt = !!(UI.plat || tgOn() || UI.dur), counts = {}; list().forEach(g => { if (!filt || (platOk(g) && tagOk(g) && durOk(g, UI.dur))) counts[g.status] = (counts[g.status] || 0) + 1; });
   $('#nav').innerHTML = STATUSES.map(s =>
     `<button data-tab="${s.id}" class="${!q && !UI.tiers && UI.tab === s.id ? 'on' : ''}" style="--c:${s.c}">${IC[s.id]}<span class="lg">${s.label}</span><span class="sh">${s.short}</span><span class="n">${counts[s.id] || 0}</span></button>`).join('') +
     `<button data-tier class="tnav${UI.tiers ? ' on' : ''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect class="t0" x="2.8" y="2.6" width="4.8" height="4.8" rx="1.4" fill="currentColor" stroke="none"/><path d="M11 5h10.5"/><rect class="t2" x="2.8" y="9.6" width="4.8" height="4.8" rx="1.4" fill="currentColor" stroke="none"/><path d="M11 12h8"/><rect class="t3" x="2.8" y="16.6" width="4.8" height="4.8" rx="1.4" fill="currentColor" stroke="none"/><path d="M11 19h5.5"/></svg><span class="lg">Tier lists</span><span class="sh">Tier</span></button>`;
@@ -1298,10 +1336,8 @@ function render(){
   const plats = [...new Set(list().map(g => g.platform).filter(Boolean))].sort((a, b) => (pc[b] || 0) - (pc[a] || 0) || cmpEs(a, b));
   if (UI.plat && UI.plat !== '__none' && !plats.includes(UI.plat)) UI.plat = '';
   $('#fPlat').innerHTML = `<option value="">Todas las plataformas (${base.length})</option>` + (noP || UI.plat === '__none' ? `<option value="__none"${UI.plat === '__none' ? ' selected' : ''}>Sin plataforma (${noP})</option>` : '') + plats.map(p => `<option value="${esc(p)}"${p === UI.plat ? ' selected' : ''}>${esc(p)} (${pc[p] || 0})</option>`).join('');
-  const tagsAll = [...new Set(list().flatMap(g => g.tags))].sort((a, b) => (tc[b] || 0) - (tc[a] || 0) || a.localeCompare(b, 'es'));
-  if (UI.tag && UI.tag !== '__none' && !tagsAll.includes(UI.tag)) UI.tag = '';
-  const ft = $('#fTag'); ft.hidden = !tagsAll.length;
-  ft.innerHTML = `<option value="">Todas las etiquetas (${base.length})</option><option value="__none"${UI.tag === '__none' ? ' selected' : ''}>Sin tags (${noT})</option>` + tagsAll.map(t => `<option value="${esc(t)}"${t === UI.tag ? ' selected' : ''}>${esc(t)} (${tc[t] || 0})</option>`).join('');
+  const ft = $('#fTag'); ft.hidden = !allTags().length;
+  const nT = UI.tg.inc.length + UI.tg.exc.length; ft.textContent = nT ? 'Etiquetas · ' + nT : 'Todas las etiquetas'; ft.classList.toggle('act', nT > 0);
   const fy = $('#fYear'), years = [...new Set(base.map(g => (g.finished || '').slice(0, 4)).filter(Boolean))].sort().reverse(), showY = !nq && UI.tab === 'done' && years.length > 0;
   if (UI.year && UI.year !== '__none' && !years.includes(UI.year)) UI.year = '';
   fy.hidden = !showY; fy.innerHTML = '<option value="">Cualquier año</option>' + years.map(y => `<option value="${y}"${y === UI.year ? ' selected' : ''}>${y}</option>`).join('') + `<option value="__none"${UI.year === '__none' ? ' selected' : ''}>Sin fecha</option>`;
@@ -1312,7 +1348,7 @@ function render(){
   $('#qSc').hidden = !q;
   $('#toolbar').classList.toggle('open', !!S.tbx);
   $('#tbMore').setAttribute('aria-expanded', !!S.tbx);
-  $('#tbMore').querySelector('.tbdot').classList.toggle('on', !S.tbx && !!(UI.tag || UI.dur || (UI.year && UI.tab === 'done') || (q && qScope() !== 'all')));
+  $('#tbMore').querySelector('.tbdot').classList.toggle('on', !S.tbx && !!(tgOn() || UI.dur || (UI.year && UI.tab === 'done') || (q && qScope() !== 'all')));
   $('#qSc').innerHTML = '<option value="all">Todas las listas</option>' + STATUSES.map(st => `<option value="${st.id}"${st.id === qScope() ? ' selected' : ''}>${st.label}</option>`).join('');
   $('#qSc').value = qScope();
   // lista
@@ -1383,7 +1419,7 @@ function updateSelBar(){
   if (!UI.selecting) return;
   const n = UI.sel.size;
   $('#selcount').textContent = UI.busy || (n ? `${n} seleccionado${n === 1 ? '' : 's'}` : 'Toca los juegos que quieras');
-  $('#selmove').disabled = $('#seldel').disabled = $('#selhl').disabled = !n;
+  $('#selmove').disabled = $('#seldel').disabled = $('#selhl').disabled = $('#seltag').disabled = !n;
   const m = $('#selmove'); if (!m.options.length) m.innerHTML = '<option value="">Mover a…</option>' + STATUSES.map(s => `<option value="${s.id}">${s.label}</option>`).join('');
 }
 function endSel(){ UI.selecting = false; UI.sel.clear(); }
@@ -1432,7 +1468,7 @@ $('#fDur').addEventListener('change', e => { UI.dur = e.target.value; render(); 
 $('#fYear').addEventListener('change', e => { UI.year = e.target.value; render(); });
 $('#fDir').addEventListener('click', () => { if (curSort() === 'manual') return; if (S.rev[UI.tab]) delete S.rev[UI.tab]; else S.rev[UI.tab] = true; saveS(); render(); });
 $('#fab').addEventListener('click', () => openAdd());
-$('#fTag').addEventListener('change', e => { UI.tag = e.target.value; render(); });
+$('#fTag').addEventListener('click', () => openTagFilter());
 $('#btnSettings').addEventListener('click', openSettings);
 $('#btnStats').addEventListener('click', openStats);
 $('#btnRandom').addEventListener('click', () => openRandom());
@@ -1669,7 +1705,116 @@ function openAdd(prefill){
 
 /* --- detalle / edición --- */
 const NOTE_LABEL = {done:'Opinión final', dropped:'Motivo del abandono', hold:'Motivo de la pausa'};
-const allTags = () => [...new Set(list().flatMap(x => x.tags))].sort((a, b) => a.localeCompare(b, 'es'));
+/* ---------- Etiquetas: lista central (D.meta.tags guarda color y las que no usa ningún juego) ---------- */
+const TAG_COLORS = ['#7c6cff', '#3ecf8e', '#ff6b81', '#ffb454', '#4fb7ff', '#c77dff', '#ff8f5a', '#2dd4bf', '#f472b6', '#9aa3c7'];
+const tlow = t => String(t).trim().toLowerCase();
+const tagHash = t => { let h = 7; for (const ch of String(t)) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return h % 10; };
+const tagReg = t => D.meta.tags.find(r => tlow(r.name) === tlow(t));
+const tagColor = t => TAG_COLORS[tagReg(t) ? tagReg(t).c : tagHash(t)];
+const allTags = () => { const m = new Map(); D.meta.tags.forEach(r => m.set(tlow(r.name), r.name)); list().forEach(g => g.tags.forEach(t => { if (!m.has(tlow(t))) m.set(tlow(t), t); })); return [...m.values()].sort((a, b) => a.localeCompare(b, 'es')); };
+const tagCounts = (games = list()) => { const c = {}; games.forEach(g => g.tags.forEach(t => c[t] = (c[t] || 0) + 1)); return c; };
+const metaTouch = () => { D.meta.updated = Date.now(); save(); };
+function tagCanon(name){ name = String(name).trim().slice(0, 24); return allTags().find(x => tlow(x) === tlow(name)) || name; }
+function tagCreate(name, quiet){
+  const t = tagCanon(name); if (!t) return '';
+  if (!tagReg(t)){ D.meta.tags.push({name:t, c:tagHash(t)}); if (!quiet) metaTouch(); }
+  return t;
+}
+const tagStyle = t => `--tc:${tagColor(t)}`;
+function tagEachGame(fn){ const now = Date.now(); for (const g of Object.values(D.games)) if (Array.isArray(g.tags) && fn(g)) g.updated = now; }
+function tagRename(old, nu){   // si «nu» ya existe (otro nombre), se fusionan; devuelve el nombre final
+  nu = String(nu).trim().slice(0, 24); if (!nu || nu === old) return old;
+  const into = allTags().find(x => tlow(x) === tlow(nu) && tlow(x) !== tlow(old)), final = into || nu, oc = tagReg(old);
+  tagEachGame(g => { if (!g.tags.includes(old)) return false; g.tags = [...new Set(g.tags.map(t => t === old ? final : t))]; return true; });
+  D.meta.tags = D.meta.tags.filter(r => tlow(r.name) !== tlow(old));
+  if (!into && !tagReg(final)) D.meta.tags.push({name:final, c:oc ? oc.c : tagHash(final)});
+  else if (into && !tagReg(final)) D.meta.tags.push({name:final, c:tagHash(final)});
+  ['inc', 'exc'].forEach(k => UI.tg[k] = UI.tg[k].map(t => t === old ? final : t).filter((t, i, a) => a.indexOf(t) === i));
+  metaTouch(); return final;
+}
+function tagDelete(name){
+  tagEachGame(g => { if (!g.tags.includes(name)) return false; g.tags = g.tags.filter(t => t !== name); return true; });
+  D.meta.tags = D.meta.tags.filter(r => tlow(r.name) !== tlow(name));
+  ['inc', 'exc'].forEach(k => UI.tg[k] = UI.tg[k].filter(t => t !== name)); metaTouch();
+}
+function tagSetColor(name, c){ const r = tagReg(name); if (r) r.c = c; else D.meta.tags.push({name, c}); metaTouch(); }
+const tagChip = (t, cls = '', extra = '') => `<button type="button" data-t="${esc(t)}" class="${cls}" style="${tagStyle(t)}">${esc(t)}${extra}</button>`;
+
+/* gestor de etiquetas (Ajustes) */
+function openTags(back){
+  const draw = () => {
+    const cnt = tagCounts(), all = allTags();
+    openSheet(`<div class="top"><h2>Etiquetas</h2><button id="x">${back ? 'Atrás' : 'Cerrar'}</button></div>
+      <div class="hint">Lista central: aquí las creas, les das color, las renombras o las borras en todos los juegos a la vez. Si renombras una al nombre de otra, se fusionan.</div>
+      <div class="tadd"><input id="tnn" maxlength="24" placeholder="Nueva etiqueta" autocomplete="off"><button id="tnb" class="pri">Crear</button></div>
+      ${all.length ? all.map(t => `<div class="tli" data-t="${esc(t)}" style="${tagStyle(t)}"><span class="dot"></span><b>${esc(t)}</b><small>${cnt[t] || 0} ${(cnt[t] || 0) === 1 ? 'juego' : 'juegos'}</small><button data-edit>Editar</button></div>`).join('') : '<div class="hint">Todavía no hay etiquetas.</div>'}`);
+    $('#x').onclick = back || closeSheet;
+    const add = () => { const v = $('#tnn').value.trim(); if (!v) return; tagCreate(v); draw(); };
+    $('#tnb').onclick = add; $('#tnn').onkeydown = e => { if (e.key === 'Enter') add(); };
+    $('#sheet').querySelectorAll('[data-edit]').forEach(b => b.onclick = () => editTag(b.closest('[data-t]').dataset.t, draw));
+  };
+  draw();
+}
+function editTag(name, back){
+  const cnt = tagCounts()[name] || 0, cur = TAG_COLORS.indexOf(tagColor(name));
+  openSheet(`<div class="top"><h2>Editar etiqueta</h2><button id="x">Atrás</button></div>
+    <label>Nombre</label><input id="enm" maxlength="24" value="${esc(name)}" autocomplete="off">
+    <div class="hint" id="emg">${cnt} ${cnt === 1 ? 'juego la tiene' : 'juegos la tienen'}.</div>
+    <label>Color</label><div class="sw" id="esw">${TAG_COLORS.map((c, i) => `<button type="button" data-c="${i}" class="${i === cur ? 'on' : ''}" style="--tc:${c}" aria-label="Color ${i + 1}"></button>`).join('')}</div>
+    <div class="btnrow"><button id="edel" class="danger">Borrar</button><button id="esv" class="pri">Guardar</button></div>`);
+  let col = cur;
+  $('#x').onclick = back;
+  $('#esw').onclick = e => { const b = e.target.closest('[data-c]'); if (!b) return; col = +b.dataset.c; $('#esw').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); };
+  $('#enm').oninput = e => { const v = e.target.value.trim(), o = allTags().find(x => tlow(x) === tlow(v) && tlow(x) !== tlow(name)); $('#emg').textContent = o ? `Ya existe «${o}»: se fusionarán.` : `${cnt} ${cnt === 1 ? 'juego la tiene' : 'juegos la tienen'}.`; };
+  $('#esv').onclick = () => { const f = tagRename(name, $('#enm').value || name); tagSetColor(f, col); render(); back(); };
+  $('#edel').onclick = () => {
+    if (!$('#edel').dataset.sure){ $('#edel').dataset.sure = 1; $('#edel').textContent = cnt ? `Quitarla de ${cnt} juego${cnt === 1 ? '' : 's'}: confirmar` : 'Pulsa otra vez para confirmar'; return; }
+    tagDelete(name); render(); toast(`Etiqueta «${name}» borrada`); back();
+  };
+}
+/* filtro de etiquetas: toca para incluir (✓), otra vez para excluir (✕), otra para quitar */
+function openTagFilter(){
+  const f = UI.tg, q = nrmT(UI.q), base = list().filter(g => inView(g, q) && platOk(g) && durOk(g, UI.dur)), cnt = tagCounts(base), noT = base.filter(g => !g.tags.length).length;
+  const st = t => f.inc.includes(t) ? 'inc' : f.exc.includes(t) ? 'exc' : '';
+  const draw = () => {
+    const n = tagOk, shown = base.filter(g => tagOk(g)).length;
+    openSheet(`<div class="top"><h2>Filtrar por etiquetas</h2><button id="x">Listo</button></div>
+      <div class="hint">Toca una vez para incluir (✓), otra para excluir (✕) y otra para quitarla.</div>
+      <div class="seg" id="fmode"><button data-m="and" class="${f.or ? '' : 'on'}">Todas las marcadas</button><button data-m="or" class="${f.or ? 'on' : ''}">Cualquiera</button></div>
+      <div class="tags" id="ftl">${tagChip('__none', st('__none'), '').replace('>__none<', '>Sin tags <small>' + noT + '</small><')}${allTags().map(t => tagChip(t, st(t), ` <small>${cnt[t] || 0}</small>`)).join('')}</div>
+      <div class="hint">${shown} de ${base.length} juegos con este filtro.</div>
+      <div class="btnrow"><button id="fclr"${tgOn() ? '' : ' disabled'}>Quitar filtro</button><button id="fman">Gestionar etiquetas</button></div>`);
+    $('#x').onclick = closeSheet;
+    $('#fmode').onclick = e => { const b = e.target.closest('[data-m]'); if (!b) return; f.or = b.dataset.m === 'or'; render(); draw(); };
+    $('#ftl').onclick = e => {
+      const b = e.target.closest('[data-t]'); if (!b) return; const t = b.dataset.t, s0 = st(t);
+      f.inc = f.inc.filter(x => x !== t); f.exc = f.exc.filter(x => x !== t);
+      if (!s0) f.inc.push(t); else if (s0 === 'inc') f.exc.push(t);
+      render(); draw();
+    };
+    $('#fclr').onclick = () => { UI.tg = {inc:[], exc:[], or:f.or}; render(); closeSheet(); };
+    $('#fman').onclick = () => openTags(() => { render(); openTagFilter(); });
+  };
+  draw();
+}
+/* etiquetas de la selección */
+function openSelTags(){
+  const ids = [...UI.sel].filter(id => D.games[id]), gs = ids.map(id => D.games[id]);
+  const draw = () => {
+    const cnt = tagCounts(gs), n = gs.length, state = t => !cnt[t] ? '' : cnt[t] === n ? 'on' : 'some';
+    openSheet(`<div class="top"><h2>Etiquetas de ${n} juego${n === 1 ? '' : 's'}</h2><button id="x">Listo</button></div>
+      <div class="hint">Toca una etiqueta para ponerla a todos (o quitarla si ya la tienen todos). Las de borde discontinuo las tienen solo algunos.</div>
+      <div class="tadd"><input id="tnn" maxlength="24" placeholder="Nueva etiqueta para todos" autocomplete="off"><button id="tnb" class="pri">Añadir</button></div>
+      <div class="tags" id="stl">${allTags().map(t => tagChip(t, state(t), ` <small>${cnt[t] || 0}</small>`)).join('')}</div>`);
+    $('#x').onclick = () => { closeSheet(); render(); };
+    const apply = (t, on) => { const now = Date.now(); gs.forEach(g => { const h = g.tags.includes(t); if (on && !h) { g.tags = [...g.tags, t]; g.updated = now; } else if (!on && h) { g.tags = g.tags.filter(x => x !== t); g.updated = now; } }); save(); };
+    $('#stl').onclick = e => { const b = e.target.closest('[data-t]'); if (!b) return; const t = b.dataset.t; apply(t, state(t) !== 'on'); draw(); };
+    const add = () => { const v = $('#tnn').value.trim(); if (!v) return; const t = tagCreate(v); apply(t, true); draw(); };
+    $('#tnb').onclick = add; $('#tnn').onkeydown = e => { if (e.key === 'Enter') add(); };
+  };
+  draw();
+}
+$('#seltag').addEventListener('click', () => { if (UI.sel.size) openSelTags(); });
 function openDetail(g){
   const draw = () => {
     const keep = $('#sheet').scrollTop;
@@ -1700,8 +1845,9 @@ function openDetail(g){
     <div class="hres" id="dhr"></div>
     <a class="link" target="_blank" rel="noopener" href="https://howlongtobeat.com/?q=${encodeURIComponent(g.title)}">Consultar duración en HowLongToBeat ↗</a>
     <label>Etiquetas</label>
-    <div class="tags" id="dtags">${allTags().map(t => `<button data-t="${esc(t)}" class="${g.tags.includes(t) ? 'on' : ''}">${esc(t)}</button>`).join('')}</div>
-    <input id="dtn" placeholder="Nueva etiqueta (Enter para añadir)" maxlength="24">
+    <div class="tags" id="dtags">${g.tags.map(t => tagChip(t, 'on', ' ✕')).join('') || '<span class="hint" style="margin:0">Sin etiquetas</span>'}</div>
+    <input id="dtn" placeholder="Buscar o crear etiqueta…" maxlength="24" autocomplete="off">
+    <div class="tags" id="dsug" style="margin-top:8px"></div>
     <label>${NOTE_LABEL[g.status] || 'Notas'}</label><textarea id="dno" rows="3" placeholder="Opcional">${esc(g.notes)}</textarea>
     <div class="btnrow"><button id="ddel" class="danger">Eliminar</button></div>
     <div class="hint">Los juegos eliminados van a la papelera (Ajustes → Datos y copias) y se guardan 30 días.</div>`);
@@ -1735,16 +1881,16 @@ function openDetail(g){
     };
     if ($('#dhx')) $('#dhx').onclick = () => { g.hm = g.hp = g.hf = g.hid = 0; touch(g); draw(); };
     $('#dpl').onchange = e => { g.plays = Math.max(0, Math.round(+e.target.value || 0)); touch(g); };
-    $('#dtags').onclick = e => {
-      const b = e.target.closest('[data-t]'); if (!b) return; const t = b.dataset.t;
-      g.tags = g.tags.includes(t) ? g.tags.filter(x => x !== t) : [...g.tags, t]; touch(g); draw();
+    const addT = t => { t = tagCreate(t); if (t && !g.tags.includes(t)) g.tags = [...g.tags, t]; touch(g); draw(); };
+    const sugg = () => {   // autocompletado: las que ya existen y coinciden, más «Crear»
+      const raw = $('#dtn').value.trim(), v = nrmT(raw), cnt = tagCounts(), have = new Set(g.tags.map(tlow));
+      const ms = allTags().filter(t => !have.has(tlow(t)) && (!v || nrmT(t).includes(v))).sort((a, b) => (cnt[b] || 0) - (cnt[a] || 0) || a.localeCompare(b, 'es')).slice(0, 10);
+      $('#dsug').innerHTML = ms.map(t => tagChip(t, '')).join('') + (raw && !allTags().some(t => tlow(t) === tlow(raw)) ? `<button type="button" class="new" data-new="1">Crear «${esc(raw)}»</button>` : '');
     };
-    $('#dtn').onchange = e => {
-      const t = e.target.value.trim().slice(0, 24); if (!t) return;
-      const ex = allTags().find(x => x.toLowerCase() === t.toLowerCase()) || t;
-      if (!g.tags.includes(ex)) g.tags = [...g.tags, ex];
-      touch(g); draw();
-    };
+    $('#dtags').onclick = e => { const b = e.target.closest('[data-t]'); if (!b) return; const t = b.dataset.t; g.tags = g.tags.filter(x => x !== t); touch(g); draw(); };
+    $('#dsug').onclick = e => { const b = e.target.closest('button'); if (!b) return; addT(b.dataset.new ? $('#dtn').value : b.dataset.t); };
+    $('#dtn').oninput = sugg; $('#dtn').onfocus = sugg;
+    $('#dtn').onkeydown = e => { if (e.key !== 'Enter') return; e.preventDefault(); const v = $('#dtn').value.trim(); if (v) addT(v); };
     $('#ddel').onclick = () => {
       if ($('#ddel').dataset.sure){ removeGame(g); closeSheet(); toast(`«${g.title}» movido a la papelera`, {label:'Deshacer', fn:() => restoreGame(g)}); }
       else { $('#ddel').dataset.sure = 1; $('#ddel').textContent = 'Pulsa otra vez para confirmar'; }
@@ -1758,7 +1904,7 @@ function openDetail(g){
 /* --- ¿a qué juego ahora? --- */
 const RND_SETS = {playing:['playing'], backlog:['backlog'], wish:['wish'], hold:['hold'], 'backlog+hold':['backlog', 'hold']};
 function openRandom(skipId, keep){
-  if (!keep || !UI.rnd) UI.rnd = {set:'backlog', plat:UI.plat, tag:UI.tag, dur:UI.dur};   // al abrirlo parte de los filtros de la pantalla; luego se cambian aquí
+  if (!keep || !UI.rnd) UI.rnd = {set:'backlog', plat:UI.plat, tag:UI.tg.inc.find(t => t !== '__none') || '', dur:UI.dur};   // al abrirlo parte de los filtros de la pantalla; luego se cambian aquí
   const f = UI.rnd, base = list().filter(g => RND_SETS[f.set].includes(g.status));
   const plats = [...new Set(base.map(g => g.platform).filter(Boolean))].sort(cmpEs), tags = [...new Set(base.flatMap(g => g.tags))].sort((a, b) => a.localeCompare(b, 'es'));
   if (f.plat && !plats.includes(f.plat)) f.plat = ''; if (f.tag && !tags.includes(f.tag)) f.tag = '';
@@ -2353,9 +2499,10 @@ function openSettings(which){   // which: sección que debe quedar abierta al vo
       <div class="btnrow" style="margin-top:8px"><button id="impl">Importar lista (txt, CSV, JSON)</button></div>
       <input id="impf" type="file" accept=".json,application/json" hidden>
       <div class="btnrow" style="margin-top:8px"><button id="copyall">Copiar todas las listas</button><button id="copycur">Copiar «${esc(ST[UI.tab].label)}»</button></div>
+      <div class="btnrow" style="margin-top:8px"><button id="tagsbtn">Gestionar etiquetas</button></div>
       <div class="btnrow" style="margin-top:8px"><button id="trashbtn">Papelera${trashN ? ` (${trashN})` : ''}</button></div>
       <div class="hint">Tus datos se guardan en este navegador y, si activas la sincronización, también (cifrados) en tu nube. Haz copias de vez en cuando: al borrar los datos del navegador se pierden los locales.</div>
-      <div class="hint"><span>Versión ${APP_VER}</span> · <a href="#" id="newsopen">Ver novedades</a></div>
+      <div class="hint"><span>Versión ${APP_VER}</span> · <a href="#" id="newsopen">Ver novedades</a> · <a href="#" id="histopen">Historial de cambios</a></div>
     </div></details>`);
   $('#x').onclick = closeSheet;
   renderSyncPanel();
@@ -2397,6 +2544,8 @@ function openSettings(which){   // which: sección que debe quedar abierta al vo
   };
   $('#imp').onclick = () => $('#impf').click();
   $('#impl').onclick = () => openImport();
+  $('#tagsbtn').onclick = () => openTags(() => openSettings('data'));
+  $('#histopen').onclick = e => { e.preventDefault(); openHistory(() => openSettings('data')); };
   $('#newsopen').onclick = e => { e.preventDefault(); closeSheet(); $('#main').scrollTop = 0; showNews(); };
   $('#impf').onchange = async e => {
     const f = e.target.files[0]; if (!f) return;
@@ -2772,13 +2921,34 @@ function impDone(ids, o){
 }
 
 /* ---------- novedades y aviso de actualización ---------- */
-const APP_VER = 34;
-const NEWS = [
-  'Buscador con ✕ para borrar y que ignora tildes. Los filtros enseñan cuántos juegos hay en cada plataforma o tag, con «Sin plataforma» y «Sin tags», y las plataformas más usadas salen primero.',
-  'Completados se ordena por fecha de fin o de inicio (los que no tienen fecha, al final) y se puede filtrar por año.',
-  'Mantén pulsada una portada para empezar a seleccionar. «Horas» salta los juegos que ya las tienen. En Deseados, el botón rápido ahora los manda al Backlog; el aleatorio también elige entre Jugando.',
-  'Las horas puestas a mano llevan ✎ y las de HowLongToBeat, «~».',
+const APP_VER = 35;
+/* Historial de cambios: cada versión nueva añade su entrada AL PRINCIPIO. La primera es la que enseña el aviso de novedades. */
+const CHANGELOG = [
+  {v:35, items:[
+    'Etiquetas con lista central: créalas, dales color, renómbralas, fusiónalas o bórralas en todos los juegos a la vez (Ajustes → Datos y copias → Gestionar etiquetas).',
+    'En la ficha de un juego, el campo de etiquetas busca mientras escribes y te deja crear una nueva al momento.',
+    'Filtro de etiquetas nuevo: incluir (✓), excluir (✕), y elegir si deben estar todas las marcadas o cualquiera.',
+    'Al seleccionar varios juegos, el botón «Etiquetas» les pone o quita una etiqueta a todos a la vez.',
+    'Ajustes → Datos y copias → «Historial de cambios» muestra todas las novedades por versión.'
+  ]},
+  {v:34, items:[
+    'Buscador con ✕ para borrar y que ignora tildes. Los filtros enseñan cuántos juegos hay en cada plataforma o tag, con «Sin plataforma» y «Sin tags», y las plataformas más usadas salen primero.',
+    'Completados se ordena por fecha de fin o de inicio (los que no tienen fecha, al final) y se puede filtrar por año.',
+    'Mantén pulsada una portada para empezar a seleccionar. «Horas» salta los juegos que ya las tienen. En Deseados, el botón rápido ahora los manda al Backlog; el aleatorio también elige entre Jugando.',
+    'Las horas puestas a mano llevan ✎ y las de HowLongToBeat, «~».'
+  ]},
+  {v:33, items:[
+    'Importa listas desde txt, CSV o JSON, con una pantalla para revisarlas antes de añadir (Ajustes → Datos y copias, o desde «Añadir juego»).',
+    'Si tu red bloquea las portadas de SteamGridDB, la app las pide a través de tu Worker (hay que actualizar worker.js).',
+    'La app avisa cuando se actualiza y enseña las novedades una sola vez.'
+  ]}
 ];
+const NEWS = CHANGELOG[0].items;
+function openHistory(back){
+  openSheet(`<div class="top"><h2>Historial de cambios</h2><button id="x">${back ? 'Atrás' : 'Cerrar'}</button></div>
+    <div class="hist">${CHANGELOG.map(c => `<h3>Versión ${c.v}${c.v === APP_VER ? '<span class="cur">actual</span>' : ''}</h3><ul>${c.items.map(i => `<li>${esc(i)}</li>`).join('')}</ul>`).join('')}</div>`);
+  $('#x').onclick = back || closeSheet;
+}
 function showNews(){
   const old = document.getElementById('news'); if (old) old.remove();
   const el = document.createElement('div'); el.id = 'news'; el.className = 'news';
@@ -2802,8 +2972,8 @@ checkSyncLink();
 window.addEventListener('hashchange', checkSyncLink);   // enlace pulsado con la app ya abierta
 
 /* «Atrás»: cierra la ventana abierta; si no hay ninguna y no estás en el inicio, vuelve al inicio; en el inicio, sale como siempre */
-const isHome = () => UI.tab === 'playing' && !UI.q && !UI.plat && !UI.tag;
-function goHome(){ endSel(); UI.tab = 'playing'; UI.q = ''; UI.plat = ''; UI.tag = ''; $('#q').value = ''; render(); $('#main').scrollTop = 0; }
+const isHome = () => UI.tab === 'playing' && !UI.q && !UI.plat && !tgOn();
+function goHome(){ endSel(); UI.tab = 'playing'; UI.q = ''; UI.plat = ''; UI.tg = {inc:[], exc:[], or:false}; $('#q').value = ''; render(); $('#main').scrollTop = 0; }
 const guard = () => history.pushState({bm:'app'}, '', location.href);
 history.replaceState({bm:'base'}, '', location.href); guard();
 window.addEventListener('popstate', e => {
