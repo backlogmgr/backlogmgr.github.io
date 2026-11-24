@@ -38,6 +38,8 @@ button{cursor:pointer;border:1px solid var(--line);background:var(--panel2);bord
 button:hover{filter:brightness(1.18)}
 button:active{transform:scale(.97)}
 button:focus-visible,a:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
+textarea{max-width:100%;resize:vertical}
+input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none;width:20px;height:20px;cursor:pointer;opacity:.75;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b8bdd6' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18'/%3E%3C/svg%3E") center/14px no-repeat}
 input,select,textarea{background-color:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;width:100%;transition:border-color .15s,box-shadow .15s}
 input:focus,select:focus,textarea:focus{outline:0;border-color:var(--accent);box-shadow:0 0 0 3px #7c6cff33}
 select{appearance:none;-webkit-appearance:none;padding-right:34px;background-repeat:no-repeat;background-position:right 12px center;
@@ -324,6 +326,7 @@ nav button.tnav.on .t0{fill:#ef5b6b}nav button.tnav.on .t2{fill:#f5a524}nav butt
   .toast{bottom:26px;left:calc(50% + 114px)}
   .wrap{align-items:center}
   .sheet{border-radius:22px;border-bottom:1px solid var(--line)}
+  .sheet:has(.covers){max-width:880px}.covers{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
 }
 @media(min-width:1100px){   /* PC: la barra de búsqueda y los filtros suben a la fila de la cabecera, junto a los botones */
   .toolbar{position:fixed;top:12px;left:calc(228px + 14px);right:184px;z-index:8;margin:0;padding:0;background:none;backdrop-filter:none;-webkit-backdrop-filter:none;flex-wrap:nowrap;gap:8px;align-items:center;transition:none}
@@ -405,8 +408,10 @@ nav button.tnav.on .t0{fill:#ef5b6b}nav button.tnav.on .t2{fill:#f5a524}nav butt
       <option value="time">Duración</option>
       <option value="manual">Mi orden</option>
       <option value="added">Añadidos</option>
+      <option value="fin">Terminado</option>
+      <option value="ini">Empezado</option>
     </select><button class="dir" id="fDir" type="button"></button></div></div>
-    <div class="trow" id="tbx"><select id="fTag" aria-label="Etiqueta" hidden></select><select id="fDur" aria-label="Duración">
+    <div class="trow" id="tbx"><select id="fYear" aria-label="Año de fin" hidden></select><select id="fTag" aria-label="Etiqueta" hidden></select><select id="fDur" aria-label="Duración">
       <option value="">Cualquier duración</option><option value="u5">Menos de 5 h</option><option value="u15">5–15 h</option><option value="u40">15–40 h</option><option value="o40">Más de 40 h</option><option value="none">Sin duración</option>
     </select><select id="qSc" aria-label="Buscar en" hidden></select></div>
   </div><div class="sec" id="sec"><h2 id="title"></h2><span id="count"></span><button class="tbtn" id="btnSel" hidden>Seleccionar</button></div><div class="grid" id="grid"></div><div id="empty"></div><div id="more"></div></main>
@@ -592,8 +597,16 @@ Object.assign(EN, {'Elegir plataforma':'Choose platform','Otra…':'Other…','O
   'Backlog + En espera':'Backlog + On hold','No hay juegos con esos filtros.':'No games match those filters.','Lista':'List','Plataforma':'Platform','Etiqueta':'Tag',
   'Toca uno para buscarlo a mano o ponerle la duración. También los ves con el filtro «Sin duración».':'Tap one to look it up by hand or set its length. You can also see them with the “No length” filter.'});
 Object.assign(EN, {'Tier lists':'Tier lists','Ampliar o reducir':'Expand or collapse','Tier list':'Tier list','Tier':'Tier','Nueva tier list':'New tier list','Mi tier list':'My tier list','(copia)':'(copy)','Sin colocar':'Unplaced','+ Añadir juegos':'+ Add games','+ Añadir fila':'+ Add row','Exportar':'Export','Fila':'Row','Nombre':'Name','Color':'Color','↑ Subir':'↑ Move up','↓ Bajar':'↓ Move down','Vaciar fila':'Empty row','Eliminar fila':'Delete row','Añadir juegos':'Add games','Hecho':'Done','Marcar todos':'Select all','Añadir':'Add','O escribe uno a mano':'Or type one by hand','Título del juego':'Game title','Toca una fila para colocarlo':'Tap a row to place it','Duplicar':'Duplicate','Devolver todo a «Sin colocar»':'Move everything back to «Unplaced»','Eliminar tier list':'Delete tier list','Tier list eliminada':'Tier list deleted','Generando imagen…':'Generating image…','No se pudo generar la imagen':'Couldn\'t generate the image','Compartir':'Share','Ya está en la tier list':'Already in the tier list','Fila vaciada: los juegos vuelven a «Sin colocar»':'Row emptied: games go back to «Unplaced»','Fila eliminada':'Row deleted','Ordena tus juegos por niveles (S, A, B…) y compártelo como imagen.':'Rank your games in tiers (S, A, B…) and share it as an image.','Nombre de la tier list':'Tier list name','Más opciones':'More options','No hay juegos que añadir con este filtro.':'No games to add with this filter.','Añade juegos y colócalos en las filas.':'Add games and place them in the rows.','Color personalizado':'Custom color','Hecho con BacklogMGR':'Made with BacklogMGR'});
+Object.assign(EN, {'Sin tags':'No tags','Cualquier año':'Any year','Año de fin':'Year finished','Terminado':'Finished','Empezado':'Started','Al backlog':'To backlog','Sin fecha':'No date',
+'Buscador con ✕ para borrar y que ignora tildes. Los filtros enseñan cuántos juegos hay en cada plataforma o tag, con «Sin plataforma» y «Sin tags», y las plataformas más usadas salen primero.':'Search box with a ✕ to clear it, ignoring accents. Filters show how many games each platform or tag has, with “No platform” and “No tags”, and the most used platforms come first.',
+'Completados se ordena por fecha de fin o de inicio (los que no tienen fecha, al final) y se puede filtrar por año.':'Completed can be sorted by finish or start date (undated ones last) and filtered by year.',
+'Mantén pulsada una portada para empezar a seleccionar. «Horas» salta los juegos que ya las tienen. En Deseados, el botón rápido ahora los manda al Backlog; el aleatorio también elige entre Jugando.':'Long-press a cover to start selecting. “Hours” skips games that already have them. In Wishlist the quick button now moves games to Backlog; the random pick can also choose from Playing.',
+'Las horas puestas a mano llevan ✎ y las de HowLongToBeat, «~».':'Hours you set by hand show ✎; HowLongToBeat ones show “~”.'});
 Object.assign(EN, {"Importar lista (txt, CSV, JSON)":"Import list (txt, CSV, JSON)","Importar una lista…":"Import a list…","Importar lista":"Import list","Un juego por línea (txt), una tabla (CSV) o una lista (JSON). Antes de añadir nada verás una pantalla para revisarlo.":"One game per line (txt), a table (CSV) or a list (JSON). Before adding anything you will get a screen to review it.","Elegir archivo":"Choose file","O pega aquí tu lista":"Or paste your list here","Revisar":"Review","Formatos admitidos":"Supported formats","Texto (txt): un juego por línea. Opcional: Título — Plataforma — estado — 40 % — ★★★★ — 12 h. Una línea con un estado («Completados», «# Backlog») fija el estado de las siguientes. También entiende el texto de «Copiar todas las listas».":"Text (txt): one game per line. Optional: Title — Platform — status — 40 % — ★★★★ — 12 h. A line with a status («Completed», «# Backlog») sets the status of the following ones. It also understands the text from «Copy all lists».","CSV: primera fila con los nombres de las columnas: título, plataforma, estado, nota, progreso, horas, inicio, fin, etiquetas, notas, veces, portada. Solo el título es obligatorio. Vale con coma, punto y coma o tabulador.":"CSV: first row with the column names: title, platform, status, rating, progress, hours, start, end, tags, notes, plays, cover. Only the title is required. Comma, semicolon or tab all work.","JSON: una lista de títulos, una lista de objetos con esos mismos campos, o una copia de BacklogMGR.":"JSON: a list of titles, a list of objects with those same fields, or a BacklogMGR backup.","Descargar plantilla CSV":"Download CSV template","Pega una lista o elige un archivo":"Paste a list or choose a file","No he podido leer ese archivo":"I could not read that file","No he encontrado juegos en ese texto":"I did not find any games in that text","Revisar importación":"Review import","Estado de todos los juegos":"Status of all games","Según el archivo":"As in the file","Si el archivo no lo dice":"If the file does not say","Plataforma si el archivo no la dice":"Platform if the file does not say","Buscar portadas (SteamGridDB)":"Look up covers (SteamGridDB)","Buscar horas (HowLongToBeat)":"Look up hours (HowLongToBeat)","Todos":"All","Ninguno":"None","Solo avisos":"Warnings only","Nada seleccionado":"Nothing selected","No hay avisos: todo se ha reconocido.":"No warnings: everything was recognised.","Estado por defecto":"Default status","Plataforma por defecto":"Default platform","Repetido en la lista":"Repeated in the list","Importación hecha":"Import done","Parar la búsqueda":"Stop the search","Deshacer importación":"Undo import","Listo":"Done","Portadas al día":"Covers up to date","Búsqueda parada":"Search stopped","Importación deshecha: los juegos están en la papelera":"Import undone: the games are in the trash","Novedades":"What's new","Entendido":"Got it","Ver novedades":"See what's new","Importa listas desde txt, CSV o JSON, con una pantalla para revisarlas antes de añadir (Ajustes → Datos y copias, o desde «Añadir juego»).":"Import lists from txt, CSV or JSON, with a screen to review them before adding (Settings → Data and backups, or from «Add game»).","Si tu red bloquea las portadas de SteamGridDB, la app las pide a través de tu Worker (hay que actualizar worker.js).":"If your network blocks SteamGridDB covers, the app requests them through your Worker (you need to update worker.js).","La app avisa cuando se actualiza y enseña las novedades una sola vez.":"The app tells you when it updates and shows what is new just once."});
 const RULES = [
+  [/^(.+?) \((\d+)\)$/, (m, l, n) => `${T(l)} (${n})`],
+  [/^(\d+) de (\d+) juegos$/, (m, a, b) => `${a} of ${b} games`],
+  [/^(.*?) · (\d+) ya las tenían$/, (m, a, n) => `${T(a)} · ${n} already had them`],
 
   [/^(\d+) ya los tienes$/, (m, n) => `${n} already in your lists`],
   [/^(\d+) repetidos? en la lista$/, (m, n) => `${n} repeated in the list`],
@@ -705,7 +718,7 @@ if (compactTrash()) store(KEY, D);
 let syncBusy = false, syncDirty = false, syncTimer = null;
 const save = () => { if (!store(KEY, D)) toast('No se pudo guardar: almacenamiento lleno o bloqueado'); if (syncBusy) syncDirty = true; else scheduleSync(); };
 const saveS = () => store(SKEY, S);
-const UI = {tab:'playing', q:'', plat:'', tag:'', dur:'', selecting:false, sel:new Set()};
+const UI = {tab:'playing', q:'', plat:'', tag:'', dur:'', year:'', selecting:false, sel:new Set()};
 const list = () => Object.values(D.games).filter(g => !g.deleted);   // los borrados se conservan como «lápidas» para poder sincronizarlos
 
 /* ---------- toast ---------- */
@@ -828,8 +841,8 @@ function hltbSummary(g){
 }
 let bulkStop = false, bulkRun = false;
 async function hltbBulk(onProg, ids){   // sin «ids»: los pendientes (menos completados); con «ids»: justo esos (la selección), también los completados
-  const targets = ids ? ids.map(id => D.games[id]).filter(g => g && !g.deleted) : list().filter(g => g.status !== 'done' && (!hasHltb(g) || (S.hOver && g.est > 0)));
-  const res = {total: targets.length, found: 0, none: 0, noneList: [], err: 0, aborted: '', stopped: false}; let consec = 0, i = 0;
+  const targets = ids ? ids.map(id => D.games[id]).filter(g => g && !g.deleted && !hasHltb(g)) : list().filter(g => g.status !== 'done' && (!hasHltb(g) || (S.hOver && g.est > 0)));
+  const res = {skipped: ids ? ids.filter(id => D.games[id] && !D.games[id].deleted).length - targets.length : 0, total: targets.length, found: 0, none: 0, noneList: [], err: 0, aborted: '', stopped: false}; let consec = 0, i = 0;
   bulkStop = false; bulkRun = true;
   for (const g of targets){
     if (bulkStop){ res.stopped = true; break; }
@@ -1199,14 +1212,14 @@ function ph(g){
   const h = hue(g.title);
   return `<div class="ph" style="background:linear-gradient(145deg,hsl(${h} 45% 32%),hsl(${(h + 50) % 360} 50% 20%))">${esc(ini)}</div>`;
 }
-const hrsChip = g => { const h = hoursOf(g); if (!h) return ''; return g.status === 'playing' && g.progress > 0 && g.progress < 100 ? 'quedan ~' + fmtH(h * (1 - g.progress / 100)) : '~' + fmtH(h); };
+const hrsChip = g => { const h = hoursOf(g); if (!h) return ''; const m = g.est > 0 ? '✎ ' : '~'; return g.status === 'playing' && g.progress > 0 && g.progress < 100 ? 'quedan ' + m + fmtH(h * (1 - g.progress / 100)) : m + fmtH(h); };   // «~» = de HowLongToBeat, «✎» = puesto a mano
 const chip = g => [g.platform, hrsChip(g)].filter(Boolean).join(' · ');
 const chipHTML = g => { const p = g.platform, h = hrsChip(g); if (!p && !h) return ''; return `<span class="chip">${p ? `<span class="cp">${esc(p)}${h ? '<i class="sp"> · </i>' : ''}</span>` : ''}${h ? `<span class="ch">${esc(h)}</span>` : ''}</span>`; };
 function fitChips(){   // una línea si cabe; si no, la plataforma arriba (puede recortarse) y la duración debajo, siempre entera
   document.querySelectorAll('.chip').forEach(c => { const p = c.querySelector('.cp'), h = c.querySelector('.ch'); if (p && h) c.classList.toggle('two', h.offsetTop > p.offsetTop + 2); });
 }
 window.addEventListener('resize', () => requestAnimationFrame(fitChips));
-const actOf = g => g.status === 'playing' ? ['done', 'Completar', IC.done] : g.status === 'done' ? ['playing', 'Rejugar', IC.playing] : ['playing', 'Jugar', IC.playing];
+const actOf = g => g.status === 'playing' ? ['done', 'Completar', IC.done] : g.status === 'done' ? ['playing', 'Rejugar', IC.playing] : g.status === 'wish' ? ['backlog', 'Al backlog', IC.backlog] : ['playing', 'Jugar', IC.playing];
 function cardHTML(g, showSt){
   const st = ST[g.status], act = actOf(g), sel = UI.selecting && UI.sel.has(g.id);
   return `<article class="card${sel ? ' sel' : ''}" data-id="${g.id}" style="--c:${st.c}">
@@ -1240,6 +1253,8 @@ const SORTS = {
   rating:   (a, b) => b.rating - a.rating || b.updated - a.updated,
   time:     (a, b) => { const x = hoursOf(a), y = hoursOf(b); return !x && !y ? 0 : !x ? 1 : !y ? -1 : x - y; },       // más corto primero; sin dato al final
   timeDesc: (a, b) => { const x = hoursOf(a), y = hoursOf(b); return !x && !y ? 0 : !x ? 1 : !y ? -1 : y - x; },
+  fin:      (a, b) => (b.finished || '').localeCompare(a.finished || ''),
+  ini:      (a, b) => (b.started || '').localeCompare(a.started || ''),
   manual:   (a, b) => okey(a) - okey(b) || a.added - b.added
 };
 // cada panel recuerda su propio orden; por defecto: en espera A–Z, completados por valoración, el resto recientes
@@ -1249,35 +1264,47 @@ if (S.sort === 'manual' && !S.sorts.backlog) S.sorts.backlog = 'manual';   // qu
 if (!S.rev || typeof S.rev !== 'object') S.rev = {};
 for (const k of Object.keys(S.sorts)) if (S.sorts[k] === 'timeDesc'){ S.sorts[k] = 'time'; S.rev[k] = true; }   // antes eran dos órdenes distintos
 const curSort = () => SORTS[S.sorts[UI.tab]] && S.sorts[UI.tab] !== 'timeDesc' ? S.sorts[UI.tab] : (DEF_SORT[UI.tab] || 'updated');
-const DEF_DIR = {updated:'desc', added:'desc', title:'asc', progress:'desc', rating:'desc', time:'asc'};   // sentido natural de cada orden
+const DEF_DIR = {fin:'desc', ini:'desc', updated:'desc', added:'desc', title:'asc', progress:'desc', rating:'desc', time:'asc'};   // sentido natural de cada orden
 const curRev = () => curSort() !== 'manual' && !!S.rev[UI.tab];
 const curDir = () => curSort() === 'manual' ? 'asc' : ((DEF_DIR[curSort()] === 'asc') !== curRev() ? 'asc' : 'desc');
 function curCmp(){
-  const s = curSort(), f = SORTS[s]; if (!curRev()) return f;
+  const s = curSort(), f = SORTS[s];
+  if (s === 'fin' || s === 'ini'){ const k = s === 'fin' ? 'finished' : 'started', rv = curRev(); return (a, b) => { const x = a[k] || '', y = b[k] || ''; if (!x || !y) return !x && !y ? 0 : !x ? 1 : -1; return rv ? x.localeCompare(y) : y.localeCompare(x); }; }   // sin fecha, siempre al final
+  if (!curRev()) return f;
   return s === 'time' ? SORTS.timeDesc : (a, b) => f(b, a);
 }
 const durOk = (g, d) => { if (!d) return true; const h = hoursOf(g); return d === 'none' ? !h : !!h && (d === 'u5' ? h < 5 : d === 'u15' ? h >= 5 && h < 15 : d === 'u40' ? h >= 15 && h < 40 : h >= 40); };
 const qScope = () => S.qSc && ST[S.qSc] ? S.qSc : 'all';
+const platOk = g => !UI.plat || (UI.plat === '__none' ? !g.platform : g.platform === UI.plat);
+const tagOk = g => !UI.tag || (UI.tag === '__none' ? !g.tags.length : g.tags.includes(UI.tag));
+const yearOk = g => !UI.year || (UI.year === '__none' ? !g.finished : (g.finished || '').startsWith(UI.year));
+const inView = (g, q) => q ? nrmT(g.title).includes(q) && (qScope() === 'all' || g.status === qScope()) : g.status === UI.tab;   // búsqueda sin tildes ni mayúsculas
 function viewItems(){
-  const q = UI.q.trim().toLowerCase();
-  return list().filter(g => (q ? g.title.toLowerCase().includes(q) && (qScope() === 'all' || g.status === qScope()) : g.status === UI.tab) && (!UI.plat || g.platform === UI.plat) && (!UI.tag || g.tags.includes(UI.tag)) && durOk(g, UI.dur)).sort(curCmp());
+  const q = nrmT(UI.q), yr = !q && UI.tab === 'done';
+  return list().filter(g => inView(g, q) && platOk(g) && tagOk(g) && durOk(g, UI.dur) && (!yr || yearOk(g))).sort(curCmp());
 }
 function render(){
-  const q = UI.q.trim().toLowerCase();
+  const q = nrmT(UI.q);
   // navegación
-  const counts = {}; list().forEach(g => counts[g.status] = (counts[g.status] || 0) + 1);
+  const filt = !!(UI.plat || UI.tag || UI.dur), counts = {}; list().forEach(g => { if (!filt || (platOk(g) && tagOk(g) && durOk(g, UI.dur))) counts[g.status] = (counts[g.status] || 0) + 1; });
   $('#nav').innerHTML = STATUSES.map(s =>
     `<button data-tab="${s.id}" class="${!q && !UI.tiers && UI.tab === s.id ? 'on' : ''}" style="--c:${s.c}">${IC[s.id]}<span class="lg">${s.label}</span><span class="sh">${s.short}</span><span class="n">${counts[s.id] || 0}</span></button>`).join('') +
     `<button data-tier class="tnav${UI.tiers ? ' on' : ''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect class="t0" x="2.8" y="2.6" width="4.8" height="4.8" rx="1.4" fill="currentColor" stroke="none"/><path d="M11 5h10.5"/><rect class="t2" x="2.8" y="9.6" width="4.8" height="4.8" rx="1.4" fill="currentColor" stroke="none"/><path d="M11 12h8"/><rect class="t3" x="2.8" y="16.6" width="4.8" height="4.8" rx="1.4" fill="currentColor" stroke="none"/><path d="M11 19h5.5"/></svg><span class="lg">Tier lists</span><span class="sh">Tier</span></button>`;
   $('#title').textContent = q ? 'Resultados' : ST[UI.tab].label;
   // filtros (según los juegos existentes)
-  const plats = [...new Set(list().map(g => g.platform).filter(Boolean))].sort(cmpEs);
-  if (UI.plat && !plats.includes(UI.plat)) UI.plat = '';
-  $('#fPlat').innerHTML = '<option value="">Todas las plataformas</option>' + plats.map(p => `<option value="${esc(p)}"${p === UI.plat ? ' selected' : ''}>${esc(p)}</option>`).join('');
-  const tagsAll = [...new Set(list().flatMap(g => g.tags))].sort((a, b) => a.localeCompare(b, 'es'));
-  if (UI.tag && !tagsAll.includes(UI.tag)) UI.tag = '';
+  const nq = nrmT(UI.q), base = list().filter(g => inView(g, nq));   // los contadores cuentan lo que hay en la lista que miras
+  const pc = {}, tc = {}; let noP = 0, noT = 0;
+  base.forEach(g => { if (g.platform) pc[g.platform] = (pc[g.platform] || 0) + 1; else noP++; if (g.tags.length) g.tags.forEach(t => tc[t] = (tc[t] || 0) + 1); else noT++; });
+  const plats = [...new Set(list().map(g => g.platform).filter(Boolean))].sort((a, b) => (pc[b] || 0) - (pc[a] || 0) || cmpEs(a, b));
+  if (UI.plat && UI.plat !== '__none' && !plats.includes(UI.plat)) UI.plat = '';
+  $('#fPlat').innerHTML = `<option value="">Todas las plataformas (${base.length})</option>` + (noP || UI.plat === '__none' ? `<option value="__none"${UI.plat === '__none' ? ' selected' : ''}>Sin plataforma (${noP})</option>` : '') + plats.map(p => `<option value="${esc(p)}"${p === UI.plat ? ' selected' : ''}>${esc(p)} (${pc[p] || 0})</option>`).join('');
+  const tagsAll = [...new Set(list().flatMap(g => g.tags))].sort((a, b) => (tc[b] || 0) - (tc[a] || 0) || a.localeCompare(b, 'es'));
+  if (UI.tag && UI.tag !== '__none' && !tagsAll.includes(UI.tag)) UI.tag = '';
   const ft = $('#fTag'); ft.hidden = !tagsAll.length;
-  ft.innerHTML = '<option value="">Todas las etiquetas</option>' + tagsAll.map(t => `<option value="${esc(t)}"${t === UI.tag ? ' selected' : ''}>${esc(t)}</option>`).join('');
+  ft.innerHTML = `<option value="">Todas las etiquetas (${base.length})</option><option value="__none"${UI.tag === '__none' ? ' selected' : ''}>Sin tags (${noT})</option>` + tagsAll.map(t => `<option value="${esc(t)}"${t === UI.tag ? ' selected' : ''}>${esc(t)} (${tc[t] || 0})</option>`).join('');
+  const fy = $('#fYear'), years = [...new Set(base.map(g => (g.finished || '').slice(0, 4)).filter(Boolean))].sort().reverse(), showY = !nq && UI.tab === 'done' && years.length > 0;
+  if (UI.year && UI.year !== '__none' && !years.includes(UI.year)) UI.year = '';
+  fy.hidden = !showY; fy.innerHTML = '<option value="">Cualquier año</option>' + years.map(y => `<option value="${y}"${y === UI.year ? ' selected' : ''}>${y}</option>`).join('') + `<option value="__none"${UI.year === '__none' ? ' selected' : ''}>Sin fecha</option>`;
   $('#fDur').value = UI.dur;
   const fd = $('#fDir'); fd.disabled = curSort() === 'manual'; fd.textContent = curDir() === 'asc' ? '↑' : '↓';
   fd.setAttribute('aria-label', curDir() === 'asc' ? 'Orden ascendente' : 'Orden descendente'); fd.title = fd.getAttribute('aria-label');
@@ -1285,7 +1312,7 @@ function render(){
   $('#qSc').hidden = !q;
   $('#toolbar').classList.toggle('open', !!S.tbx);
   $('#tbMore').setAttribute('aria-expanded', !!S.tbx);
-  $('#tbMore').querySelector('.tbdot').classList.toggle('on', !S.tbx && !!(UI.tag || UI.dur || (q && qScope() !== 'all')));
+  $('#tbMore').querySelector('.tbdot').classList.toggle('on', !S.tbx && !!(UI.tag || UI.dur || (UI.year && UI.tab === 'done') || (q && qScope() !== 'all')));
   $('#qSc').innerHTML = '<option value="all">Todas las listas</option>' + STATUSES.map(st => `<option value="${st.id}"${st.id === qScope() ? ' selected' : ''}>${st.label}</option>`).join('');
   $('#qSc').value = qScope();
   // lista
@@ -1293,7 +1320,8 @@ function render(){
   if (UI.selecting) UI.sel = new Set([...UI.sel].filter(id => items.some(g => g.id === id)));
   const grid = $('#grid'); grid.className = 'grid' + (listMode ? ' list' : '');
   grid.innerHTML = items.map((g, i) => listMode ? rowHTML(g, i, !!q) : cardHTML(g, !!q)).join(''); fitChips(); requestAnimationFrame(fitChips);
-  $('#count').textContent = items.length + (items.length === 1 ? ' juego' : ' juegos');
+  const tot = q ? 0 : list().filter(g => g.status === UI.tab).length, fl = !q && items.length !== tot;
+  $('#count').textContent = (fl ? items.length + ' de ' + tot : items.length) + (items.length === 1 && !fl ? ' juego' : ' juegos');
   $('#sec').style.setProperty('--c', q ? 'var(--accent)' : ST[UI.tab].c);
   const bs = $('#btnSel'); bs.hidden = listMode || !items.length; bs.textContent = UI.selecting ? 'Listo' : 'Seleccionar';
   updateSelBar(); scheduleMore();
@@ -1401,6 +1429,7 @@ $('#q').addEventListener('input', e => { endSel(); UI.q = e.target.value; render
 $('#fPlat').addEventListener('change', e => { UI.plat = e.target.value; render(); });
 $('#fSort').addEventListener('change', e => { endSel(); S.sorts[UI.tab] = e.target.value; delete S.rev[UI.tab]; saveS(); render(); });
 $('#fDur').addEventListener('change', e => { UI.dur = e.target.value; render(); });
+$('#fYear').addEventListener('change', e => { UI.year = e.target.value; render(); });
 $('#fDir').addEventListener('click', () => { if (curSort() === 'manual') return; if (S.rev[UI.tab]) delete S.rev[UI.tab]; else S.rev[UI.tab] = true; saveS(); render(); });
 $('#fab').addEventListener('click', () => openAdd());
 $('#fTag').addEventListener('change', e => { UI.tag = e.target.value; render(); });
@@ -1439,7 +1468,7 @@ $('#selhl').addEventListener('click', async () => {
   const btn = $('#selhl'); btn.textContent = 'Cancelar';
   const r = await hltbBulk((i, n) => { UI.busy = `Buscando ${i} de ${n}…`; $('#selcount').textContent = UI.busy; }, ids);
   UI.busy = ''; btn.textContent = 'Horas'; setSelecting(false);
-  toast(r.aborted ? r.aborted : `${r.found} con horas · ${r.none} sin coincidencia${r.stopped ? ' · cancelado' : ''}`);
+  toast(r.aborted ? r.aborted : `${r.found} con horas · ${r.none} sin coincidencia${r.skipped ? ' · ' + r.skipped + ' ya las tenían' : ''}${r.stopped ? ' · cancelado' : ''}`);
 });
 $('#seldel').addEventListener('click', () => {
   const ids = [...UI.sel], now = Date.now(); if (!ids.length) return;
@@ -1449,6 +1478,7 @@ $('#seldel').addEventListener('click', () => {
 });
 
 $('#grid').addEventListener('click', e => {
+  if (Date.now() - window.lpFired < 600) return;
   if (UI.selecting){ const c = e.target.closest('.card'); if (c) toggleSel(c.dataset.id); return; }
   const a = e.target.closest('[data-act]'); if (!a) return;
   const el = a.closest('[data-id]'); const g = el && D.games[el.dataset.id]; if (!g) return;
@@ -1467,6 +1497,17 @@ $('#grid').addEventListener('error', e => {   // portada rota → marcador de po
   let drag = null;
   const val = (bar, x) => { const r = bar.getBoundingClientRect(); return clamp(Math.round((x - r.left) / r.width * 100), 0, 100); };
   const paint = (d, v) => { d.v = v; d.bar.firstElementChild.style.width = v + '%'; d.pct.textContent = v + '%'; };
+  let lp = null, lx = 0, ly = 0; window.lpFired = 0;
+  const lpClear = () => { clearTimeout(lp); lp = null; };
+  $('#grid').addEventListener('pointerdown', e => {   // pulsación larga en una portada: entra en modo selección con ese juego marcado
+    const cv = e.target.closest('.card .cover, .card h3');
+    if (!cv || UI.selecting || e.pointerType === 'mouse' || curSort() === 'manual') return;
+    const id = cv.closest('.card').dataset.id; lx = e.clientX; ly = e.clientY; lpClear();
+    lp = setTimeout(() => { lp = null; window.lpFired = Date.now(); try { navigator.vibrate && navigator.vibrate(15); } catch(_){} UI.selecting = true; UI.sel.add(id); render(); }, 500);
+  });
+  $('#grid').addEventListener('pointermove', e => { if (lp && Math.hypot(e.clientX - lx, e.clientY - ly) > 10) lpClear(); }, {passive:true});
+  ['pointerup', 'pointercancel'].forEach(t => $('#grid').addEventListener(t, lpClear, true));
+  $('#grid').addEventListener('contextmenu', e => { if (e.target.closest('.card') && e.pointerType !== 'mouse' && 'ontouchstart' in window) e.preventDefault(); });
   $('#grid').addEventListener('pointerdown', e => {
     const bar = e.target.closest('.bar'); if (!bar || UI.selecting) return;
     const card = bar.closest('.card');
@@ -1512,9 +1553,9 @@ function closeSheet(){ $('#wrap').hidden = true; $('#sheet').innerHTML = ''; }
 $('#wrap').addEventListener('mousedown', e => { if (e.target === $('#wrap')) closeSheet(); });
 document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; if (!$('#wrap').hidden) closeSheet(); else if (UI.tiers){ if (UI.tid){ UI.tid = null; TS.sel = null; renderTiers(); } else closeTiers(); } else if (UI.selecting) setSelecting(false); });
 
-const platList = () => [...new Set([...PLATFORMS, ...list().map(g => g.platform).filter(Boolean)])].sort(cmpEs);
+const platList = () => { const n = {}; list().forEach(g => { if (g.platform) n[g.platform] = (n[g.platform] || 0) + 1; }); return [...new Set([...PLATFORMS, ...Object.keys(n)])].sort((a, b) => (n[b] || 0) - (n[a] || 0) || cmpEs(a, b)); };   // las más usadas primero
 function platSelect(id, val){   // desplegable alfabético; las plataformas propias ya usadas también aparecen
-  const all = platList(); if (val && !all.includes(val)){ all.push(val); all.sort(cmpEs); }
+  const all = platList(); if (val && !all.includes(val)) all.unshift(val);
   return `<select id="${id}"><option value="">Sin plataforma</option>${all.map(p => `<option value="${esc(p)}"${p === val ? ' selected' : ''}>${esc(p)}</option>`).join('')}<option value="__other">Otra (escribir)…</option></select><input id="${id}-o" class="other" placeholder="Nombre de la plataforma" maxlength="40" hidden>`;
 }
 function platBind(id, onChange){
@@ -1715,7 +1756,7 @@ function openDetail(g){
 }
 
 /* --- ¿a qué juego ahora? --- */
-const RND_SETS = {backlog:['backlog'], wish:['wish'], hold:['hold'], 'backlog+hold':['backlog', 'hold']};
+const RND_SETS = {playing:['playing'], backlog:['backlog'], wish:['wish'], hold:['hold'], 'backlog+hold':['backlog', 'hold']};
 function openRandom(skipId, keep){
   if (!keep || !UI.rnd) UI.rnd = {set:'backlog', plat:UI.plat, tag:UI.tag, dur:UI.dur};   // al abrirlo parte de los filtros de la pantalla; luego se cambian aquí
   const f = UI.rnd, base = list().filter(g => RND_SETS[f.set].includes(g.status));
@@ -1726,7 +1767,7 @@ function openRandom(skipId, keep){
   const o = (v, l, cur) => `<option value="${esc(v)}"${v === cur ? ' selected' : ''}>${esc(l)}</option>`;
   openSheet(`<div class="top"><h2>¿A qué juego ahora?</h2><button id="x">Cerrar</button></div>
     <div class="rnd">
-      <div><label>Lista</label><select id="rl">${o('backlog', 'Backlog', f.set)}${o('wish', 'Deseados', f.set)}${o('hold', 'En espera', f.set)}${o('backlog+hold', 'Backlog + En espera', f.set)}</select></div>
+      <div><label>Lista</label><select id="rl">${o('playing', 'Jugando', f.set)}${o('backlog', 'Backlog', f.set)}${o('wish', 'Deseados', f.set)}${o('hold', 'En espera', f.set)}${o('backlog+hold', 'Backlog + En espera', f.set)}</select></div>
       <div><label>Plataforma</label><select id="rp2"><option value="">Todas las plataformas</option>${plats.map(p => o(p, p, f.plat)).join('')}</select></div>
       <div><label>Duración</label><select id="rd">${[['', 'Cualquier duración'], ['u5', 'Menos de 5 h'], ['u15', '5–15 h'], ['u40', '15–40 h'], ['o40', 'Más de 40 h']].map(([v, l]) => o(v, l, f.dur)).join('')}</select></div>
       ${tags.length ? `<div><label>Etiqueta</label><select id="rt"><option value="">Todas las etiquetas</option>${tags.map(t => o(t, t, f.tag)).join('')}</select></div>` : '<div></div>'}
@@ -2610,7 +2651,7 @@ function impRowHTML(r, i){
   if (r.stBad) fl.push(`Estado «${r.stBad}» sin reconocer`);
   let box = '';
   if (r.open){
-    const all = platList(); if (r.platform && !all.includes(r.platform)){ all.push(r.platform); all.sort(cmpEs); }
+    const all = platList(); if (r.platform && !all.includes(r.platform)) all.unshift(r.platform);
     box = `<div class="iebox"><input data-f="title" value="${esc(r.title)}" aria-label="Título">
       <select data-f="st"><option value="">Estado por defecto</option>${STATUSES.map(s => `<option value="${s.id}"${r.status === s.id ? ' selected' : ''}>${s.label}</option>`).join('')}</select>
       <select data-f="pl"><option value="">Plataforma por defecto</option><option value="__none"${r.noPl ? ' selected' : ''}>Sin plataforma</option>${all.map(p => `<option value="${esc(p)}"${!r.noPl && r.platform === p ? ' selected' : ''}>${esc(p)}</option>`).join('')}</select></div>`;
@@ -2731,11 +2772,12 @@ function impDone(ids, o){
 }
 
 /* ---------- novedades y aviso de actualización ---------- */
-const APP_VER = 33;
+const APP_VER = 34;
 const NEWS = [
-  'Importa listas desde txt, CSV o JSON, con una pantalla para revisarlas antes de añadir (Ajustes → Datos y copias, o desde «Añadir juego»).',
-  'Si tu red bloquea las portadas de SteamGridDB, la app las pide a través de tu Worker (hay que actualizar worker.js).',
-  'La app avisa cuando se actualiza y enseña las novedades una sola vez.'
+  'Buscador con ✕ para borrar y que ignora tildes. Los filtros enseñan cuántos juegos hay en cada plataforma o tag, con «Sin plataforma» y «Sin tags», y las plataformas más usadas salen primero.',
+  'Completados se ordena por fecha de fin o de inicio (los que no tienen fecha, al final) y se puede filtrar por año.',
+  'Mantén pulsada una portada para empezar a seleccionar. «Horas» salta los juegos que ya las tienen. En Deseados, el botón rápido ahora los manda al Backlog; el aleatorio también elige entre Jugando.',
+  'Las horas puestas a mano llevan ✎ y las de HowLongToBeat, «~».',
 ];
 function showNews(){
   const old = document.getElementById('news'); if (old) old.remove();

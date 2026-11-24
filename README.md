@@ -93,3 +93,11 @@ La clave se guarda solo en tu navegador. No la subas al repositorio.
 Importar desde Steam, el resto de la hoja de ruta y, más adelante, cuentas con inicio de sesión. La integración con tu cuenta de Backloggd queda descartada: no ofrece API ni exportación oficial.
 
 - **Barra de búsqueda compacta (móvil):** 3 filas bajitas como máximo; se esconde siguiendo el dedo al bajar y vuelve al subir un poco.
+
+## Novedades de la versión 34
+- Buscador con ✕ y sin distinguir tildes.
+- Los filtros muestran cuántos juegos hay por plataforma y por tag; nuevas opciones «Sin plataforma» y «Sin tags». Las plataformas más usadas salen primero.
+- La cabecera y las pestañas cuentan lo que se ve con los filtros («3 de 20 juegos»).
+- Completados: orden por fecha de fin o de inicio (sin fecha, al final) y filtro por año.
+- Pulsación larga en una portada para empezar a seleccionar; «Horas» salta los juegos que ya tienen datos.
+- Horas a mano con ✎, las de HowLongToBeat con «~». Deseados → botón «Al backlog». Aleatorio también desde Jugando.
