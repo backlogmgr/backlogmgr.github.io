@@ -29,6 +29,11 @@ Gestor personal de backlog de videojuegos. Web instalable (PWA): funciona en And
 - **Duración automática (HowLongToBeat):** al añadir un juego se buscan sus horas (historia, extras y completista) a través de tu Worker. En Ajustes → Duración eliges cuál prefieres; si falta, con un solo dato se usa ese y con dos, el más grande si prefieres «Completista» y el más pequeño en los otros casos. Lo que escribas a mano manda, salvo que marques «sobrescribir». Hay un botón para buscar las horas de todos los juegos (no completados), un selector de resultados en cada juego, orden por duración y un botón «Probar HowLongToBeat» que dice dónde falla si algún día deja de responder. **Requiere pegar de nuevo el `worker.js` en Cloudflare.** HowLongToBeat no tiene API oficial y puede cambiar su web.
 - Las fechas de inicio y fin de un juego se pueden quitar desde sus detalles.
 - Exportar e importar copia de seguridad.
+- **Importar una lista (txt, CSV o JSON):** en Ajustes → Datos y copias, o desde «Añadir juego». Antes de añadir nada hay una pantalla de revisión: marca los que ya tienes y los repetidos, avisa de plataformas que no reconoce, deja elegir el estado de todos los juegos (o el que se usa si el archivo no lo dice) y la plataforma por defecto, y cada fila se puede editar. Al terminar busca portadas y horas en segundo plano (se puede parar) y se puede deshacer todo.
+  - **txt:** un juego por línea; opcional `Título — Plataforma — estado — 40 % — ★★★★ — 12 h` (también con `|`, `;` o tabulador). Una línea con un estado («Completados», «# Backlog») fija el de las siguientes; una línea `Nintendo Switch:` fija la plataforma. Entiende el texto de «Copiar todas las listas».
+  - **CSV:** primera fila con los nombres de las columnas (título, plataforma, estado, nota, progreso, horas, inicio, fin, etiquetas, notas, veces, portada); solo el título es obligatorio. Coma, punto y coma o tabulador. En Ajustes hay una plantilla para descargar.
+  - **JSON:** lista de títulos, lista de objetos con esos campos, o una copia de BacklogMGR.
+- **Novedades:** cuando se instala una versión nueva la app avisa y enseña las novedades una sola vez (Ajustes → Datos y copias → «Ver novedades» las vuelve a abrir).
 - Botón «atrás» del móvil: cierra la ventana abierta y, si no hay ninguna, lleva al inicio (Jugando).
 
 ## Instalación y actualización
@@ -85,6 +90,6 @@ La clave se guarda solo en tu navegador. No la subas al repositorio.
 
 ## Pendiente
 
-Importar CSV, consulta automática de duraciones (HowLongToBeat no tiene API oficial) y, más adelante, cuentas con inicio de sesión. La integración con tu cuenta de Backloggd queda descartada: no ofrece API ni exportación oficial.
+Importar desde Steam, el resto de la hoja de ruta y, más adelante, cuentas con inicio de sesión. La integración con tu cuenta de Backloggd queda descartada: no ofrece API ni exportación oficial.
 
 - **Barra de búsqueda compacta (móvil):** 3 filas bajitas como máximo; se esconde siguiendo el dedo al bajar y vuelve al subir un poco.

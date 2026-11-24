@@ -344,6 +344,27 @@ nav button.tnav.on .t0{fill:#ef5b6b}nav button.tnav.on .t2{fill:#f5a524}nav butt
   .toolbar #tbx,.toolbar.open #tbx{display:contents!important;position:static;padding:0;background:none;border:0;box-shadow:none}
   .toolbar #tbx #fTag{flex:1 0 172px;min-width:172px}.toolbar #tbx #fDur{flex:1 0 176px;min-width:176px}.toolbar #tbx #qSc{flex:1 0 156px;min-width:156px}
 }
+
+/* importar lista */
+#isum{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}#isum span{font-size:12px;font-weight:650;padding:4px 10px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);color:var(--mute)}
+.imr{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:9px 10px;border-radius:14px;background:var(--panel2);border:1px solid var(--line);margin-bottom:7px;cursor:pointer}
+.imr:not(.on){opacity:.55}
+.imr .ick{flex:none;width:26px;height:26px;border-radius:8px;padding:0;border:2px solid var(--line);background:var(--bg);color:transparent;font-weight:900;line-height:1}
+.imr.on .ick{background:var(--accent);border-color:var(--accent);color:#fff}
+.imr .t{flex:1;min-width:0}
+.imr .t b{display:block;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.imr .t small{display:block;color:var(--mute);font-size:12px;margin-top:2px}
+.imr .fl{display:block;font-style:normal;font-size:11.5px;font-weight:650;color:#e5a53a;margin-top:3px}
+.imr .ied{flex:none;width:34px;height:34px;padding:0;border-radius:10px;font-size:15px}
+.imr .iebox{flex-basis:100%;display:grid;gap:8px;cursor:default}
+#iwarn.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.imbar{position:sticky;bottom:0;padding:14px 0 4px;margin-top:6px;background:linear-gradient(transparent,var(--panel) 35%)}
+.imbar button{width:100%;padding:13px}.imbar button:disabled{opacity:.45}
+.news{position:relative;margin:0 0 14px;padding:14px 44px 14px 16px;border-radius:16px;background:linear-gradient(135deg,#5b4fe022,#2fbf8f1f);border:1px solid var(--accent)}
+.news b{display:block;font-size:15px}.news b small{font-size:12px;font-weight:600;color:var(--mute);margin-left:6px}
+.news ul{margin:8px 0 12px;padding-left:18px;font-size:13px;line-height:1.5}
+.news .nx{position:absolute;top:8px;right:8px;width:32px;height:32px;padding:0;border-radius:10px}
+.news .nok{padding:9px 18px}
 </style>
 </head>
 <body>
@@ -571,7 +592,21 @@ Object.assign(EN, {'Elegir plataforma':'Choose platform','Otra…':'Other…','O
   'Backlog + En espera':'Backlog + On hold','No hay juegos con esos filtros.':'No games match those filters.','Lista':'List','Plataforma':'Platform','Etiqueta':'Tag',
   'Toca uno para buscarlo a mano o ponerle la duración. También los ves con el filtro «Sin duración».':'Tap one to look it up by hand or set its length. You can also see them with the “No length” filter.'});
 Object.assign(EN, {'Tier lists':'Tier lists','Ampliar o reducir':'Expand or collapse','Tier list':'Tier list','Tier':'Tier','Nueva tier list':'New tier list','Mi tier list':'My tier list','(copia)':'(copy)','Sin colocar':'Unplaced','+ Añadir juegos':'+ Add games','+ Añadir fila':'+ Add row','Exportar':'Export','Fila':'Row','Nombre':'Name','Color':'Color','↑ Subir':'↑ Move up','↓ Bajar':'↓ Move down','Vaciar fila':'Empty row','Eliminar fila':'Delete row','Añadir juegos':'Add games','Hecho':'Done','Marcar todos':'Select all','Añadir':'Add','O escribe uno a mano':'Or type one by hand','Título del juego':'Game title','Toca una fila para colocarlo':'Tap a row to place it','Duplicar':'Duplicate','Devolver todo a «Sin colocar»':'Move everything back to «Unplaced»','Eliminar tier list':'Delete tier list','Tier list eliminada':'Tier list deleted','Generando imagen…':'Generating image…','No se pudo generar la imagen':'Couldn\'t generate the image','Compartir':'Share','Ya está en la tier list':'Already in the tier list','Fila vaciada: los juegos vuelven a «Sin colocar»':'Row emptied: games go back to «Unplaced»','Fila eliminada':'Row deleted','Ordena tus juegos por niveles (S, A, B…) y compártelo como imagen.':'Rank your games in tiers (S, A, B…) and share it as an image.','Nombre de la tier list':'Tier list name','Más opciones':'More options','No hay juegos que añadir con este filtro.':'No games to add with this filter.','Añade juegos y colócalos en las filas.':'Add games and place them in the rows.','Color personalizado':'Custom color','Hecho con BacklogMGR':'Made with BacklogMGR'});
+Object.assign(EN, {"Importar lista (txt, CSV, JSON)":"Import list (txt, CSV, JSON)","Importar una lista…":"Import a list…","Importar lista":"Import list","Un juego por línea (txt), una tabla (CSV) o una lista (JSON). Antes de añadir nada verás una pantalla para revisarlo.":"One game per line (txt), a table (CSV) or a list (JSON). Before adding anything you will get a screen to review it.","Elegir archivo":"Choose file","O pega aquí tu lista":"Or paste your list here","Revisar":"Review","Formatos admitidos":"Supported formats","Texto (txt): un juego por línea. Opcional: Título — Plataforma — estado — 40 % — ★★★★ — 12 h. Una línea con un estado («Completados», «# Backlog») fija el estado de las siguientes. También entiende el texto de «Copiar todas las listas».":"Text (txt): one game per line. Optional: Title — Platform — status — 40 % — ★★★★ — 12 h. A line with a status («Completed», «# Backlog») sets the status of the following ones. It also understands the text from «Copy all lists».","CSV: primera fila con los nombres de las columnas: título, plataforma, estado, nota, progreso, horas, inicio, fin, etiquetas, notas, veces, portada. Solo el título es obligatorio. Vale con coma, punto y coma o tabulador.":"CSV: first row with the column names: title, platform, status, rating, progress, hours, start, end, tags, notes, plays, cover. Only the title is required. Comma, semicolon or tab all work.","JSON: una lista de títulos, una lista de objetos con esos mismos campos, o una copia de BacklogMGR.":"JSON: a list of titles, a list of objects with those same fields, or a BacklogMGR backup.","Descargar plantilla CSV":"Download CSV template","Pega una lista o elige un archivo":"Paste a list or choose a file","No he podido leer ese archivo":"I could not read that file","No he encontrado juegos en ese texto":"I did not find any games in that text","Revisar importación":"Review import","Estado de todos los juegos":"Status of all games","Según el archivo":"As in the file","Si el archivo no lo dice":"If the file does not say","Plataforma si el archivo no la dice":"Platform if the file does not say","Buscar portadas (SteamGridDB)":"Look up covers (SteamGridDB)","Buscar horas (HowLongToBeat)":"Look up hours (HowLongToBeat)","Todos":"All","Ninguno":"None","Solo avisos":"Warnings only","Nada seleccionado":"Nothing selected","No hay avisos: todo se ha reconocido.":"No warnings: everything was recognised.","Estado por defecto":"Default status","Plataforma por defecto":"Default platform","Repetido en la lista":"Repeated in the list","Importación hecha":"Import done","Parar la búsqueda":"Stop the search","Deshacer importación":"Undo import","Listo":"Done","Portadas al día":"Covers up to date","Búsqueda parada":"Search stopped","Importación deshecha: los juegos están en la papelera":"Import undone: the games are in the trash","Novedades":"What's new","Entendido":"Got it","Ver novedades":"See what's new","Importa listas desde txt, CSV o JSON, con una pantalla para revisarlas antes de añadir (Ajustes → Datos y copias, o desde «Añadir juego»).":"Import lists from txt, CSV or JSON, with a screen to review them before adding (Settings → Data and backups, or from «Add game»).","Si tu red bloquea las portadas de SteamGridDB, la app las pide a través de tu Worker (hay que actualizar worker.js).":"If your network blocks SteamGridDB covers, the app requests them through your Worker (you need to update worker.js).","La app avisa cuando se actualiza y enseña las novedades una sola vez.":"The app tells you when it updates and shows what is new just once."});
 const RULES = [
+
+  [/^(\d+) ya los tienes$/, (m, n) => `${n} already in your lists`],
+  [/^(\d+) repetidos? en la lista$/, (m, n) => `${n} repeated in the list`],
+  [/^(\d+) con plataforma sin reconocer$/, (m, n) => `${n} with unrecognised platform`],
+  [/^Importar (\d+) juegos?$/, (m, n) => `Import ${n} ${n === '1' ? 'game' : 'games'}`],
+  [/^Ya lo tienes en ([^(]+?)( \((.+)\))?$/, (m, l, x, p) => `You already have it in ${T(l)}${p ? ' (' + p + ')' : ''}`],
+  [/^Plataforma «(.+)» sin reconocer$/, (m, p) => `Platform «${p}» not recognised`],
+  [/^Estado «(.+)» sin reconocer$/, (m, p) => `Status «${p}» not recognised`],
+  [/^Portadas: (\d+) de (\d+)$/, (m, a, b) => `Covers: ${a} of ${b}`],
+  [/^Horas: (\d+) de (\d+)$/, (m, a, b) => `Hours: ${a} of ${b}`],
+  [/^Solo se leen las primeras (\d+) filas\.$/, (m, n) => `Only the first ${n} rows are read.`],
+  [/^Actualizada a la versión (\d+)$/, (m, n) => `Updated to version ${n}`],
+  [/^Versión (\d+)$/, (m, n) => `Version ${n}`],
   [/^(\d+) juegos?$/, (m, n) => `${n} ${n === '1' ? 'game' : 'games'}`],
   [/^Añadir (\d+)$/, (m, n) => `Add ${n}`],
   [/^(\d+) juegos? añadidos?$/, (m, n) => `${n} ${n === '1' ? 'game' : 'games'} added`],
@@ -1501,8 +1536,9 @@ function openAdd(prefill){
     <input id="aq" type="search" placeholder="Nombre del juego…" autocomplete="off">
     <label>Añadir a</label><select id="as">${STATUSES.map(s => `<option value="${s.id}" ${s.id === UI.tab ? 'selected' : ''}>${s.label}</option>`).join('')}</select>
     <div id="ares" style="margin-top:12px"></div>
-    <div class="btnrow"><button id="manual">Añadir «<span id="mt">…</span>» sin buscar</button></div>`);
-  $('#x').onclick = closeSheet;
+    <div class="btnrow"><button id="manual">Añadir «<span id="mt">…</span>» sin buscar</button></div>
+    <div class="btnrow" style="margin-top:8px"><button id="aimp">Importar una lista…</button></div>`);
+  $('#x').onclick = closeSheet; $('#aimp').onclick = () => openImport('add');
   const aq = $('#aq'); setTimeout(() => aq.focus(), 50);
   const opts = plat => ({platform: plat || '', status: $('#as').value});   // la plataforma sale de HowLongToBeat (se puede cambiar luego en el detalle)
   const manLabel = () => { const t = aq.value.trim(), d = t && findDup(t, null); $('#manual').innerHTML = d ? `Ya lo tienes (${esc(dupText(d))}). Pulsa otra vez para añadirlo igualmente` : 'Añadir «<span id="mt"></span>» sin buscar'; if (!d) $('#mt').textContent = t || '…'; delete $('#manual').dataset.ok; };
@@ -2273,10 +2309,12 @@ function openSettings(which){   // which: sección que debe quedar abierta al vo
     </div></details>
     <details class="acc" ${which === 'data' ? 'open' : ''}><summary>Datos y copias <small>${list().length} juegos</small></summary><div class="in">
       <div class="btnrow" style="margin-top:0"><button id="exp">Exportar copia</button><button id="imp">Importar copia</button></div>
+      <div class="btnrow" style="margin-top:8px"><button id="impl">Importar lista (txt, CSV, JSON)</button></div>
       <input id="impf" type="file" accept=".json,application/json" hidden>
       <div class="btnrow" style="margin-top:8px"><button id="copyall">Copiar todas las listas</button><button id="copycur">Copiar «${esc(ST[UI.tab].label)}»</button></div>
       <div class="btnrow" style="margin-top:8px"><button id="trashbtn">Papelera${trashN ? ` (${trashN})` : ''}</button></div>
       <div class="hint">Tus datos se guardan en este navegador y, si activas la sincronización, también (cifrados) en tu nube. Haz copias de vez en cuando: al borrar los datos del navegador se pierden los locales.</div>
+      <div class="hint"><span>Versión ${APP_VER}</span> · <a href="#" id="newsopen">Ver novedades</a></div>
     </div></details>`);
   $('#x').onclick = closeSheet;
   renderSyncPanel();
@@ -2317,6 +2355,8 @@ function openSettings(which){   // which: sección que debe quedar abierta al vo
     setTimeout(() => URL.revokeObjectURL(a.href), 2000);
   };
   $('#imp').onclick = () => $('#impf').click();
+  $('#impl').onclick = () => openImport();
+  $('#newsopen').onclick = e => { e.preventDefault(); closeSheet(); $('#main').scrollTop = 0; showNews(); };
   $('#impf').onchange = async e => {
     const f = e.target.files[0]; if (!f) return;
     try {
@@ -2334,9 +2374,388 @@ function openSettings(which){   // which: sección que debe quedar abierta al vo
   };
 }
 
+/* ---------- importar una lista (txt, CSV o JSON) ---------- */
+const IMP_MAX = 3000;
+const IMP_STATUS = (() => {
+  const m = {}, add = (id, ...ks) => ks.forEach(k => { m[nrmT(k)] = id; });
+  add('playing', 'jugando', 'playing', 'en curso', 'currently playing', 'now playing', 'jugando ahora');
+  add('backlog', 'backlog', 'pendiente', 'pendientes', 'por jugar', 'to play', 'todo', 'cola', 'queue', 'plan to play', 'sin empezar');
+  add('wish', 'deseados', 'deseado', 'wishlist', 'wish', 'lista de deseos', 'wanted', 'deseos');
+  add('hold', 'en espera', 'espera', 'pausa', 'pausado', 'pausados', 'on hold', 'hold', 'paused');
+  add('dropped', 'abandonados', 'abandonado', 'dropped', 'abandoned');
+  add('done', 'completados', 'completado', 'terminado', 'terminados', 'done', 'completed', 'finished', 'beaten', 'acabado', 'acabados', 'finalizado', 'finalizados', 'completo');
+  return m;
+})();
+const impStatus = s => IMP_STATUS[nrmT(s)] || '';
+let _impPlat = null;
+function impPlat(raw){   // texto → plataforma de la app; ok = false si no se reconoce (se conserva tal cual para que la revises)
+  const s = String(raw == null ? '' : raw).trim(); if (!s) return {name:'', ok:true};
+  if (!_impPlat){
+    _impPlat = {};
+    const put = (k, p) => { k = nrmT(k); if (k && !_impPlat[k]) _impPlat[k] = p; };
+    for (const p of PLATFORMS){ put(p, p); put(p.replace(/\s*\(.*\)\s*/, ''), p); p.split(/\s*\/\s*/).forEach(x => put(x, p)); }
+    const ex = {'ps1':'PlayStation', 'psx':'PlayStation', 'ps2':'PlayStation 2', 'ps3':'PlayStation 3', 'ps4':'PlayStation 4', 'ps5':'PlayStation 5', 'vita':'PlayStation Vita', 'ps vita':'PlayStation Vita',
+      'psp':'PlayStation Portable (PSP)', 'xbox series':'Xbox Series X|S', 'series x':'Xbox Series X|S', 'series s':'Xbox Series X|S', 'xsx':'Xbox Series X|S', 'x360':'Xbox 360', 'xone':'Xbox One',
+      'switch':'Nintendo Switch', 'switch 2':'Nintendo Switch 2', 'ns':'Nintendo Switch', 'ns2':'Nintendo Switch 2', 'windows':'PC', 'pc windows':'PC', 'steam':'PC', 'epic':'PC', 'gog':'PC',
+      'ordenador':'PC', 'computer':'PC', 'n64':'Nintendo 64', 'wiiu':'Wii U'};
+    for (const [k, p] of Object.entries(ex)) if (PLATFORMS.includes(p)) put(k, p);
+  }
+  const lc = s.toLowerCase();
+  if (Object.prototype.hasOwnProperty.call(PLAT_ALIAS, lc)) return {name:PLAT_ALIAS[lc], ok:true};
+  const k = nrmT(s); if (_impPlat[k]) return {name:_impPlat[k], ok:true};
+  if (HPLAT[lc]) return {name:HPLAT[lc], ok:true};
+  const own = list().map(g => g.platform).find(p => p && nrmT(p) === k); if (own) return {name:own, ok:true};
+  return {name:s, ok:false};
+}
+const impNum = v => { const n = parseFloat(String(v == null ? '' : v).replace(',', '.').replace(/[^\d.\-]/g, '')); return Number.isFinite(n) ? n : 0; };
+function impDate(v){
+  const s = String(v == null ? '' : v).trim(); let m, y, mo, d;
+  if ((m = s.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/))){ y = +m[1]; mo = +m[2]; d = +m[3]; }
+  else if ((m = s.match(/^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})/))){ d = +m[1]; mo = +m[2]; y = +m[3]; }
+  else return '';
+  if (mo < 1 || mo > 12 || d < 1 || d > 31) return '';
+  return y + '-' + String(mo).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+}
+function impRating(v){
+  if (typeof v === 'string' && /[★½⭐]/.test(v)) return clamp((v.match(/[★⭐]/g) || []).length + (/½/.test(v) ? .5 : 0), 0, 5);
+  let n = impNum(v); if (n > 10) n /= 20; else if (n > 5) n /= 2;
+  return clamp(Math.round(n * 2) / 2, 0, 5);
+}
+// nombres de columna / campos que se entienden (sin tildes ni mayúsculas)
+const IMP_COLS = {
+  title:['title', 'titulo', 'nombre', 'name', 'game', 'juego', 'juegos'],
+  platform:['platform', 'plataforma', 'console', 'consola', 'system', 'sistema'],
+  status:['status', 'estado', 'list', 'lista'],
+  rating:['rating', 'nota', 'valoracion', 'puntuacion', 'score', 'stars', 'estrellas'],
+  progress:['progress', 'progreso', 'avance', 'completion', 'percent', 'porcentaje'],
+  est:['est', 'hours', 'horas', 'duration', 'duracion', 'time', 'tiempo'],
+  started:['started', 'start', 'inicio', 'empezado', 'fecha inicio', 'start date', 'fecha de inicio'],
+  finished:['finished', 'finish', 'fin', 'end', 'fecha fin', 'end date', 'fecha de fin', 'terminado el'],
+  tags:['tags', 'tag', 'etiquetas', 'etiqueta', 'genres', 'generos'],
+  notes:['notes', 'note', 'notas', 'comments', 'comentarios'],
+  plays:['plays', 'veces', 'veces completado', 'playthroughs'],
+  cover:['cover', 'portada', 'image', 'imagen']
+};
+const IMP_KEY = (() => { const m = {}; for (const [k, ns] of Object.entries(IMP_COLS)) ns.forEach(n => { m[nrmT(n)] = k; }); return m; })();
+const impKey = c => IMP_KEY[nrmT(c)] || '';
+const impObj = x => { const o = {}; for (const [k, v] of Object.entries(x)){ const c = impKey(k); if (c && o[c] === undefined) o[c] = v; } return o; };
+
+function impRow(o){   // campos sueltos → fila de la pantalla de revisión
+  const title = String(o.title == null ? '' : o.title).replace(/\s+/g, ' ').trim(); if (!title || !/[\p{L}\p{N}]/u.test(title)) return null;   // vacío o solo signos («---»)
+  const st = o.status ? impStatus(o.status) : '', pl = impPlat(o.platform), has = v => v != null && v !== '';
+  return {title, status:st, stBad:o.status && !st ? String(o.status) : '', platform:pl.name, platOk:pl.ok, noPl:false,
+    rating:has(o.rating) ? impRating(o.rating) : 0, progress:has(o.progress) ? clamp(Math.round(impNum(o.progress)), 0, 100) : 0,
+    est:has(o.est) ? Math.max(0, impNum(o.est)) : 0, started:impDate(o.started), finished:impDate(o.finished),
+    tags:(Array.isArray(o.tags) ? o.tags : String(o.tags || '').split(/[;|,]/)).map(x => String(x).trim()).filter(Boolean).slice(0, 12),
+    notes:String(o.notes || '').trim().slice(0, 2000), plays:Math.max(0, Math.round(impNum(o.plays))),
+    cover:/^https:\/\//.test(o.cover || '') ? String(o.cover) : '', sel:true, open:false};
+}
+function impClass(p){   // qué es cada trozo de una línea de texto
+  const s = String(p).trim(); let m; if (!s) return {k:'none'};
+  if ((m = s.match(/^(\d{1,3}(?:[.,]\d+)?)\s*%$/))) return {k:'progress', v:clamp(Math.round(parseFloat(m[1].replace(',', '.'))), 0, 100)};
+  if (/^[★☆⭐]+\s*½?$|^½$/.test(s)) return {k:'rating', v:impRating(s)};
+  if ((m = s.match(/^(\d{1,2}(?:[.,]\d)?)\s*\/\s*(5|10)$/))){ const n = parseFloat(m[1].replace(',', '.')); return {k:'rating', v:impRating(m[2] === '10' ? n / 2 : n)}; }
+  if ((m = s.match(/^~?(\d+(?:[.,]\d+)?)\s*(?:h|hs|horas?|hours?)$/i))) return {k:'hours', v:parseFloat(m[1].replace(',', '.'))};
+  if (impStatus(s)) return {k:'status', v:impStatus(s)};
+  if (/^\d/.test(s) && impDate(s)) return {k:'date', v:impDate(s)};
+  if (/^(19|20)\d\d$/.test(s)) return {k:'year'};
+  const pl = impPlat(s); if (pl.ok && pl.name) return {k:'plat', v:pl.name};
+  return {k:'unk', v:s};
+}
+function impLine(line, st, pl, done){
+  const parts = line.split(/\s+[—–]\s+|\s*\|\s*|\t+|\s*;\s*/).map(x => x.trim()).filter(Boolean); if (!parts.length) return null;
+  for (;;){   // «Título - Plataforma»: el guion normal solo separa si lo que sigue se reconoce
+    const i = parts[0].lastIndexOf(' - '); if (i < 0) break;
+    const tail = parts[0].slice(i + 3).trim(), k = impClass(tail).k; if (!tail || k === 'unk' || k === 'year' || k === 'none') break;
+    parts.splice(1, 0, tail); parts[0] = parts[0].slice(0, i).trim();
+  }
+  for (;;){   // «Título (Plataforma)», «Título [PC]» o «Título (2016)»
+    const m = parts[0].match(/^(.*\S)\s*[(\[]([^()\[\]]{1,40})[)\]]$/); if (!m) break;
+    const c = impClass(m[2]); if (c.k === 'unk' || c.k === 'none') break;
+    parts[0] = m[1]; if (c.k !== 'year') parts.splice(1, 0, m[2]);
+  }
+  const o = {title:parts[0], status:st || (done ? 'done' : ''), platform:pl}, notes = []; let raw = '', date = '';
+  for (const p of parts.slice(1)){
+    const c = impClass(p);
+    if (c.k === 'progress') o.progress = c.v; else if (c.k === 'rating') o.rating = c.v; else if (c.k === 'hours') o.est = c.v;
+    else if (c.k === 'status') o.status = c.v; else if (c.k === 'plat') o.platform = c.v; else if (c.k === 'date') date = c.v;
+    else if (c.k === 'unk'){ if (!raw && p.length <= 24 && p.split(/\s+/).length <= 3) raw = p; else notes.push(p); }
+  }
+  if (raw){ if (!o.platform) o.platform = raw; else notes.push(raw); }
+  if (date){ if (o.status === 'done') o.finished = date; else o.started = date; }
+  if (notes.length) o.notes = notes.join(' · ');
+  return impRow(o);
+}
+function impParseTxt(text){
+  const rows = []; let cur = '', curPl = '';
+  for (const raw of text.split(/\r?\n/)){
+    let line = raw.trim(); if (!line) continue;
+    if (/^BacklogMGR\s*·/.test(line) || /^\((vac[ií]a|empty)\)$/i.test(line)) continue;
+    const bullet = /^(?:•|[-*–]\s|\d+[.)]\s|\[[ xX]?\]\s?)/.test(line);
+    if (!bullet){   // cabeceras: «Jugando (3)», «# Completados», «Completados:», «[Backlog]» o una plataforma marcada con # o :
+      const h = line.replace(/^[#=*\s]+/, '').replace(/[=*:\s]+$/, '').replace(/\s*\(\d+\)$/, '').replace(/^\[|\]$/g, '').trim();
+      const st = impStatus(h); if (st){ cur = st; continue; }
+      if (/^#|:$|^=+/.test(line)){ const pl = impPlat(h); if (pl.ok && pl.name) curPl = pl.name; continue; }
+    }
+    let done = false;
+    line = line.replace(/^(?:•|[-*–]|\d+[.)])\s*/, '').replace(/^\[([ xX]?)\]\s*/, (m0, cb) => { if (/x/i.test(cb)) done = true; return ''; });
+    const r = impLine(line, cur, curPl, done); if (r) rows.push(r);
+  }
+  return rows;
+}
+function impCsvRows(text, delim){
+  const rows = []; let row = [], f = '', q = false;
+  for (let i = 0; i < text.length; i++){
+    const c = text[i];
+    if (q){ if (c === '"'){ if (text[i + 1] === '"'){ f += '"'; i++; } else q = false; } else f += c; }
+    else if (c === '"' && f === '') q = true;
+    else if (c === delim){ row.push(f); f = ''; }
+    else if (c === '\n' || c === '\r'){ if (c === '\r' && text[i + 1] === '\n') i++; row.push(f); f = ''; rows.push(row); row = []; }
+    else f += c;
+  }
+  if (f !== '' || row.length){ row.push(f); rows.push(row); }
+  return rows.filter(r => r.some(x => String(x).trim() !== ''));
+}
+function impParseCsv(text){
+  const first = text.split(/\r?\n/).find(l => l.trim()) || '', cnt = c => first.split(c).length - 1;
+  const delim = [',', ';', '\t'].reduce((b, c) => cnt(c) > cnt(b) ? c : b, ',');
+  const data = impCsvRows(text, delim); if (!data.length) return [];
+  const keys = data[0].map(impKey), head = keys.includes('title');
+  const cols = head ? keys : ['title', 'platform', 'status', 'rating', 'progress', 'est'];   // sin cabecera: título, plataforma, estado, nota…
+  return (head ? data.slice(1) : data).map(r => { const o = {}; cols.forEach((k, i) => { if (k && r[i] !== undefined && String(r[i]).trim() !== '' && o[k] === undefined) o[k] = r[i]; }); return impRow(o); }).filter(Boolean);
+}
+function impParseJson(text){
+  const j = JSON.parse(text); let items = null;
+  if (Array.isArray(j)) items = j;
+  else if (j && typeof j === 'object'){
+    if (Array.isArray(j.games)) items = j.games;
+    else if (j.games && typeof j.games === 'object') items = Object.values(j.games);
+    else { const ks = Object.keys(j); if (ks.length && ks.every(k => impStatus(k) && Array.isArray(j[k]))) items = ks.flatMap(k => j[k].map(x => typeof x === 'string' ? {title:x, status:k} : Object.assign({status:k}, x))); }
+  }
+  if (!items) throw new Error('formato');
+  return items.map(x => typeof x === 'string' ? impRow({title:x}) : x && typeof x === 'object' && x.deleted !== true ? impRow(impObj(x)) : null).filter(Boolean);
+}
+async function impRead(file){   // UTF-8 y, si hay caracteres rotos (CSV de Excel en Windows), Windows-1252
+  const buf = await file.arrayBuffer(); let t = new TextDecoder('utf-8').decode(buf);
+  if (t.includes('�')) t = new TextDecoder('windows-1252').decode(buf);
+  return t.replace(/^﻿/, '');
+}
+function impPrepare(rows){   // marca los que ya tienes y los repetidos dentro de la propia lista
+  const have = new Map(); for (const g of list()){ const k = normTitle(g.title); if (!have.has(k)) have.set(k, g); }
+  const seen = new Set();
+  for (const r of rows){
+    r.dup = have.get(normTitle(r.title)) || null;
+    const k = normTitle(r.title) + '|' + (r.platform || '').toLowerCase(); r.rep = seen.has(k); seen.add(k);
+    r.sel = !r.dup && !r.rep;
+  }
+  return {have, rows};
+}
+function impParse(text, name){
+  const s = String(text || '').trim(), ext = ((name || '').match(/\.(\w+)$/) || [, ''])[1].toLowerCase(); let rows = null, kind = '';
+  if (ext === 'json' || /^[\[{]/.test(s)){ try { rows = impParseJson(s); kind = 'JSON'; } catch(e){ if (ext === 'json') throw e; } }
+  if (!rows){
+    const cells = (s.split(/\r?\n/)[0] || '').split(/[,;\t]/).map(c => impKey(c.replace(/^"|"$/g, '')));
+    if (ext === 'csv' || ext === 'tsv' || cells.includes('title')){ rows = impParseCsv(s); kind = 'CSV'; } else { rows = impParseTxt(s); kind = 'TXT'; }
+  }
+  rows = rows.filter(Boolean); const cut = rows.length > IMP_MAX; if (cut) rows = rows.slice(0, IMP_MAX);
+  const p = impPrepare(rows); return {rows:p.rows, have:p.have, kind, cut};
+}
+
+/* --- pantalla de entrada --- */
+const IMP_TPL = 'titulo,plataforma,estado,nota,progreso,horas,inicio,fin,etiquetas,notas\nHades,Nintendo Switch,completado,4.5,100,22,2024-03-01,2024-03-20,roguelike;indie,Me encantó\nCeleste,PC,backlog,,,,,,plataformas,\nHollow Knight,Nintendo Switch,jugando,,35,,2024-05-02,,metroidvania,\n';
+function openImport(from){
+  openSheet(`<div class="top"><h2>Importar lista</h2><button id="x">Atrás</button></div>
+    <div class="hint">Un juego por línea (txt), una tabla (CSV) o una lista (JSON). Antes de añadir nada verás una pantalla para revisarlo.</div>
+    <div class="btnrow" style="margin-top:12px"><button id="ifile" class="pri">Elegir archivo</button></div>
+    <input id="ifin" type="file" accept=".txt,.csv,.tsv,.json,.md,text/*,application/json" hidden>
+    <label>O pega aquí tu lista</label>
+    <textarea id="itxt" rows="8" placeholder="Hades — Nintendo Switch — ★★★★½&#10;Celeste&#10;Hollow Knight (PC)" spellcheck="false"></textarea>
+    <div class="btnrow"><button id="irev">Revisar</button></div>
+    <details class="hnone"><summary>Formatos admitidos</summary>
+      <div class="hint">Texto (txt): un juego por línea. Opcional: Título — Plataforma — estado — 40 % — ★★★★ — 12 h. Una línea con un estado («Completados», «# Backlog») fija el estado de las siguientes. También entiende el texto de «Copiar todas las listas».</div>
+      <div class="hint">CSV: primera fila con los nombres de las columnas: título, plataforma, estado, nota, progreso, horas, inicio, fin, etiquetas, notas, veces, portada. Solo el título es obligatorio. Vale con coma, punto y coma o tabulador.</div>
+      <div class="hint">JSON: una lista de títulos, una lista de objetos con esos mismos campos, o una copia de BacklogMGR.</div>
+    </details>
+    <div class="btnrow"><button id="itpl">Descargar plantilla CSV</button></div>`);
+  $('#x').onclick = () => from === 'add' ? closeSheet() : openSettings('data');
+  const run = async (text, name) => {
+    if (!String(text).trim()){ toast('Pega una lista o elige un archivo'); return; }
+    let p; try { p = impParse(text, name); } catch(_){ toast('No he podido leer ese archivo'); return; }
+    if (!p.rows.length){ toast('No he encontrado juegos en ese texto'); return; }
+    impReview(p, from);
+  };
+  $('#ifile').onclick = () => $('#ifin').click();
+  $('#ifin').onchange = async e => { const f = e.target.files[0]; if (!f) return; let t; try { t = await impRead(f); } catch(_){ toast('No he podido leer ese archivo'); return; } run(t, f.name); };
+  $('#irev').onclick = () => run($('#itxt').value, '');
+  $('#itpl').onclick = () => {
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + IMP_TPL], {type:'text/csv'})); a.download = 'plantilla-backlogmgr.csv';
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  };
+}
+
+/* --- pantalla de revisión (staging) --- */
+let IM = null, impStop = false;
+const impEffSt = r => IM.st || r.status || (r.progress >= 100 ? 'done' : IM.defSt);
+const impEffPl = r => r.noPl ? '' : (r.platform || IM.defPl);
+const impWarn = r => !!(r.dup || r.rep || !r.platOk || r.stBad);
+function impRowHTML(r, i){
+  const st = impEffSt(r), pl = impEffPl(r), bits = [ST[st].label, pl || 'Sin plataforma'];
+  if (r.rating) bits.push('★'.repeat(Math.floor(r.rating)) + (r.rating % 1 ? '½' : ''));
+  if (st !== 'done' && r.progress > 0 && r.progress < 100) bits.push(r.progress + ' %');
+  if (r.est) bits.push(fmtH(r.est));
+  const fl = [];
+  if (r.dup) fl.push(`Ya lo tienes en ${ST[r.dup.status].label}${r.dup.platform ? ' (' + r.dup.platform + ')' : ''}`);
+  if (r.rep) fl.push('Repetido en la lista');
+  if (!r.platOk) fl.push(`Plataforma «${r.platform}» sin reconocer`);
+  if (r.stBad) fl.push(`Estado «${r.stBad}» sin reconocer`);
+  let box = '';
+  if (r.open){
+    const all = platList(); if (r.platform && !all.includes(r.platform)){ all.push(r.platform); all.sort(cmpEs); }
+    box = `<div class="iebox"><input data-f="title" value="${esc(r.title)}" aria-label="Título">
+      <select data-f="st"><option value="">Estado por defecto</option>${STATUSES.map(s => `<option value="${s.id}"${r.status === s.id ? ' selected' : ''}>${s.label}</option>`).join('')}</select>
+      <select data-f="pl"><option value="">Plataforma por defecto</option><option value="__none"${r.noPl ? ' selected' : ''}>Sin plataforma</option>${all.map(p => `<option value="${esc(p)}"${!r.noPl && r.platform === p ? ' selected' : ''}>${esc(p)}</option>`).join('')}</select></div>`;
+  }
+  return `<div class="imr${r.sel ? ' on' : ''}" data-i="${i}"><button class="ick" aria-label="Incluir">✓</button>
+    <div class="t"><b>${esc(r.title)}</b><small>${esc(bits.join(' · '))}</small>${fl.map(f => `<em class="fl">${esc(f)}</em>`).join('')}</div>
+    <button class="ied" aria-label="Editar">✎</button>${box}</div>`;
+}
+function impCount(){
+  const n = IM.rows.filter(r => r.sel).length, d = IM.rows.filter(r => r.dup).length, p = IM.rows.filter(r => r.rep).length, b = IM.rows.filter(r => !r.platOk).length;
+  $('#isum').innerHTML = `<span>${IM.rows.length} juegos</span>` + (d ? `<span>${d} ya los tienes</span>` : '') + (p ? `<span>${p} repetidos en la lista</span>` : '') + (b ? `<span>${b} con plataforma sin reconocer</span>` : '') + `<span data-notr>${IM.kind}</span>`;
+  const go = $('#igo'); go.textContent = n ? `Importar ${n} ${n === 1 ? 'juego' : 'juegos'}` : 'Nada seleccionado'; go.disabled = !n;
+}
+function impDraw(){   // la lista se dibuja por tramos al bajar (hay listas de miles de juegos)
+  const el = $('#iml'); el.innerHTML = '';
+  IM.view = IM.rows.map((r, i) => i).filter(i => !IM.only || impWarn(IM.rows[i])); IM.n = 0;
+  if (!IM.view.length) el.innerHTML = '<div class="hint">No hay avisos: todo se ha reconocido.</div>';
+  impMore(); impCount();
+}
+function impMore(){
+  const el = $('#iml'); if (!el || !IM) return; const old = el.querySelector('.isent'); if (old) old.remove();
+  const next = IM.view.slice(IM.n, IM.n + 50); IM.n += next.length;
+  el.insertAdjacentHTML('beforeend', next.map(i => impRowHTML(IM.rows[i], i)).join(''));
+  if (IM.n < IM.view.length){ el.insertAdjacentHTML('beforeend', '<div class="isent" style="height:24px"></div>'); onVisible(el.querySelector('.isent'), impMore); }
+}
+function impReview(p, from){
+  IM = {rows:p.rows, have:p.have, kind:p.kind, st:'', defSt:'backlog', defPl:'', cv:!!S.sgdbKey, hr:S.hAuto !== false, only:false};
+  openSheet(`<div class="top"><h2>Revisar importación</h2><button id="x">Atrás</button></div>
+    <div id="isum"></div>${p.cut ? `<div class="hint">Solo se leen las primeras ${IMP_MAX} filas.</div>` : ''}
+    <label>Estado de todos los juegos</label>
+    <select id="ist"><option value="">Según el archivo</option>${STATUSES.map(s => `<option value="${s.id}">${s.label}</option>`).join('')}</select>
+    <div id="idefw"><label>Si el archivo no lo dice</label><select id="idefst">${STATUSES.map(s => `<option value="${s.id}"${s.id === 'backlog' ? ' selected' : ''}>${s.label}</option>`).join('')}</select></div>
+    <label>Plataforma si el archivo no la dice</label>
+    <select id="idefpl"><option value="">Sin plataforma</option>${platList().map(x => `<option value="${esc(x)}">${esc(x)}</option>`).join('')}</select>
+    <label class="chk"><input type="checkbox" id="icv" ${IM.cv ? 'checked' : ''} ${S.sgdbKey ? '' : 'disabled'}> Buscar portadas (SteamGridDB)</label>
+    <label class="chk"><input type="checkbox" id="ihr" ${IM.hr ? 'checked' : ''}> Buscar horas (HowLongToBeat)</label>
+    <div class="btnrow"><button id="iall">Todos</button><button id="inone">Ninguno</button><button id="iwarn">Solo avisos</button></div>
+    <div id="iml" style="margin-top:12px"></div>
+    <div class="imbar"><button id="igo" class="pri"></button></div>`);
+  $('#x').onclick = () => openImport(from);
+  $('#ist').onchange = e => { IM.st = e.target.value; $('#idefw').hidden = !!IM.st; impDraw(); };
+  $('#idefst').onchange = e => { IM.defSt = e.target.value; impDraw(); };
+  $('#idefpl').onchange = e => { IM.defPl = e.target.value; impDraw(); };
+  $('#icv').onchange = e => { IM.cv = e.target.checked; }; $('#ihr').onchange = e => { IM.hr = e.target.checked; };
+  $('#iall').onclick = () => { IM.rows.forEach(r => { r.sel = true; }); impDraw(); };
+  $('#inone').onclick = () => { IM.rows.forEach(r => { r.sel = false; }); impDraw(); };
+  $('#iwarn').onclick = () => { IM.only = !IM.only; $('#iwarn').classList.toggle('on', IM.only); impDraw(); };
+  $('#iml').onclick = e => {
+    const row = e.target.closest('.imr'); if (!row || e.target.closest('.iebox')) return;
+    const i = +row.dataset.i, r = IM.rows[i];
+    if (e.target.closest('.ied')) r.open = !r.open; else r.sel = !r.sel;
+    row.outerHTML = impRowHTML(r, i); impCount();
+  };
+  $('#iml').onchange = e => {
+    const f = e.target.dataset.f, row = e.target.closest('.imr'); if (!f || !row) return;
+    const i = +row.dataset.i, r = IM.rows[i], v = e.target.value;
+    if (f === 'title'){ const t = v.replace(/\s+/g, ' ').trim(); if (t){ r.title = t; r.dup = IM.have.get(normTitle(t)) || null; } }
+    else if (f === 'st') r.status = v;
+    else if (f === 'pl'){ r.noPl = v === '__none'; r.platform = r.noPl ? '' : v; r.platOk = true; }
+    row.outerHTML = impRowHTML(r, i); impCount();
+  };
+  $('#igo').onclick = () => {
+    const now = Date.now(), ids = [];
+    for (const r of IM.rows){
+      if (!r.sel) continue;
+      const status = impEffSt(r);
+      const g = norm({id:uid(), title:r.title, platform:impEffPl(r), status, progress:0, cover:r.cover, sgdbId:null, notes:r.notes, tags:r.tags, rating:r.rating,
+        plays:r.plays, est:r.est, started:r.started, finished:r.finished, added:now + ids.length, updated:now + ids.length});
+      if (status === 'done'){ g.progress = 100; if (!g.plays) g.plays = 1; } else g.progress = r.progress < 100 ? r.progress : 0;
+      D.games[g.id] = g; ids.push(g.id);
+    }
+    if (!ids.length) return;
+    save(); render(); impDone(ids, {cv:IM.cv && !!S.sgdbKey, hr:IM.hr});
+  };
+  impDraw();
+}
+
+/* --- tras importar: portadas y horas en segundo plano --- */
+async function impCovers(ids, onProg){
+  let n = 0;
+  for (const id of ids){
+    if (impStop) break;
+    const g = D.games[id]; if (!g || g.deleted) continue;
+    onProg(++n, ids.length);
+    if (!g.cover){
+      try { const x = await sgByName(g.title); if (x && (x.id || x.cover)){ if (x.id && !g.sgdbId) g.sgdbId = x.id; if (x.cover) g.cover = x.cover; g.updated = Date.now(); } } catch(_){}
+    }
+    if (n % 10 === 0){ save(); render(); }
+    await new Promise(r => setTimeout(r, 120));
+  }
+  save(); render();
+}
+function impDone(ids, o){
+  impStop = false;
+  openSheet(`<div class="top"><h2>Importación hecha</h2><button id="x">Cerrar</button></div>
+    <div class="status-line ok">${ids.length} ${ids.length === 1 ? 'juego añadido' : 'juegos añadidos'}</div>
+    <div id="iprog"></div>
+    <div class="btnrow"><button id="istop" hidden>Parar la búsqueda</button><button id="iundo" class="danger">Deshacer importación</button></div>
+    <div class="btnrow"><button id="idone" class="pri">Listo</button></div>`);
+  $('#x').onclick = closeSheet; $('#idone').onclick = closeSheet;
+  $('#istop').onclick = () => { impStop = true; bulkStop = true; };
+  $('#iundo').onclick = () => {
+    impStop = true; bulkStop = true; const now = Date.now();
+    for (const id of ids){ const g = D.games[id]; if (g && !g.deleted){ g.deleted = true; g.updated = now; } }
+    save(); render(); closeSheet(); toast('Importación deshecha: los juegos están en la papelera');
+  };
+  const line = (cls, t) => { const el = $('#iprog'); if (el && el.isConnected) el.innerHTML = `<div class="status-line ${cls}">${esc(t)}</div>`; };
+  if (!o.cv && !o.hr) return;
+  $('#istop').hidden = false;
+  (async () => {
+    if (o.cv) await impCovers(ids, (i, n) => line('', `Portadas: ${i} de ${n}`));
+    let res = null;
+    if (o.hr && !impStop && !bulkRun) res = await hltbBulk((i, n) => line('', `Horas: ${i} de ${n}`), ids);
+    const st = $('#istop'); if (st) st.hidden = true;
+    if (res && res.aborted) line('ko', res.aborted);
+    else line('ok', res ? `${res.found} con horas · ${res.none} sin coincidencia` : (impStop ? 'Búsqueda parada' : 'Portadas al día'));
+  })();
+}
+
+/* ---------- novedades y aviso de actualización ---------- */
+const APP_VER = 33;
+const NEWS = [
+  'Importa listas desde txt, CSV o JSON, con una pantalla para revisarlas antes de añadir (Ajustes → Datos y copias, o desde «Añadir juego»).',
+  'Si tu red bloquea las portadas de SteamGridDB, la app las pide a través de tu Worker (hay que actualizar worker.js).',
+  'La app avisa cuando se actualiza y enseña las novedades una sola vez.'
+];
+function showNews(){
+  const old = document.getElementById('news'); if (old) old.remove();
+  const el = document.createElement('div'); el.id = 'news'; el.className = 'news';
+  el.innerHTML = `<button class="nx" aria-label="Cerrar">✕</button><b>Novedades <small>Versión ${APP_VER}</small></b><ul>${NEWS.map(n => `<li>${esc(n)}</li>`).join('')}</ul><button class="pri nok">Entendido</button>`;
+  $('#grid').before(el);
+  const bye = () => { S.seenVer = APP_VER; saveS(); el.remove(); };
+  el.querySelector('.nx').onclick = bye; el.querySelector('.nok').onclick = bye;
+}
+function newsInit(){
+  try { if (localStorage.getItem('backlog.updated')){ localStorage.removeItem('backlog.updated'); setTimeout(() => toast(`Actualizada a la versión ${APP_VER}`), 600); } } catch(_){}
+  const fresh = !Object.keys(D.games).length && !S.sgdbKey && !S.syncCode;
+  if (S.seenVer === undefined && fresh){ S.seenVer = APP_VER; saveS(); return; }   // instalación nueva: no hay nada que contar
+  if (S.seenVer !== APP_VER) showNews();
+}
+
 /* ---------- arranque ---------- */
 render();
 if (S.syncCode) setSync(S.syncErr ? 'err' : 'ok');
+newsInit();
 checkSyncLink();
 window.addEventListener('hashchange', checkSyncLink);   // enlace pulsado con la app ya abierta
 
@@ -2357,7 +2776,7 @@ window.addEventListener('pageshow', e => { if (e.persisted) location.reload(); }
 if (syncReady()) syncNow(false);
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')){
   const had = !!navigator.serviceWorker.controller; let reloaded = false;
-  navigator.serviceWorker.addEventListener('controllerchange', () => { if (had && !reloaded){ reloaded = true; location.reload(); } });
+  navigator.serviceWorker.addEventListener('controllerchange', () => { if (had && !reloaded){ reloaded = true; try { localStorage.setItem('backlog.updated', '1'); } catch(_){} location.reload(); } });
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 </script>
