@@ -83,7 +83,7 @@ header .ib{width:42px;height:42px;padding:0;display:grid;place-items:center;bord
 #q{flex:1 1 0;min-width:0;padding-left:40px;background-repeat:no-repeat;background-position:13px center;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%239096b0' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M20 20l-3.5-3.5'/%3E%3C/svg%3E")}
 .sortgrp{flex:1.25 1 0;display:flex;gap:8px;min-width:0}.sortgrp select{flex:1 1 0;min-width:0}
-#qSc[hidden],#fTag[hidden],#fYear[hidden]{display:none}
+#qSc[hidden],#fTag[hidden],#fYear[hidden],#fSaga[hidden],#fHty[hidden]{display:none}
 .tbm{position:relative;flex:none;width:38px;height:36px;padding:0;display:grid;place-items:center;border-radius:11px;background:var(--panel2)}.tbm svg{transition:transform .2s}.toolbar.open .tbm svg{transform:rotate(180deg)}
 .tbdot{display:none;position:absolute;top:5px;right:5px;width:8px;height:8px;border-radius:50%;background:var(--accent2);border:2px solid var(--panel2);box-sizing:content-box}.tbdot.on{display:block}
 #tbx{display:none}.toolbar.open #tbx{display:flex}
@@ -184,6 +184,7 @@ nav .sh{display:none}
 .res:hover{filter:brightness(1.12)}.res:active{transform:scale(.99)}
 .res .th{width:44px;aspect-ratio:2/3;border-radius:7px;overflow:hidden;background:var(--bg);flex:none}
 .res .th img{width:100%;height:100%;object-fit:cover}
+.res .ed{flex:none;width:36px;height:36px;padding:0;border-radius:50%;font-size:16px;align-self:center}
 .res .t{flex:1;min-width:0}
 .res .t b{display:block;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .res .t small{color:var(--mute)}
@@ -424,12 +425,13 @@ nav button.tnav.on .t0{fill:#ef5b6b}nav button.tnav.on .t2{fill:#f5a524}nav butt
       <option value="time">Duración</option>
       <option value="manual">Mi orden</option>
       <option value="added">Añadidos</option>
+      <option value="saga">Saga</option>
       <option value="fin">Terminado</option>
       <option value="ini">Empezado</option>
     </select><button class="dir" id="fDir" type="button"></button></div></div>
-    <div class="trow" id="tbx"><select id="fYear" aria-label="Año de fin" hidden></select><button id="fTag" class="fsel" type="button" aria-label="Etiquetas" hidden></button><select id="fDur" aria-label="Duración">
+    <div class="trow" id="tbx"><select id="fYear" aria-label="Año de fin" hidden></select><select id="fSaga" aria-label="Saga" hidden></select><button id="fTag" class="fsel" type="button" aria-label="Etiquetas" hidden></button><select id="fDur" aria-label="Duración">
       <option value="">Cualquier duración</option><option value="u5">Menos de 5 h</option><option value="u15">5–15 h</option><option value="u40">15–40 h</option><option value="o40">Más de 40 h</option><option value="none">Sin duración</option>
-    </select><select id="qSc" aria-label="Buscar en" hidden></select></div>
+    </select><select id="fHty" aria-label="Tipo de horas" hidden><option value="">Horas: tu preferencia</option><option value="main">Solo Historia</option><option value="plus">Solo Extras</option><option value="full">Solo Completista</option></select><select id="qSc" aria-label="Buscar en" hidden></select></div>
   </div><div class="sec" id="sec"><h2 id="title"></h2><span id="count"></span><button class="tbtn" id="btnSel" hidden>Seleccionar</button></div><div class="grid" id="grid"></div><div id="empty"></div><div id="more"></div></main>
   <nav id="nav"></nav>
   <button class="fab" id="fab" aria-label="Añadir juego" title="Añadir juego"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><span>Añadir juego</span></button>
@@ -616,6 +618,13 @@ Object.assign(EN, {'Tier lists':'Tier lists','Ampliar o reducir':'Expand or coll
 Object.assign(EN, {'Al marcar una etiqueta en el filtro o en la selección múltiple, la lista ya no vuelve arriba: puedes marcar varias seguidas sin volver a bajar.':'Marking a tag in the filter or in multi-select no longer jumps the list back to the top, so you can mark several in a row.',
 'Las etiquetas se buscan por relevancia: primero la coincidencia exacta, luego las que empiezan por lo que escribes, después las que tienen una palabra que empieza así y por último las que solo lo contienen.':'Tags are searched by relevance: exact match first, then tags starting with what you type, then tags with a word starting that way, and finally tags that merely contain it.',
 'El filtro de etiquetas y la selección múltiple tienen ahora su propio buscador de etiquetas.':'The tag filter and multi-select now have their own tag search box.'});
+Object.assign(EN, {'En Añadir juego, el botón ✎ de cada resultado (o «Editar y añadir») abre la ficha completa del juego antes de guardarlo: cambias etiquetas, lista, plataforma, fechas, notas… y se añade todo junto al pulsar «Añadir». Si cancelas, no se guarda nada.':'In Add game, the ✎ button on each result (or “Edit and add”) opens the full game page before saving: change tags, list, platform, dates, notes… and everything is added together when you press “Add”. If you cancel, nothing is saved.',
+'En la ficha de un juego puedes añadir varias etiquetas de golpe: marca las sugeridas o escríbelas separadas por comas.':'In a game’s page you can add several tags at once: tick the suggested ones or type them separated by commas.',
+'Sagas: cada juego puede tener una saga (con autocompletado), se pueden filtrar, ordenar por saga y ponérsela a varios juegos a la vez desde la selección múltiple. También se importan desde una columna «saga».':'Series: each game can have a series (with autocomplete); you can filter and sort by series and set it on several games at once from multi-select. They are also imported from a “saga” column.',
+'El filtro de duración puede usar un tipo de horas concreto (Solo Historia, Solo Extras o Solo Completista), y el orden por tiempo también.':'The duration filter can use a specific type of hours (Main story only, Extras only or Completionist only), and so can sorting by time.',
+'Las etiquetas tienen su propia sección en Ajustes, con todas a la vista.':'Tags have their own section in Settings, with all of them in view.'});
+Object.assign(EN, {'Saga':'Series','Saga de todos':'Series for all','Nombre de la saga':'Series name','Poner':'Set','Quitar':'Remove','p. ej. The Legend of Zelda':'e.g. The Legend of Zelda','Horas: tu preferencia':'Hours: your preference','Solo Historia':'Main story only','Solo Extras':'Extras only','Solo Completista':'Completionist only'});
+Object.assign(EN, {'Editar y añadir':'Edit and add','Añadir juego':'Add game','Cancelar':'Cancel','Editar antes de añadir':'Edit before adding','Buscar o crear etiquetas (puedes separar varias con comas)…':'Search or create tags (separate several with commas)…','Lista central de etiquetas: toca una para cambiarle el nombre o el color, o gestiónalas todas.':'Central tag list: tap one to rename it or change its color, or manage them all.'});
 Object.assign(EN, {'Buscar etiqueta…':'Search tag…','Ninguna coincide.':'No tag matches.','Buscar o crear etiqueta para todos':'Search or create a tag for all','Gestionar etiquetas':'Manage tags','Historial de cambios':'Changelog','Etiquetas':'Tags','Nueva etiqueta':'New tag','Crear':'Create','Editar':'Edit','Editar etiqueta':'Edit tag','Nombre':'Name','Color':'Color','Borrar':'Delete','Todas las marcadas':'All marked','Cualquiera':'Any','Quitar filtro':'Clear filter','Filtrar por etiquetas':'Filter by tags','Buscar o crear etiqueta…':'Search or create a tag…','Sin etiquetas':'No tags','Todavía no hay etiquetas.':'No tags yet.','Nueva etiqueta para todos':'New tag for all','Añadir':'Add','Listo':'Done','Todas las etiquetas':'All tags','actual':'current',
 'Lista central: aquí las creas, les das color, las renombras o las borras en todos los juegos a la vez. Si renombras una al nombre de otra, se fusionan.':'Central list: create tags here, give them a color, rename them or delete them across all games at once. Renaming one to another’s name merges them.',
 'Toca una vez para incluir (✓), otra para excluir (✕) y otra para quitarla.':'Tap once to include (✓), again to exclude (✕), and again to clear it.',
@@ -636,6 +645,12 @@ const RULES = [
   [/^Versión (\d+)$/, (m, n) => `Version ${n}`],
   [/^Etiquetas · (\d+)$/, (m, n) => `Tags · ${n}`],
   [/^Etiquetas de (\d+) juegos?$/, (m, n) => `Tags of ${n} ${n === '1' ? 'game' : 'games'}`],
+  [/^(Todas las sagas|Sin saga) \((\d+)\)$/, (m, l, n) => `${l === 'Sin saga' ? 'No series' : 'All series'} (${n})`],
+  [/^Saga «(.+)» en (\d+) juegos?$/, (m, t, n) => `Series “${t}” on ${n} ${n === '1' ? 'game' : 'games'}`],
+  [/^Saga quitada de (\d+) juegos?$/, (m, n) => `Series removed from ${n} ${n === '1' ? 'game' : 'games'}`],
+  [/^Añadir a «(.+)»$/, (m, l) => `Add to “${T(l)}”`],
+  [/^Añadir (\d+) etiquetas$/, (m, n) => `Add ${n} tags`],
+  [/^Ya lo tienes \((.+)\)\. Puedes añadirlo igualmente\.$/, (m, d) => `You already have it (${T(d)}). You can still add it.`],
   [/^Crear «(.+)»$/, (m, t) => `Create “${t}”`],
   [/^Ya existe «(.+)»: se fusionarán\.$/, (m, t) => `“${t}” already exists: they will be merged.`],
   [/^(\d+) juegos? (?:la tiene|la tienen)\.$/, (m, n) => `${n} ${n === '1' ? 'game has' : 'games have'} it.`],
@@ -756,7 +771,7 @@ if (compactTrash()) store(KEY, D);
 let syncBusy = false, syncDirty = false, syncTimer = null;
 const save = () => { if (!store(KEY, D)) toast('No se pudo guardar: almacenamiento lleno o bloqueado'); if (syncBusy) syncDirty = true; else scheduleSync(); };
 const saveS = () => store(SKEY, S);
-const UI = {tab:'playing', q:'', plat:'', tg:{inc:[], exc:[], or:false}, dur:'', year:'', selecting:false, sel:new Set()};
+const UI = {tab:'playing', q:'', saga:'', hty:'', plat:'', tg:{inc:[], exc:[], or:false}, dur:'', year:'', selecting:false, sel:new Set()};
 const list = () => Object.values(D.games).filter(g => !g.deleted);   // los borrados se conservan como «lápidas» para poder sincronizarlos
 
 /* ---------- toast ---------- */
@@ -782,6 +797,7 @@ function norm(g){
   g.started = typeof g.started === 'string' ? g.started : '';
   g.finished = typeof g.finished === 'string' ? g.finished : '';
   g.notes = typeof g.notes === 'string' ? g.notes : '';
+  g.saga = typeof g.saga === 'string' ? g.saga.trim().slice(0, 60) : '';
   g.platform = typeof g.platform === 'string' ? g.platform.trim() : '';
   if (Object.prototype.hasOwnProperty.call(PLAT_ALIAS, g.platform.toLowerCase())) g.platform = PLAT_ALIAS[g.platform.toLowerCase()];
   g.cover = typeof g.cover === 'string' ? g.cover : '';
@@ -800,13 +816,15 @@ function applyStatus(g, s){   // cambia de lista y mantiene fechas, progreso y v
     g.finished = today; if (prev !== 'done') g.plays = (g.plays || 0) + 1;
   }
 }
-function addGame(o){
+function makeGame(o){   // crea el juego sin guardarlo (para editarlo antes de añadirlo)
   const now = Date.now();
   const g = norm({id: uid(), title: o.title.trim(), platform: o.platform || '', status: 'backlog', progress: 0,
     cover: o.cover || '', sgdbId: o.sgdbId || null, added: now, updated: now});
-  applyStatus(g, o.status || 'backlog'); D.games[g.id] = g; save(); render(); return g;
+  applyStatus(g, o.status || 'backlog'); return g;
 }
-function touch(g){ g.updated = Date.now(); save(); render(); }
+function addGame(o){ const g = makeGame(o); D.games[g.id] = g; save(); render(); return g; }
+const DRAFTS = new WeakSet();   // juegos que se están editando antes de añadirlos: no se guardan hasta confirmar
+function touch(g){ g.updated = Date.now(); if (DRAFTS.has(g)) return; save(); render(); }
 /* ---------- duración: la tuya a mano o la de HowLongToBeat según tu preferencia ---------- */
 const HKEY = {main:'hm', plus:'hp', full:'hf'};
 const hPref = () => HKEY[S.hPref] ? S.hPref : 'main';
@@ -1046,7 +1064,7 @@ const TOMB_MS = 90 * 864e5;   // las lápidas se limpian a los 90 días
 function adopt(id, g){        // copia saneada de un juego que viene de fuera (importación o nube)
   if (!g || typeof g.title !== 'string' || !ST[g.status]) return null;
   return norm({id, title:g.title, platform:g.platform, status:g.status, progress:clamp(+g.progress || 0, 0, 100), cover:g.cover, sgdbId:g.sgdbId || null,
-    notes:g.notes, tags:g.tags, rating:g.rating, plays:g.plays, est:g.est, hm:g.hm, hp:g.hp, hf:g.hf, hid:g.hid, started:g.started, finished:g.finished,
+    notes:g.notes, saga:g.saga, tags:g.tags, rating:g.rating, plays:g.plays, est:g.est, hm:g.hm, hp:g.hp, hf:g.hf, hid:g.hid, started:g.started, finished:g.finished,
     added:g.added || Date.now(), updated:+g.updated || 0, order:g.order, deleted:g.deleted === true});
 }
 function mergeRemote(remote, remoteMeta){   // gana el cambio más reciente de cada juego
@@ -1290,8 +1308,9 @@ const SORTS = {
   title:    (a, b) => a.title.localeCompare(b.title, 'es', {sensitivity:'base'}),
   progress: (a, b) => b.progress - a.progress,
   rating:   (a, b) => b.rating - a.rating || b.updated - a.updated,
-  time:     (a, b) => { const x = hoursOf(a), y = hoursOf(b); return !x && !y ? 0 : !x ? 1 : !y ? -1 : x - y; },       // más corto primero; sin dato al final
+  time:     (a, b) => { const x = hSel(a), y = hSel(b); return !x && !y ? 0 : !x ? 1 : !y ? -1 : x - y; },       // más corto primero; sin dato al final
   timeDesc: (a, b) => { const x = hoursOf(a), y = hoursOf(b); return !x && !y ? 0 : !x ? 1 : !y ? -1 : y - x; },
+  saga:     (a, b) => (a.saga || '').localeCompare(b.saga || '', 'es') || a.title.localeCompare(b.title, 'es'),
   fin:      (a, b) => (b.finished || '').localeCompare(a.finished || ''),
   ini:      (a, b) => (b.started || '').localeCompare(a.started || ''),
   manual:   (a, b) => okey(a) - okey(b) || a.added - b.added
@@ -1303,31 +1322,34 @@ if (S.sort === 'manual' && !S.sorts.backlog) S.sorts.backlog = 'manual';   // qu
 if (!S.rev || typeof S.rev !== 'object') S.rev = {};
 for (const k of Object.keys(S.sorts)) if (S.sorts[k] === 'timeDesc'){ S.sorts[k] = 'time'; S.rev[k] = true; }   // antes eran dos órdenes distintos
 const curSort = () => SORTS[S.sorts[UI.tab]] && S.sorts[UI.tab] !== 'timeDesc' ? S.sorts[UI.tab] : (DEF_SORT[UI.tab] || 'updated');
-const DEF_DIR = {fin:'desc', ini:'desc', updated:'desc', added:'desc', title:'asc', progress:'desc', rating:'desc', time:'asc'};   // sentido natural de cada orden
+const DEF_DIR = {saga:'asc', fin:'desc', ini:'desc', updated:'desc', added:'desc', title:'asc', progress:'desc', rating:'desc', time:'asc'};   // sentido natural de cada orden
 const curRev = () => curSort() !== 'manual' && !!S.rev[UI.tab];
 const curDir = () => curSort() === 'manual' ? 'asc' : ((DEF_DIR[curSort()] === 'asc') !== curRev() ? 'asc' : 'desc');
 function curCmp(){
   const s = curSort(), f = SORTS[s];
+  if (s === 'saga'){ const rv = curRev(); return (a, b) => { const x = a.saga || '', y = b.saga || ''; if (!x || !y) return !x && !y ? a.title.localeCompare(b.title, 'es') : !x ? 1 : -1; return rv ? y.localeCompare(x, 'es') || b.title.localeCompare(a.title, 'es') : x.localeCompare(y, 'es') || a.title.localeCompare(b.title, 'es'); }; }   // sin saga, siempre al final
   if (s === 'fin' || s === 'ini'){ const k = s === 'fin' ? 'finished' : 'started', rv = curRev(); return (a, b) => { const x = a[k] || '', y = b[k] || ''; if (!x || !y) return !x && !y ? 0 : !x ? 1 : -1; return rv ? x.localeCompare(y) : y.localeCompare(x); }; }   // sin fecha, siempre al final
   if (!curRev()) return f;
   return s === 'time' ? SORTS.timeDesc : (a, b) => f(b, a);
 }
-const durOk = (g, d) => { if (!d) return true; const h = hoursOf(g); return d === 'none' ? !h : !!h && (d === 'u5' ? h < 5 : d === 'u15' ? h >= 5 && h < 15 : d === 'u40' ? h >= 15 && h < 40 : h >= 40); };
+const hSel = (g, t = UI.hty) => t ? (g[HKEY[t]] || 0) : hoursOf(g);   // horas según el tipo elegido (Historia / Extras / Completista) o tu preferencia
+const durOk = (g, d, t) => { if (!d) return true; const h = hSel(g, t); return d === 'none' ? !h : !!h && (d === 'u5' ? h < 5 : d === 'u15' ? h >= 5 && h < 15 : d === 'u40' ? h >= 15 && h < 40 : h >= 40); };
 const qScope = () => S.qSc && ST[S.qSc] ? S.qSc : 'all';
 const platOk = g => !UI.plat || (UI.plat === '__none' ? !g.platform : g.platform === UI.plat);
 const tgOn = () => UI.tg.inc.length + UI.tg.exc.length > 0;
 const hasTg = (g, t) => t === '__none' ? !g.tags.length : g.tags.includes(t);
 const tagOk = (g, f = UI.tg) => !f.exc.some(t => hasTg(g, t)) && (!f.inc.length || (f.or ? f.inc.some(t => hasTg(g, t)) : f.inc.every(t => hasTg(g, t))));
+const sagaOk = g => !UI.saga || (UI.saga === '__none' ? !g.saga : g.saga === UI.saga);
 const yearOk = g => !UI.year || (UI.year === '__none' ? !g.finished : (g.finished || '').startsWith(UI.year));
 const inView = (g, q) => q ? nrmT(g.title).includes(q) && (qScope() === 'all' || g.status === qScope()) : g.status === UI.tab;   // búsqueda sin tildes ni mayúsculas
 function viewItems(){
   const q = nrmT(UI.q), yr = !q && UI.tab === 'done';
-  return list().filter(g => inView(g, q) && platOk(g) && tagOk(g) && durOk(g, UI.dur) && (!yr || yearOk(g))).sort(curCmp());
+  return list().filter(g => inView(g, q) && platOk(g) && sagaOk(g) && tagOk(g) && durOk(g, UI.dur) && (!yr || yearOk(g))).sort(curCmp());
 }
 function render(){
   const q = nrmT(UI.q);
   // navegación
-  const filt = !!(UI.plat || tgOn() || UI.dur), counts = {}; list().forEach(g => { if (!filt || (platOk(g) && tagOk(g) && durOk(g, UI.dur))) counts[g.status] = (counts[g.status] || 0) + 1; });
+  const filt = !!(UI.plat || UI.saga || tgOn() || UI.dur), counts = {}; list().forEach(g => { if (!filt || (platOk(g) && sagaOk(g) && tagOk(g) && durOk(g, UI.dur))) counts[g.status] = (counts[g.status] || 0) + 1; });
   $('#nav').innerHTML = STATUSES.map(s =>
     `<button data-tab="${s.id}" class="${!q && !UI.tiers && UI.tab === s.id ? 'on' : ''}" style="--c:${s.c}">${IC[s.id]}<span class="lg">${s.label}</span><span class="sh">${s.short}</span><span class="n">${counts[s.id] || 0}</span></button>`).join('') +
     `<button data-tier class="tnav${UI.tiers ? ' on' : ''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect class="t0" x="2.8" y="2.6" width="4.8" height="4.8" rx="1.4" fill="currentColor" stroke="none"/><path d="M11 5h10.5"/><rect class="t2" x="2.8" y="9.6" width="4.8" height="4.8" rx="1.4" fill="currentColor" stroke="none"/><path d="M11 12h8"/><rect class="t3" x="2.8" y="16.6" width="4.8" height="4.8" rx="1.4" fill="currentColor" stroke="none"/><path d="M11 19h5.5"/></svg><span class="lg">Tier lists</span><span class="sh">Tier</span></button>`;
@@ -1341,6 +1363,12 @@ function render(){
   $('#fPlat').innerHTML = `<option value="">Todas las plataformas (${base.length})</option>` + (noP || UI.plat === '__none' ? `<option value="__none"${UI.plat === '__none' ? ' selected' : ''}>Sin plataforma (${noP})</option>` : '') + plats.map(p => `<option value="${esc(p)}"${p === UI.plat ? ' selected' : ''}>${esc(p)} (${pc[p] || 0})</option>`).join('');
   const ft = $('#fTag'); ft.hidden = !allTags().length;
   const nT = UI.tg.inc.length + UI.tg.exc.length; ft.textContent = nT ? 'Etiquetas · ' + nT : 'Todas las etiquetas'; ft.classList.toggle('act', nT > 0);
+  const sc = {}; let noS = 0; base.forEach(g => { if (g.saga) sc[g.saga] = (sc[g.saga] || 0) + 1; else noS++; });
+  const sagas = [...new Set(list().map(g => g.saga).filter(Boolean))].sort((a, b) => (sc[b] || 0) - (sc[a] || 0) || a.localeCompare(b, 'es'));
+  if (UI.saga && UI.saga !== '__none' && !sagas.includes(UI.saga)) UI.saga = '';
+  const fs = $('#fSaga'); fs.hidden = !sagas.length;
+  fs.innerHTML = `<option value="">Todas las sagas (${base.length})</option><option value="__none"${UI.saga === '__none' ? ' selected' : ''}>Sin saga (${noS})</option>` + sagas.map(x => `<option value="${esc(x)}"${x === UI.saga ? ' selected' : ''}>${esc(x)} (${sc[x] || 0})</option>`).join('');
+  const fh = $('#fHty'); fh.hidden = !(UI.dur || curSort() === 'time'); fh.value = UI.hty;
   const fy = $('#fYear'), years = [...new Set(base.map(g => (g.finished || '').slice(0, 4)).filter(Boolean))].sort().reverse(), showY = !nq && UI.tab === 'done' && years.length > 0;
   if (UI.year && UI.year !== '__none' && !years.includes(UI.year)) UI.year = '';
   fy.hidden = !showY; fy.innerHTML = '<option value="">Cualquier año</option>' + years.map(y => `<option value="${y}"${y === UI.year ? ' selected' : ''}>${y}</option>`).join('') + `<option value="__none"${UI.year === '__none' ? ' selected' : ''}>Sin fecha</option>`;
@@ -1351,7 +1379,7 @@ function render(){
   $('#qSc').hidden = !q;
   $('#toolbar').classList.toggle('open', !!S.tbx);
   $('#tbMore').setAttribute('aria-expanded', !!S.tbx);
-  $('#tbMore').querySelector('.tbdot').classList.toggle('on', !S.tbx && !!(tgOn() || UI.dur || (UI.year && UI.tab === 'done') || (q && qScope() !== 'all')));
+  $('#tbMore').querySelector('.tbdot').classList.toggle('on', !S.tbx && !!(tgOn() || UI.dur || UI.saga || (UI.year && UI.tab === 'done') || (q && qScope() !== 'all')));
   $('#qSc').innerHTML = '<option value="all">Todas las listas</option>' + STATUSES.map(st => `<option value="${st.id}"${st.id === qScope() ? ' selected' : ''}>${st.label}</option>`).join('');
   $('#qSc').value = qScope();
   // lista
@@ -1469,6 +1497,8 @@ $('#fPlat').addEventListener('change', e => { UI.plat = e.target.value; render()
 $('#fSort').addEventListener('change', e => { endSel(); S.sorts[UI.tab] = e.target.value; delete S.rev[UI.tab]; saveS(); render(); });
 $('#fDur').addEventListener('change', e => { UI.dur = e.target.value; render(); });
 $('#fYear').addEventListener('change', e => { UI.year = e.target.value; render(); });
+$('#fSaga').addEventListener('change', e => { UI.saga = e.target.value; render(); });
+$('#fHty').addEventListener('change', e => { UI.hty = e.target.value; render(); });
 $('#fDir').addEventListener('click', () => { if (curSort() === 'manual') return; if (S.rev[UI.tab]) delete S.rev[UI.tab]; else S.rev[UI.tab] = true; saveS(); render(); });
 $('#fab').addEventListener('click', () => openAdd());
 $('#fTag').addEventListener('click', () => openTagFilter());
@@ -1616,13 +1646,17 @@ function openAdd(prefill){
     <input id="aq" type="search" placeholder="Nombre del juego…" autocomplete="off">
     <label>Añadir a</label><select id="as">${STATUSES.map(s => `<option value="${s.id}" ${s.id === UI.tab ? 'selected' : ''}>${s.label}</option>`).join('')}</select>
     <div id="ares" style="margin-top:12px"></div>
-    <div class="btnrow"><button id="manual">Añadir «<span id="mt">…</span>» sin buscar</button></div>
+    <div class="btnrow"><button id="manual">Añadir «<span id="mt">…</span>» sin buscar</button><button id="manualed">Editar y añadir</button></div>
     <div class="btnrow" style="margin-top:8px"><button id="aimp">Importar una lista…</button></div>`);
   $('#x').onclick = closeSheet; $('#aimp').onclick = () => openImport('add');
   const aq = $('#aq'); setTimeout(() => aq.focus(), 50);
   const opts = plat => ({platform: plat || '', status: $('#as').value});   // la plataforma sale de HowLongToBeat (se puede cambiar luego en el detalle)
   const manLabel = () => { const t = aq.value.trim(), d = t && findDup(t, null); $('#manual').innerHTML = d ? `Ya lo tienes (${esc(dupText(d))}). Pulsa otra vez para añadirlo igualmente` : 'Añadir «<span id="mt"></span>» sin buscar'; if (!d) $('#mt').textContent = t || '…'; delete $('#manual').dataset.ok; };
   manLabel();
+  $('#manualed').onclick = () => {
+    const t = aq.value.trim(); if (!t) return toast('Escribe un título primero');
+    openDetail(makeGame({title: t, ...opts()}), {back: () => openAdd(t)});
+  };
   $('#manual').onclick = () => {
     const t = aq.value.trim(); if (!t) return toast('Escribe un título primero');
     if (findDup(t, null) && !$('#manual').dataset.ok){ $('#manual').dataset.ok = 1; return; }
@@ -1645,7 +1679,7 @@ function openAdd(prefill){
       if (me !== seq || !box.isConnected) return;
       if (!data.length && !syncBase()){ box.innerHTML = '<div class="hint">Sin resultados. Puedes añadirlo a mano abajo.</div>'; return; }
       const rows = data, hm = new Array(rows.length).fill(null), hpl = rows.map(() => []), hb = rows.map(() => []); let rs = null, shown = 0, hp = 1, hDone = !syncBase(); const seenN = new Set(rows.map(r => nrmT(r.name))), hpages = {};
-      const rowHTML = (r, i) => `<div class="res" data-i="${i}"><div class="th"></div><div class="t"><b>${esc(r.name)}</b><small>${r.release_date ? new Date(r.release_date * 1000).getUTCFullYear() : ''}${r.verified ? ' · verificado' : ''}${(() => { const d = findDup(r.name, r.id); return d ? ` · <span class="dup">${esc(dupText(d))}</span>` : ''; })()}</small><div class="pls">${platPick('Elegir plataforma')}</div></div></div>`;
+      const rowHTML = (r, i) => `<div class="res" data-i="${i}"><div class="th"></div><div class="t"><b>${esc(r.name)}</b><small>${r.release_date ? new Date(r.release_date * 1000).getUTCFullYear() : ''}${r.verified ? ' · verificado' : ''}${(() => { const d = findDup(r.name, r.id); return d ? ` · <span class="dup">${esc(dupText(d))}</span>` : ''; })()}</small><div class="pls">${platPick('Elegir plataforma')}</div></div><button class="ed" data-ed="1" type="button" aria-label="Editar antes de añadir" title="Editar antes de añadir">✎</button></div>`;
       const platStrip = i => {   // todas las de HowLongToBeat en una tira que se desliza; al final, «Otros» con toda tu lista (HowLongToBeat a veces se equivoca)
         const el = box.querySelector(`.res[data-i="${i}"] .pls`); if (!el || !hpl[i].length) return;
         el.innerHTML = hpl[i].map(x => `<button class="pc" data-p="${esc(x)}">${esc(x)}</button>`).join('') + platPick('Otros');
@@ -1691,8 +1725,14 @@ function openAdd(prefill){
         const ng = addGame({title: r.name, sgdbId: sid || null, cover, ...opts(plat)}); if (S.hAuto !== false) hltbFill(ng.id, hm[i]);
         row.classList.add('added'); row.querySelector('small').textContent = '✓ añadido' + (plat ? ' · ' + plat : ''); row.querySelector('.pls').innerHTML = ''; toast(`«${r.name}» añadido`);
       };
+      const editRow = async row => {   // abre la ficha completa antes de añadirlo: no se guarda hasta confirmar
+        const i = +row.dataset.i, r = rows[i]; row.classList.add('busy');
+        let sid = r.id, cover = ''; try { if (sid) cover = await firstCover(sid); else { const sg = await sgByName(r.name); sid = sg.id; cover = sg.cover; } } catch(_){}
+        const ng = makeGame({title: r.name, sgdbId: sid || null, cover, ...opts('')}); if (usable(hm[i])) hltbApply(ng, hm[i]);
+        row.classList.remove('busy'); openDetail(ng, {back: () => openAdd(term)});
+      };
       box.onclick = e => {
-        const row = e.target.closest('.res'); if (!row || row.classList.contains('added') || row.classList.contains('busy') || e.target.closest('select')) return;
+        const row = e.target.closest('.res'); if (row && e.target.closest('[data-ed]') && !row.classList.contains('added') && !row.classList.contains('busy')) return editRow(row); if (!row || row.classList.contains('added') || row.classList.contains('busy') || e.target.closest('select')) return;
         const i = +row.dataset.i, chipBtn = e.target.closest('.pc');
         // la plataforma solo se pone si tocas una de la tira o eliges «Otros»; si no, se añade sin plataforma (HowLongToBeat a veces se equivoca)
         const plat = chipBtn ? chipBtn.dataset.p : '';
@@ -1830,8 +1870,13 @@ function openSelTags(){
   openSheet(`<div class="top"><h2>Etiquetas de ${n} juego${n === 1 ? '' : 's'}</h2><button id="x">Listo</button></div>
     <div class="hint">Toca una etiqueta para ponerla a todos (o quitarla si ya la tienen todos). Las de borde discontinuo las tienen solo algunos.</div>
     <div class="tadd"><input id="tnn" maxlength="24" placeholder="Buscar o crear etiqueta para todos" autocomplete="off"><button id="tnb" class="pri">Añadir</button></div>
-    <div class="tags" id="stl"></div>`);
+    <div class="tags" id="stl"></div>
+    <label>Saga de todos</label>
+    <div class="tadd"><input id="sgn" list="sgl" maxlength="60" placeholder="Nombre de la saga" autocomplete="off"><datalist id="sgl">${[...new Set(list().map(x => x.saga).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'es')).map(x => `<option value="${esc(x)}">`).join('')}</datalist><button id="sgb" class="pri">Poner</button><button id="sgx">Quitar</button></div>`);
   $('#x').onclick = () => { closeSheet(); render(); };
+  const setSaga = v => { const now = Date.now(), ex = list().map(x => x.saga).find(x => x && x.toLowerCase() === v.toLowerCase()); v = ex || v; gs.forEach(g => { g.saga = v; g.updated = now; }); save(); toast(v ? `Saga «${v}» en ${n} juego${n === 1 ? '' : 's'}` : `Saga quitada de ${n} juego${n === 1 ? '' : 's'}`); };
+  $('#sgb').onclick = () => { const v = $('#sgn').value.trim().slice(0, 60); if (v) setSaga(v); };
+  $('#sgx').onclick = () => setSaga('');
   const apply = (t, on) => { const now = Date.now(); gs.forEach(g => { const h = g.tags.includes(t); if (on && !h) { g.tags = [...g.tags, t]; g.updated = now; } else if (!on && h) { g.tags = g.tags.filter(x => x !== t); g.updated = now; } }); save(); };
   $('#tnn').oninput = e => { term = e.target.value; paint(); };
   $('#stl').onclick = e => { const b = e.target.closest('[data-t]'); if (!b) return; const t = b.dataset.t, c = tagCounts(gs)[t] || 0; apply(t, c !== n); paint(); };
@@ -1840,11 +1885,13 @@ function openSelTags(){
   paint();
 }
 $('#seltag').addEventListener('click', () => { if (UI.sel.size) openSelTags(); });
-function openDetail(g){
+function openDetail(g, draft){   // draft = {back: () => …}: juego aún sin añadir
+  if (draft) DRAFTS.add(g);
   const draw = () => {
     const keep = $('#sheet').scrollTop;
     openSheet(`
-    <div class="top"><h2>Detalles</h2><button id="x">Cerrar</button></div>
+    <div class="top"><h2>${draft ? 'Añadir juego' : 'Detalles'}</h2><button id="x">${draft ? 'Cancelar' : 'Cerrar'}</button></div>
+    ${draft ? `<div class="btnrow" style="margin:0 0 6px"><button id="dadd" class="pri">Añadir a «${esc(ST[g.status].label)}»</button></div>${(() => { const d = findDup(g.title, g.sgdbId); return d ? `<div class="hint" style="margin:0 0 8px"><span class="dup">Ya lo tienes (${esc(dupText(d))}). Puedes añadirlo igualmente.</span></div>` : ''; })()}` : ''}
     <div class="detail-head">
       <div class="th edit" id="dth" role="button" tabindex="0" aria-label="Cambiar portada">${coverHTML(g)}</div>
       <div class="f"><label style="margin-top:0">Título</label><input id="dt" value="${esc(g.title)}">
@@ -1869,19 +1916,25 @@ function openDetail(g){
     <div class="btnrow" style="margin-top:8px"><button id="dhs">Buscar horas en HowLongToBeat</button>${hasHltb(g) ? '<button id="dhx">Quitar horas de HowLongToBeat</button>' : ''}</div>
     <div class="hres" id="dhr"></div>
     <a class="link" target="_blank" rel="noopener" href="https://howlongtobeat.com/?q=${encodeURIComponent(g.title)}">Consultar duración en HowLongToBeat ↗</a>
+    <label>Saga</label><input id="dsg" list="dsgl" maxlength="60" value="${esc(g.saga)}" placeholder="p. ej. The Legend of Zelda" autocomplete="off"><datalist id="dsgl">${[...new Set(list().map(x => x.saga).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'es')).map(x => `<option value="${esc(x)}">`).join('')}</datalist>
     <label>Etiquetas</label>
     <div class="tags" id="dtags">${g.tags.map(t => tagChip(t, 'on', ' ✕')).join('') || '<span class="hint" style="margin:0">Sin etiquetas</span>'}</div>
-    <input id="dtn" placeholder="Buscar o crear etiqueta…" maxlength="24" autocomplete="off">
+    <input id="dtn" placeholder="Buscar o crear etiquetas (puedes separar varias con comas)…" maxlength="120" autocomplete="off">
     <div class="tags" id="dsug" style="margin-top:8px"></div>
     <label>${NOTE_LABEL[g.status] || 'Notas'}</label><textarea id="dno" rows="3" placeholder="Opcional">${esc(g.notes)}</textarea>
-    <div class="btnrow"><button id="ddel" class="danger">Eliminar</button></div>
-    <div class="hint">Los juegos eliminados van a la papelera (Ajustes → Datos y copias) y se guardan 30 días.</div>`);
+    ${draft ? '' : `<div class="btnrow"><button id="ddel" class="danger">Eliminar</button></div>
+    <div class="hint">Los juegos eliminados van a la papelera (Ajustes → Datos y copias) y se guardan 30 días.</div>`}`);
     $('#sheet').scrollTop = keep; bind();
   };
   const bind = () => {
-    $('#x').onclick = closeSheet;
+    $('#x').onclick = draft ? () => { DRAFTS.delete(g); draft.back(); } : closeSheet;
+    if (draft) $('#dadd').onclick = () => {
+      DRAFTS.delete(g); g.updated = Date.now(); D.games[g.id] = g; save(); render(); closeSheet(); toast(`«${g.title}» añadido`);
+      if (S.hAuto !== false && !hasHltb(g)) hltbFill(g.id);
+    };
     $('#dt').onchange = e => { const t = e.target.value.trim(); if (t){ g.title = t; touch(g); } else e.target.value = g.title; };
     platBind('dp', v => { g.platform = v; touch(g); draw(); });
+    $('#dsg').onchange = e => { const v = e.target.value.trim().slice(0, 60), ex = list().map(x => x.saga).find(x => x && x.toLowerCase() === v.toLowerCase()); g.saga = ex || v; e.target.value = g.saga; touch(g); };
     $('#dno').onchange = e => { g.notes = e.target.value; touch(g); };
     $('#dst').onclick = e => { const b = e.target.closest('[data-s]'); if (b){ setStatus(g, b.dataset.s, true); draw(); } };
     const r = $('#dr'), n = $('#dn');
@@ -1906,17 +1959,28 @@ function openDetail(g){
     };
     if ($('#dhx')) $('#dhx').onclick = () => { g.hm = g.hp = g.hf = g.hid = 0; touch(g); draw(); };
     $('#dpl').onchange = e => { g.plays = Math.max(0, Math.round(+e.target.value || 0)); touch(g); };
-    const addT = t => { t = tagCreate(t); if (t && !g.tags.includes(t)) g.tags = [...g.tags, t]; touch(g); draw(); };
-    const sugg = () => {   // autocompletado: las que ya existen y coinciden, más «Crear»
-      const raw = $('#dtn').value.trim(), v = nrmT(raw), cnt = tagCounts(), have = new Set(g.tags.map(tlow));
+    // varias etiquetas a la vez: se marcan las sugeridas (o se escriben separadas por comas) y se añaden de golpe
+    const pend = new Set();
+    const addMany = names => { let n = 0; names.forEach(x => { const t = tagCreate(x); if (t && !g.tags.some(y => tlow(y) === tlow(t))){ g.tags = [...g.tags, t]; n++; } }); if (n) touch(g); draw(); };
+    const typed = () => $('#dtn').value.split(',').map(x => x.trim()).filter(Boolean);
+    const sugg = () => {   // autocompletado: las que ya existen y coinciden (la última parte tras la coma), más «Crear»
+      const parts = $('#dtn').value.split(','), raw = parts[parts.length - 1].trim(), cnt = tagCounts(), have = new Set(g.tags.map(tlow));
       const ms = tagRank(allTags().filter(t => !have.has(tlow(t))), raw, cnt, true).slice(0, 12);
-      $('#dsug').innerHTML = ms.map(t => tagChip(t, '')).join('') + (raw && !allTags().some(t => tlow(t) === tlow(raw)) ? `<button type="button" class="new" data-new="1">Crear «${esc(raw)}»</button>` : '');
+      const ex = allTags().some(t => tlow(t) === tlow(raw)) || pend.has(raw);
+      const extra = [...pend].filter(t => !ms.includes(t));
+      $('#dsug').innerHTML = [...extra, ...ms].map(t => tagChip(t, pend.has(t) ? 'inc' : '')).join('') + (raw && !ex ? `<button type="button" class="new" data-new="1">Crear «${esc(raw)}»</button>` : '')
+        + (pend.size + typed().length > 1 || pend.size ? `<button type="button" class="new" data-all="1" style="border-style:solid;color:var(--text)">Añadir ${pend.size + typed().length} etiquetas</button>` : '');
     };
     $('#dtags').onclick = e => { const b = e.target.closest('[data-t]'); if (!b) return; const t = b.dataset.t; g.tags = g.tags.filter(x => x !== t); touch(g); draw(); };
-    $('#dsug').onclick = e => { const b = e.target.closest('button'); if (!b) return; addT(b.dataset.new ? $('#dtn').value : b.dataset.t); };
+    $('#dsug').onclick = e => {
+      const b = e.target.closest('button'); if (!b) return;
+      if (b.dataset.all) return addMany([...pend, ...typed()]);
+      if (b.dataset.new){ const parts = $('#dtn').value.split(','), raw = parts.pop().trim(); if (raw) pend.add(tagCreate(raw)); $('#dtn').value = parts.length ? parts.join(', ') + ', ' : ''; return sugg(); }
+      const t = b.dataset.t; pend.has(t) ? pend.delete(t) : pend.add(t); sugg();
+    };
     $('#dtn').oninput = sugg; $('#dtn').onfocus = sugg;
-    $('#dtn').onkeydown = e => { if (e.key !== 'Enter') return; e.preventDefault(); const v = $('#dtn').value.trim(); if (v) addT(v); };
-    $('#ddel').onclick = () => {
+    $('#dtn').onkeydown = e => { if (e.key !== 'Enter') return; e.preventDefault(); const all = [...pend, ...typed()]; if (all.length) addMany(all); };
+    if (!draft) $('#ddel').onclick = () => {
       if ($('#ddel').dataset.sure){ removeGame(g); closeSheet(); toast(`«${g.title}» movido a la papelera`, {label:'Deshacer', fn:() => restoreGame(g)}); }
       else { $('#ddel').dataset.sure = 1; $('#ddel').textContent = 'Pulsa otra vez para confirmar'; }
     };
@@ -1933,7 +1997,7 @@ function openRandom(skipId, keep){
   const f = UI.rnd, base = list().filter(g => RND_SETS[f.set].includes(g.status));
   const plats = [...new Set(base.map(g => g.platform).filter(Boolean))].sort(cmpEs), tags = [...new Set(base.flatMap(g => g.tags))].sort((a, b) => a.localeCompare(b, 'es'));
   if (f.plat && !plats.includes(f.plat)) f.plat = ''; if (f.tag && !tags.includes(f.tag)) f.tag = '';
-  const pool = base.filter(g => (!f.plat || g.platform === f.plat) && (!f.tag || g.tags.includes(f.tag)) && durOk(g, f.dur));
+  const pool = base.filter(g => (!f.plat || g.platform === f.plat) && (!f.tag || g.tags.includes(f.tag)) && durOk(g, f.dur, ''));
   const opts = pool.length > 1 ? pool.filter(g => g.id !== skipId) : pool, g = opts.length ? opts[Math.floor(Math.random() * opts.length)] : null;
   const o = (v, l, cur) => `<option value="${esc(v)}"${v === cur ? ' selected' : ''}>${esc(l)}</option>`;
   openSheet(`<div class="top"><h2>¿A qué juego ahora?</h2><button id="x">Cerrar</button></div>
@@ -2484,7 +2548,7 @@ function openTrash(){
 }
 
 /* --- ajustes --- */
-function openSettings(which){   // which: sección que debe quedar abierta al volver desde otra pantalla ('data' | 'sync')
+function openSettings(which){   // which: sección que debe quedar abierta al volver desde otra pantalla ('data' | 'sync' | 'tags' | 'hltb')
   which = typeof which === 'string' ? which : '';
   const trashN = trashList().length;
   openSheet(`
@@ -2519,12 +2583,16 @@ function openSettings(which){   // which: sección que debe quedar abierta al vo
       <div id="htres"></div>
       <div class="hint">HowLongToBeat no tiene API oficial: se consulta a través de tu Worker y puede dejar de funcionar si cambian su web. Lo que escribes a mano se conserva salvo que marques sobrescribir. No se buscan los juegos ya completados.</div>
     </div></details>
+    <details class="acc" ${which === 'tags' ? 'open' : ''}><summary>Etiquetas <small>${allTags().length}</small></summary><div class="in">
+      <div class="hint" style="margin-top:0">Lista central de etiquetas: toca una para cambiarle el nombre o el color, o gestiónalas todas.</div>
+      <div class="tags" id="settags">${allTags().map(t => tagChip(t, '')).join('') || '<span class="hint" style="margin:0">Todavía no hay etiquetas.</span>'}</div>
+      <div class="btnrow" style="margin-top:10px"><button id="tagsbtn">Gestionar etiquetas</button></div>
+    </div></details>
     <details class="acc" ${which === 'data' ? 'open' : ''}><summary>Datos y copias <small>${list().length} juegos</small></summary><div class="in">
       <div class="btnrow" style="margin-top:0"><button id="exp">Exportar copia</button><button id="imp">Importar copia</button></div>
       <div class="btnrow" style="margin-top:8px"><button id="impl">Importar lista (txt, CSV, JSON)</button></div>
       <input id="impf" type="file" accept=".json,application/json" hidden>
       <div class="btnrow" style="margin-top:8px"><button id="copyall">Copiar todas las listas</button><button id="copycur">Copiar «${esc(ST[UI.tab].label)}»</button></div>
-      <div class="btnrow" style="margin-top:8px"><button id="tagsbtn">Gestionar etiquetas</button></div>
       <div class="btnrow" style="margin-top:8px"><button id="trashbtn">Papelera${trashN ? ` (${trashN})` : ''}</button></div>
       <div class="hint">Tus datos se guardan en este navegador y, si activas la sincronización, también (cifrados) en tu nube. Haz copias de vez en cuando: al borrar los datos del navegador se pierden los locales.</div>
       <div class="hint"><span>Versión ${APP_VER}</span> · <a href="#" id="newsopen">Ver novedades</a> · <a href="#" id="histopen">Historial de cambios</a></div>
@@ -2569,7 +2637,8 @@ function openSettings(which){   // which: sección que debe quedar abierta al vo
   };
   $('#imp').onclick = () => $('#impf').click();
   $('#impl').onclick = () => openImport();
-  $('#tagsbtn').onclick = () => openTags(() => openSettings('data'));
+  $('#tagsbtn').onclick = () => openTags(() => openSettings('tags'));
+  $('#settags').onclick = e => { const b = e.target.closest('[data-t]'); if (b) editTag(b.dataset.t, () => openSettings('tags')); };
   $('#histopen').onclick = e => { e.preventDefault(); openHistory(() => openSettings('data')); };
   $('#newsopen').onclick = e => { e.preventDefault(); closeSheet(); $('#main').scrollTop = 0; showNews(); };
   $('#impf').onchange = async e => {
@@ -2647,6 +2716,7 @@ const IMP_COLS = {
   started:['started', 'start', 'inicio', 'empezado', 'fecha inicio', 'start date', 'fecha de inicio'],
   finished:['finished', 'finish', 'fin', 'end', 'fecha fin', 'end date', 'fecha de fin', 'terminado el'],
   tags:['tags', 'tag', 'etiquetas', 'etiqueta', 'genres', 'generos'],
+  saga:['saga', 'sagas', 'serie', 'series', 'franchise', 'franquicia'],
   notes:['notes', 'note', 'notas', 'comments', 'comentarios'],
   plays:['plays', 'veces', 'veces completado', 'playthroughs'],
   cover:['cover', 'portada', 'image', 'imagen']
@@ -2662,7 +2732,7 @@ function impRow(o){   // campos sueltos → fila de la pantalla de revisión
     rating:has(o.rating) ? impRating(o.rating) : 0, progress:has(o.progress) ? clamp(Math.round(impNum(o.progress)), 0, 100) : 0,
     est:has(o.est) ? Math.max(0, impNum(o.est)) : 0, started:impDate(o.started), finished:impDate(o.finished),
     tags:(Array.isArray(o.tags) ? o.tags : String(o.tags || '').split(/[;|,]/)).map(x => String(x).trim()).filter(Boolean).slice(0, 12),
-    notes:String(o.notes || '').trim().slice(0, 2000), plays:Math.max(0, Math.round(impNum(o.plays))),
+    saga:String(o.saga || '').trim().slice(0, 60), notes:String(o.notes || '').trim().slice(0, 2000), plays:Math.max(0, Math.round(impNum(o.plays))),
     cover:/^https:\/\//.test(o.cover || '') ? String(o.cover) : '', sel:true, open:false};
 }
 function impClass(p){   // qué es cada trozo de una línea de texto
@@ -2892,7 +2962,7 @@ function impReview(p, from){
     for (const r of IM.rows){
       if (!r.sel) continue;
       const status = impEffSt(r);
-      const g = norm({id:uid(), title:r.title, platform:impEffPl(r), status, progress:0, cover:r.cover, sgdbId:null, notes:r.notes, tags:r.tags, rating:r.rating,
+      const g = norm({id:uid(), title:r.title, platform:impEffPl(r), status, progress:0, cover:r.cover, sgdbId:null, notes:r.notes, saga:r.saga || '', tags:r.tags, rating:r.rating,
         plays:r.plays, est:r.est, started:r.started, finished:r.finished, added:now + ids.length, updated:now + ids.length});
       if (status === 'done'){ g.progress = 100; if (!g.plays) g.plays = 1; } else g.progress = r.progress < 100 ? r.progress : 0;
       D.games[g.id] = g; ids.push(g.id);
@@ -2946,9 +3016,16 @@ function impDone(ids, o){
 }
 
 /* ---------- novedades y aviso de actualización ---------- */
-const APP_VER = 36;
+const APP_VER = 37;
 /* Historial de cambios: cada versión nueva añade su entrada AL PRINCIPIO. La primera es la que enseña el aviso de novedades. */
 const CHANGELOG = [
+  {v:37, items:[
+    'En Añadir juego, el botón ✎ de cada resultado (o «Editar y añadir») abre la ficha completa del juego antes de guardarlo: cambias etiquetas, lista, plataforma, fechas, notas… y se añade todo junto al pulsar «Añadir». Si cancelas, no se guarda nada.',
+    'En la ficha de un juego puedes añadir varias etiquetas de golpe: marca las sugeridas o escríbelas separadas por comas.',
+    'Sagas: cada juego puede tener una saga (con autocompletado), se pueden filtrar, ordenar por saga y ponérsela a varios juegos a la vez desde la selección múltiple. También se importan desde una columna «saga».',
+    'El filtro de duración puede usar un tipo de horas concreto (Solo Historia, Solo Extras o Solo Completista), y el orden por tiempo también.',
+    'Las etiquetas tienen su propia sección en Ajustes, con todas a la vista.'
+  ]},
   {v:36, items:[
     'Al marcar una etiqueta en el filtro o en la selección múltiple, la lista ya no vuelve arriba: puedes marcar varias seguidas sin volver a bajar.',
     'Las etiquetas se buscan por relevancia: primero la coincidencia exacta, luego las que empiezan por lo que escribes, después las que tienen una palabra que empieza así y por último las que solo lo contienen.',
@@ -3002,8 +3079,8 @@ checkSyncLink();
 window.addEventListener('hashchange', checkSyncLink);   // enlace pulsado con la app ya abierta
 
 /* «Atrás»: cierra la ventana abierta; si no hay ninguna y no estás en el inicio, vuelve al inicio; en el inicio, sale como siempre */
-const isHome = () => UI.tab === 'playing' && !UI.q && !UI.plat && !tgOn();
-function goHome(){ endSel(); UI.tab = 'playing'; UI.q = ''; UI.plat = ''; UI.tg = {inc:[], exc:[], or:false}; $('#q').value = ''; render(); $('#main').scrollTop = 0; }
+const isHome = () => UI.tab === 'playing' && !UI.q && !UI.plat && !UI.saga && !tgOn();
+function goHome(){ endSel(); UI.tab = 'playing'; UI.q = ''; UI.plat = ''; UI.saga = ''; UI.tg = {inc:[], exc:[], or:false}; $('#q').value = ''; render(); $('#main').scrollTop = 0; }
 const guard = () => history.pushState({bm:'app'}, '', location.href);
 history.replaceState({bm:'base'}, '', location.href); guard();
 window.addEventListener('popstate', e => {

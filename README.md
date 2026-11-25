@@ -111,3 +111,10 @@ Importar desde Steam, el resto de la hoja de ruta y, más adelante, cuentas con 
 ## Novedades de la versión 36
 - Marcar etiquetas en el filtro o en la selección múltiple ya no devuelve la lista al principio.
 - Las etiquetas se buscan por relevancia (exacta, empieza por, palabra que empieza, contiene) y el filtro y la selección múltiple tienen buscador propio.
+
+## Novedades de la versión 37
+- «Editar y añadir»: en Añadir juego, el botón ✎ de cada resultado (o el botón junto a «sin buscar») abre la ficha completa antes de guardar; no se guarda nada hasta pulsar «Añadir».
+- Varias etiquetas a la vez en la ficha (marcar sugeridas o escribirlas separadas por comas).
+- Sagas: campo por juego, filtro, orden por saga, asignación masiva desde la selección múltiple y columna `saga` en las importaciones.
+- El filtro de duración y el orden por tiempo pueden usar un tipo de horas concreto (Historia / Extras / Completista).
+- Etiquetas en su propia sección de Ajustes.
