@@ -118,3 +118,10 @@ Importar desde Steam, el resto de la hoja de ruta y, más adelante, cuentas con 
 - Sagas: campo por juego, filtro, orden por saga, asignación masiva desde la selección múltiple y columna `saga` en las importaciones.
 - El filtro de duración y el orden por tiempo pueden usar un tipo de horas concreto (Historia / Extras / Completista).
 - Etiquetas en su propia sección de Ajustes.
+
+## Novedades de la versión 38
+- Ficha: etiquetas más usadas a la vista (con «Ver todas»), sugerencias de saga propias, barra de progreso rediseñada.
+- Selección múltiple: «Etiquetas y saga» (etiquetas y saga para todos los seleccionados).
+- Etiquetas: rueda de color personalizado además de los colores de la lista.
+- Plantillas de ejemplo CSV / JSON / TXT (Ajustes → Datos y copias, y en la pantalla de importar).
+- «Añadir y seguir buscando» en «Editar y añadir». Filtro de sagas traducido.

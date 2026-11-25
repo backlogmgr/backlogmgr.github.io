@@ -52,6 +52,8 @@ textarea{max-width:100%;resize:vertical}
 .tli{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid var(--line)}.tli .dot{width:12px;height:12px;border-radius:50%;background:var(--tc);flex:none}
 .tli b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}.tli small{color:var(--mute)}.tli button{padding:6px 12px;font-size:13px}
 .sw{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 12px}.sw button{width:30px;height:30px;border-radius:50%;border:3px solid transparent;background:var(--tc);padding:0}.sw button.on{border-color:#fff}
+.swc{position:relative;display:inline-block;width:30px;height:30px;border-radius:50%;border:3px solid transparent;margin:0;cursor:pointer;background:conic-gradient(#f55,#fd5,#5f5,#5ff,#55f,#f5f,#f55);overflow:hidden}
+.swc.on{border-color:#fff;background:var(--tc,#888)}.swc input{position:absolute;inset:-6px;width:44px;height:44px;opacity:0;cursor:pointer;border:0;padding:0}
 .seg{display:flex;gap:6px;margin:6px 0 10px}.seg button{flex:1}.seg button.on{background:var(--accent);border-color:var(--accent);color:#fff}
 .hist h3{margin:16px 0 6px;font-size:15px}.hist ul{margin:0;padding-left:20px;color:var(--text)}.hist li{margin:4px 0;font-size:13.5px;line-height:1.4}.hist .cur{font-size:11px;color:var(--accent);margin-left:6px}
 
@@ -167,8 +169,15 @@ nav .sh{display:none}
 .detail-head .th.edit::after{content:"Cambiar";position:absolute;inset:auto 0 0 0;color:#fff;background:#000c;font-size:11px;font-weight:700;text-align:center;padding:5px 0}
 .detail-head .f{flex:1;min-width:0}
 .prog{display:flex;gap:10px;align-items:center}
-.prog input[type=range]{padding:0;border:0;background:none;accent-color:var(--accent);height:30px;box-shadow:none}
-.prog input[type=number]{width:76px}
+.prog{gap:12px}
+.prog input[type=range]{-webkit-appearance:none;appearance:none;padding:0;border:0;outline:0;box-shadow:none;height:10px;border-radius:99px;margin:10px 0;cursor:pointer;background:linear-gradient(90deg,var(--accent) var(--p,0%),var(--panel2) var(--p,0%));box-shadow:inset 0 0 0 1px var(--line)}
+.prog input[type=range]::-webkit-slider-runnable-track{background:transparent;height:10px;border-radius:99px}
+.prog input[type=range]::-moz-range-track{background:transparent;height:10px;border-radius:99px}
+.prog input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;margin-top:-6px;border-radius:50%;background:#fff;border:4px solid var(--accent);box-shadow:0 2px 8px #0008;transition:transform .12s}
+.prog input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#fff;border:4px solid var(--accent);box-shadow:0 2px 8px #0008}
+.prog input[type=range]:active::-webkit-slider-thumb{transform:scale(1.15)}
+.prog input[type=range]:focus-visible{box-shadow:inset 0 0 0 1px var(--line),0 0 0 3px #7c6cff55}
+.prog .pn{display:flex;align-items:center;gap:6px;flex:none}.prog .pn input{width:72px;text-align:center}.prog .pn span{color:var(--mute);font-weight:600}
 .res{display:flex;gap:12px;align-items:center;padding:8px;border-radius:14px;background:var(--panel2);border:1px solid var(--line);margin-bottom:8px;cursor:pointer;transition:filter .15s,transform .12s}
 .mh{margin:22px 2px 10px;font-size:17px;font-weight:800;display:flex;align-items:center;gap:10px}.mh::before{content:"";width:5px;height:18px;border-radius:3px;background:var(--mute)}
 #more .res .t small{color:var(--mute)}
@@ -437,7 +446,7 @@ nav button.tnav.on .t0{fill:#ef5b6b}nav button.tnav.on .t2{fill:#f5a524}nav butt
   <button class="fab" id="fab" aria-label="Añadir juego" title="Añadir juego"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><span>Añadir juego</span></button>
 </div>
 <div id="tiers" hidden></div>
-<div id="selbar" hidden><span id="selcount"></span><button id="selall">Todos</button><button id="selx">Cancelar</button><button id="seltag">Etiquetas</button><button id="selhl" title="Buscar horas en HowLongToBeat" aria-label="Buscar horas en HowLongToBeat">Horas</button><select id="selmove" aria-label="Mover a"></select><button id="seldel" class="danger">Eliminar</button></div>
+<div id="selbar" hidden><span id="selcount"></span><button id="selall">Todos</button><button id="selx">Cancelar</button><button id="seltag" title="Etiquetas y saga de los seleccionados">Etiquetas y saga</button><button id="selhl" title="Buscar horas en HowLongToBeat" aria-label="Buscar horas en HowLongToBeat">Horas</button><select id="selmove" aria-label="Mover a"></select><button id="seldel" class="danger">Eliminar</button></div>
 <div class="wrap" id="wrap" hidden><div class="sheet" id="sheet"></div></div>
 
 <script>
@@ -623,6 +632,13 @@ Object.assign(EN, {'En Añadir juego, el botón ✎ de cada resultado (o «Edita
 'Sagas: cada juego puede tener una saga (con autocompletado), se pueden filtrar, ordenar por saga y ponérsela a varios juegos a la vez desde la selección múltiple. También se importan desde una columna «saga».':'Series: each game can have a series (with autocomplete); you can filter and sort by series and set it on several games at once from multi-select. They are also imported from a “saga” column.',
 'El filtro de duración puede usar un tipo de horas concreto (Solo Historia, Solo Extras o Solo Completista), y el orden por tiempo también.':'The duration filter can use a specific type of hours (Main story only, Extras only or Completionist only), and so can sorting by time.',
 'Las etiquetas tienen su propia sección en Ajustes, con todas a la vista.':'Tags have their own section in Settings, with all of them in view.'});
+Object.assign(EN, {'Al editar un juego, en la ficha ves las etiquetas más usadas sin tocar el buscador, con un botón para ver todas. La saga tiene sus sugerencias con el mismo estilo que las etiquetas.':'When editing a game, its page shows the most used tags without touching the search box, with a button to see them all. Series has suggestions in the same style as tags.',
+'Selección múltiple: el botón «Etiquetas y saga» sirve para poner etiquetas y una saga a todos los seleccionados (con «Todos» eliges toda la lista).':'Multi-select: the “Tags & series” button sets tags and a series on all selected games (use “All” to pick the whole list).',
+'Etiquetas: además de los colores de la lista, hay una rueda para elegir un color propio.':'Tags: besides the preset colors there is now a wheel to pick a custom color.',
+'Plantillas de ejemplo en CSV, JSON y TXT para ver el formato de importación (Ajustes → Datos y copias, y al importar).':'Sample CSV, JSON and TXT templates to see the import format (Settings → Data and backups, and when importing).',
+'«Editar y añadir» tiene ahora «Añadir y seguir buscando», que vuelve a la búsqueda en vez de cerrar.':'“Edit and add” now has “Add and keep searching”, which goes back to the search instead of closing.',
+'Barra de progreso rediseñada y filtro de sagas traducido al inglés.':'Redesigned progress bar and the series filter is now translated to English.'});
+Object.assign(EN, {'Ver todas':'Show all','Todas las sagas':'All series','Sin saga':'No series','Etiquetas y saga':'Tags & series','Etiquetas y saga de los seleccionados':'Tags & series of the selected','Añadir y seguir buscando':'Add and keep searching','Ver menos':'Show less','Color personalizado':'Custom color','Elige uno de la lista o pulsa la rueda para un color a tu gusto.':'Pick one from the list or tap the wheel for a custom color.','Plantillas de ejemplo para ver el formato:':'Sample templates to see the format:'});
 Object.assign(EN, {'Saga':'Series','Saga de todos':'Series for all','Nombre de la saga':'Series name','Poner':'Set','Quitar':'Remove','p. ej. The Legend of Zelda':'e.g. The Legend of Zelda','Horas: tu preferencia':'Hours: your preference','Solo Historia':'Main story only','Solo Extras':'Extras only','Solo Completista':'Completionist only'});
 Object.assign(EN, {'Editar y añadir':'Edit and add','Añadir juego':'Add game','Cancelar':'Cancel','Editar antes de añadir':'Edit before adding','Buscar o crear etiquetas (puedes separar varias con comas)…':'Search or create tags (separate several with commas)…','Lista central de etiquetas: toca una para cambiarle el nombre o el color, o gestiónalas todas.':'Central tag list: tap one to rename it or change its color, or manage them all.'});
 Object.assign(EN, {'Buscar etiqueta…':'Search tag…','Ninguna coincide.':'No tag matches.','Buscar o crear etiqueta para todos':'Search or create a tag for all','Gestionar etiquetas':'Manage tags','Historial de cambios':'Changelog','Etiquetas':'Tags','Nueva etiqueta':'New tag','Crear':'Create','Editar':'Edit','Editar etiqueta':'Edit tag','Nombre':'Name','Color':'Color','Borrar':'Delete','Todas las marcadas':'All marked','Cualquiera':'Any','Quitar filtro':'Clear filter','Filtrar por etiquetas':'Filter by tags','Buscar o crear etiqueta…':'Search or create a tag…','Sin etiquetas':'No tags','Todavía no hay etiquetas.':'No tags yet.','Nueva etiqueta para todos':'New tag for all','Añadir':'Add','Listo':'Done','Todas las etiquetas':'All tags','actual':'current',
@@ -645,6 +661,8 @@ const RULES = [
   [/^Versión (\d+)$/, (m, n) => `Version ${n}`],
   [/^Etiquetas · (\d+)$/, (m, n) => `Tags · ${n}`],
   [/^Etiquetas de (\d+) juegos?$/, (m, n) => `Tags of ${n} ${n === '1' ? 'game' : 'games'}`],
+  [/^Ver todas \((\d+)\)$/, (m, n) => `Show all (${n})`],
+  [/^Etiquetas y saga de (\d+) juegos?$/, (m, n) => `Tags & series of ${n} ${n === '1' ? 'game' : 'games'}`],
   [/^(Todas las sagas|Sin saga) \((\d+)\)$/, (m, l, n) => `${l === 'Sin saga' ? 'No series' : 'All series'} (${n})`],
   [/^Saga «(.+)» en (\d+) juegos?$/, (m, t, n) => `Series “${t}” on ${n} ${n === '1' ? 'game' : 'games'}`],
   [/^Saga quitada de (\d+) juegos?$/, (m, n) => `Series removed from ${n} ${n === '1' ? 'game' : 'games'}`],
@@ -935,7 +953,7 @@ function cleanMeta(m){
     id:t.id.slice(0, 64), name:String(t.name || '').slice(0, 60),
     rows:(Array.isArray(t.rows) ? t.rows : []).slice(0, 20).map(r => ({id:String((r && r.id) || uid()).slice(0, 64), label:String((r && r.label) || '').slice(0, 40), color:/^#[0-9a-f]{6}$/i.test(r && r.color) ? r.color : '#9096b0', items:cleanRefs(r && r.items)})),
     pool:cleanRefs(t.pool)}));
-  const seen = new Set(), tags = (Array.isArray(m && m.tags) ? m.tags : []).filter(t => t && typeof t.name === 'string' && t.name.trim() && !seen.has(t.name.trim().toLowerCase()) && seen.add(t.name.trim().toLowerCase())).slice(0, 300).map(t => ({name:t.name.trim().slice(0, 24), c:Math.max(0, Math.min(9, Math.round(+t.c) || 0))}));
+  const seen = new Set(), tags = (Array.isArray(m && m.tags) ? m.tags : []).filter(t => t && typeof t.name === 'string' && t.name.trim() && !seen.has(t.name.trim().toLowerCase()) && seen.add(t.name.trim().toLowerCase())).slice(0, 300).map(t => ({name:t.name.trim().slice(0, 24), c:/^#[0-9a-f]{6}$/i.test(t.c) ? t.c.toLowerCase() : Math.max(0, Math.min(9, Math.round(+t.c) || 0))}));
   return {goals, tiers, tags, updated: +(m && m.updated) || 0};
 }
 const metaGoal = y => +D.meta.goals[y] || 0;
@@ -1753,7 +1771,7 @@ const TAG_COLORS = ['#7c6cff', '#3ecf8e', '#ff6b81', '#ffb454', '#4fb7ff', '#c77
 const tlow = t => String(t).trim().toLowerCase();
 const tagHash = t => { let h = 7; for (const ch of String(t)) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return h % 10; };
 const tagReg = t => D.meta.tags.find(r => tlow(r.name) === tlow(t));
-const tagColor = t => TAG_COLORS[tagReg(t) ? tagReg(t).c : tagHash(t)];
+const tagColor = t => { const r = tagReg(t); return r ? (typeof r.c === 'string' ? r.c : TAG_COLORS[r.c]) : TAG_COLORS[tagHash(t)]; };
 const allTags = () => { const m = new Map(); D.meta.tags.forEach(r => m.set(tlow(r.name), r.name)); list().forEach(g => g.tags.forEach(t => { if (!m.has(tlow(t))) m.set(tlow(t), t); })); return [...m.values()].sort((a, b) => a.localeCompare(b, 'es')); };
 const tagCounts = (games = list()) => { const c = {}; games.forEach(g => g.tags.forEach(t => c[t] = (c[t] || 0) + 1)); return c; };
 const metaTouch = () => { D.meta.updated = Date.now(); save(); };
@@ -1770,6 +1788,13 @@ function tagRank(names, raw, cnt = {}, usage){
   if (!v) return [...names].sort(usage ? by : (a, b) => a.localeCompare(b, 'es'));
   const rk = t => { const n = nrmT(t); return n === v ? 0 : n.startsWith(v) ? 1 : n.split(' ').some(w => w.startsWith(v)) ? 2 : n.includes(v) ? 3 : -1; };
   return names.map(t => [t, rk(t)]).filter(x => x[1] >= 0).sort((a, b) => a[1] - b[1] || by(a[0], b[0])).map(x => x[0]);
+}
+function sagaBox(inp, box, apply){   // sugerencias de saga con el mismo estilo que las de etiquetas (sin el desplegable nativo)
+  const cnt = () => { const c = {}; list().forEach(g => { if (g.saga) c[g.saga] = (c[g.saga] || 0) + 1; }); return c; };
+  const paint = () => { const raw = inp.value.trim(), c = cnt(); box.innerHTML = tagRank(Object.keys(c), raw, c, true).filter(x => tlow(x) !== tlow(raw)).slice(0, 8).map(x => `<button type="button" data-sg="${esc(x)}">${esc(x)}</button>`).join(''); };
+  inp.addEventListener('input', paint); inp.addEventListener('focus', paint);
+  box.addEventListener('pointerdown', e => e.preventDefault());   // que el campo no pierda el foco (y no guarde a medias lo escrito)
+  box.addEventListener('click', e => { const b = e.target.closest('[data-sg]'); if (!b) return; inp.value = b.dataset.sg; box.innerHTML = ''; apply(b.dataset.sg); });
 }
 function tagEachGame(fn){ const now = Date.now(); for (const g of Object.values(D.games)) if (Array.isArray(g.tags) && fn(g)) g.updated = now; }
 function tagRename(old, nu){   // si «nu» ya existe (otro nombre), se fusionan; devuelve el nombre final
@@ -1808,15 +1833,17 @@ function openTags(back){
   draw();
 }
 function editTag(name, back){
-  const cnt = tagCounts()[name] || 0, cur = TAG_COLORS.indexOf(tagColor(name));
+  const cnt = tagCounts()[name] || 0, curHex = tagColor(name), cur = TAG_COLORS.indexOf(curHex);
   openSheet(`<div class="top"><h2>Editar etiqueta</h2><button id="x">Atrás</button></div>
     <label>Nombre</label><input id="enm" maxlength="24" value="${esc(name)}" autocomplete="off">
     <div class="hint" id="emg">${cnt} ${cnt === 1 ? 'juego la tiene' : 'juegos la tienen'}.</div>
-    <label>Color</label><div class="sw" id="esw">${TAG_COLORS.map((c, i) => `<button type="button" data-c="${i}" class="${i === cur ? 'on' : ''}" style="--tc:${c}" aria-label="Color ${i + 1}"></button>`).join('')}</div>
+    <label>Color</label><div class="sw" id="esw">${TAG_COLORS.map((c, i) => `<button type="button" data-c="${i}" class="${i === cur ? 'on' : ''}" style="--tc:${c}" aria-label="Color ${i + 1}"></button>`).join('')}<label class="swc${cur < 0 ? ' on' : ''}" id="eccl" title="Color personalizado"><input type="color" id="ecc" value="${curHex}" aria-label="Color personalizado"></label></div>
+    <div class="hint" style="margin-top:-4px">Elige uno de la lista o pulsa la rueda para un color a tu gusto.</div>
     <div class="btnrow"><button id="edel" class="danger">Borrar</button><button id="esv" class="pri">Guardar</button></div>`);
-  let col = cur;
+  let col = cur < 0 ? curHex : cur;
   $('#x').onclick = back;
-  $('#esw').onclick = e => { const b = e.target.closest('[data-c]'); if (!b) return; col = +b.dataset.c; $('#esw').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); };
+  $('#esw').onclick = e => { const b = e.target.closest('[data-c]'); if (!b) return; col = +b.dataset.c; $('#ecc').value = TAG_COLORS[col]; $('#eccl').classList.remove('on'); $('#esw').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); };
+  $('#ecc').oninput = e => { col = e.target.value.toLowerCase(); $('#eccl').classList.add('on'); $('#eccl').style.setProperty('--tc', col); $('#esw').querySelectorAll('button').forEach(x => x.classList.remove('on')); };
   $('#enm').oninput = e => { const v = e.target.value.trim(), o = allTags().find(x => tlow(x) === tlow(v) && tlow(x) !== tlow(name)); $('#emg').textContent = o ? `Ya existe «${o}»: se fusionarán.` : `${cnt} ${cnt === 1 ? 'juego la tiene' : 'juegos la tienen'}.`; };
   $('#esv').onclick = () => { const f = tagRename(name, $('#enm').value || name); tagSetColor(f, col); render(); back(); };
   $('#edel').onclick = () => {
@@ -1867,12 +1894,14 @@ function openSelTags(){
     const cnt = tagCounts(gs), state = t => !cnt[t] ? '' : cnt[t] === n ? 'on' : 'some';
     $('#stl').innerHTML = tagRank(allTags(), term, tagCounts()).map(t => tagChip(t, state(t), ` <small>${cnt[t] || 0}</small>`)).join('') || '<span class="hint" style="margin:0">Ninguna coincide.</span>';
   };
-  openSheet(`<div class="top"><h2>Etiquetas de ${n} juego${n === 1 ? '' : 's'}</h2><button id="x">Listo</button></div>
+  openSheet(`<div class="top"><h2>Etiquetas y saga de ${n} juego${n === 1 ? '' : 's'}</h2><button id="x">Listo</button></div>
     <div class="hint">Toca una etiqueta para ponerla a todos (o quitarla si ya la tienen todos). Las de borde discontinuo las tienen solo algunos.</div>
     <div class="tadd"><input id="tnn" maxlength="24" placeholder="Buscar o crear etiqueta para todos" autocomplete="off"><button id="tnb" class="pri">Añadir</button></div>
     <div class="tags" id="stl"></div>
     <label>Saga de todos</label>
-    <div class="tadd"><input id="sgn" list="sgl" maxlength="60" placeholder="Nombre de la saga" autocomplete="off"><datalist id="sgl">${[...new Set(list().map(x => x.saga).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'es')).map(x => `<option value="${esc(x)}">`).join('')}</datalist><button id="sgb" class="pri">Poner</button><button id="sgx">Quitar</button></div>`);
+    <div class="tadd"><input id="sgn" maxlength="60" placeholder="Nombre de la saga" autocomplete="off"><button id="sgb" class="pri">Poner</button><button id="sgx">Quitar</button></div>
+    <div class="tags" id="sgs"></div>`);
+  sagaBox($('#sgn'), $('#sgs'), v => { $('#sgn').value = v; });
   $('#x').onclick = () => { closeSheet(); render(); };
   const setSaga = v => { const now = Date.now(), ex = list().map(x => x.saga).find(x => x && x.toLowerCase() === v.toLowerCase()); v = ex || v; gs.forEach(g => { g.saga = v; g.updated = now; }); save(); toast(v ? `Saga «${v}» en ${n} juego${n === 1 ? '' : 's'}` : `Saga quitada de ${n} juego${n === 1 ? '' : 's'}`); };
   $('#sgb').onclick = () => { const v = $('#sgn').value.trim().slice(0, 60); if (v) setSaga(v); };
@@ -1891,7 +1920,7 @@ function openDetail(g, draft){   // draft = {back: () => …}: juego aún sin a�
     const keep = $('#sheet').scrollTop;
     openSheet(`
     <div class="top"><h2>${draft ? 'Añadir juego' : 'Detalles'}</h2><button id="x">${draft ? 'Cancelar' : 'Cerrar'}</button></div>
-    ${draft ? `<div class="btnrow" style="margin:0 0 6px"><button id="dadd" class="pri">Añadir a «${esc(ST[g.status].label)}»</button></div>${(() => { const d = findDup(g.title, g.sgdbId); return d ? `<div class="hint" style="margin:0 0 8px"><span class="dup">Ya lo tienes (${esc(dupText(d))}). Puedes añadirlo igualmente.</span></div>` : ''; })()}` : ''}
+    ${draft ? `<div class="btnrow" style="margin:0 0 6px"><button id="dadd" class="pri">Añadir a «${esc(ST[g.status].label)}»</button><button id="dadd2">Añadir y seguir buscando</button></div>${(() => { const d = findDup(g.title, g.sgdbId); return d ? `<div class="hint" style="margin:0 0 8px"><span class="dup">Ya lo tienes (${esc(dupText(d))}). Puedes añadirlo igualmente.</span></div>` : ''; })()}` : ''}
     <div class="detail-head">
       <div class="th edit" id="dth" role="button" tabindex="0" aria-label="Cambiar portada">${coverHTML(g)}</div>
       <div class="f"><label style="margin-top:0">Título</label><input id="dt" value="${esc(g.title)}">
@@ -1900,7 +1929,7 @@ function openDetail(g, draft){   // draft = {back: () => …}: juego aún sin a�
     <label>Lista</label>
     <div class="seg" id="dst">${STATUSES.map(s => `<button data-s="${s.id}" class="${g.status === s.id ? 'on' : ''}" style="--c:${s.c}">${s.label}</button>`).join('')}</div>
     <label>Progreso</label>
-    <div class="prog"><input id="dr" type="range" min="0" max="100" value="${g.progress}" style="flex:1"><input id="dn" type="number" min="0" max="100" value="${g.progress}"></div>
+    <div class="prog"><input id="dr" type="range" min="0" max="100" value="${g.progress}" style="flex:1;--p:${g.progress}%"><span class="pn"><input id="dn" type="number" min="0" max="100" value="${g.progress}"><span>%</span></span></div>
     <label>Valoración</label>
     <div class="stars" id="dstars">${[1, 2, 3, 4, 5].map(n => `<button data-r="${n}" class="${g.rating >= n ? 'on' : g.rating === n - 0.5 ? 'half' : ''}" aria-label="${n} de 5"><span>★</span></button>`).join('')}</div>
     <div class="hint" style="margin-top:4px">Toca la mitad izquierda de una estrella para media nota (p. ej. 2,5).</div>
@@ -1916,7 +1945,7 @@ function openDetail(g, draft){   // draft = {back: () => …}: juego aún sin a�
     <div class="btnrow" style="margin-top:8px"><button id="dhs">Buscar horas en HowLongToBeat</button>${hasHltb(g) ? '<button id="dhx">Quitar horas de HowLongToBeat</button>' : ''}</div>
     <div class="hres" id="dhr"></div>
     <a class="link" target="_blank" rel="noopener" href="https://howlongtobeat.com/?q=${encodeURIComponent(g.title)}">Consultar duración en HowLongToBeat ↗</a>
-    <label>Saga</label><input id="dsg" list="dsgl" maxlength="60" value="${esc(g.saga)}" placeholder="p. ej. The Legend of Zelda" autocomplete="off"><datalist id="dsgl">${[...new Set(list().map(x => x.saga).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'es')).map(x => `<option value="${esc(x)}">`).join('')}</datalist>
+    <label>Saga</label><input id="dsg" maxlength="60" value="${esc(g.saga)}" placeholder="p. ej. The Legend of Zelda" autocomplete="off"><div class="tags" id="dsgs" style="margin-top:8px"></div>
     <label>Etiquetas</label>
     <div class="tags" id="dtags">${g.tags.map(t => tagChip(t, 'on', ' ✕')).join('') || '<span class="hint" style="margin:0">Sin etiquetas</span>'}</div>
     <input id="dtn" placeholder="Buscar o crear etiquetas (puedes separar varias con comas)…" maxlength="120" autocomplete="off">
@@ -1928,17 +1957,19 @@ function openDetail(g, draft){   // draft = {back: () => …}: juego aún sin a�
   };
   const bind = () => {
     $('#x').onclick = draft ? () => { DRAFTS.delete(g); draft.back(); } : closeSheet;
-    if (draft) $('#dadd').onclick = () => {
-      DRAFTS.delete(g); g.updated = Date.now(); D.games[g.id] = g; save(); render(); closeSheet(); toast(`«${g.title}» añadido`);
+    const commit = again => {
+      DRAFTS.delete(g); g.updated = Date.now(); D.games[g.id] = g; save(); render(); again ? draft.back() : closeSheet(); toast(`«${g.title}» añadido`);
       if (S.hAuto !== false && !hasHltb(g)) hltbFill(g.id);
     };
+    if (draft){ $('#dadd').onclick = () => commit(false); $('#dadd2').onclick = () => commit(true); }
     $('#dt').onchange = e => { const t = e.target.value.trim(); if (t){ g.title = t; touch(g); } else e.target.value = g.title; };
     platBind('dp', v => { g.platform = v; touch(g); draw(); });
-    $('#dsg').onchange = e => { const v = e.target.value.trim().slice(0, 60), ex = list().map(x => x.saga).find(x => x && x.toLowerCase() === v.toLowerCase()); g.saga = ex || v; e.target.value = g.saga; touch(g); };
+    const setSg = v => { v = String(v).trim().slice(0, 60); const ex = list().map(x => x.saga).find(x => x && x.toLowerCase() === v.toLowerCase()); g.saga = ex || v; $('#dsg').value = g.saga; touch(g); };
+    $('#dsg').onchange = e => setSg(e.target.value); sagaBox($('#dsg'), $('#dsgs'), setSg);
     $('#dno').onchange = e => { g.notes = e.target.value; touch(g); };
     $('#dst').onclick = e => { const b = e.target.closest('[data-s]'); if (b){ setStatus(g, b.dataset.s, true); draw(); } };
     const r = $('#dr'), n = $('#dn');
-    r.oninput = () => { n.value = r.value; };
+    r.oninput = () => { n.value = r.value; r.style.setProperty('--p', r.value + '%'); };
     r.onchange = () => { setProgress(g, +r.value); draw(); };
     n.onchange = () => { setProgress(g, clamp(+n.value || 0, 0, 100)); draw(); };
     $('#dstars').onclick = e => { const b = e.target.closest('[data-r]'); if (!b) return; const r = b.getBoundingClientRect(), v = +b.dataset.r - (e.clientX - r.left < r.width * 0.45 ? 0.5 : 0); g.rating = g.rating === v ? 0 : v; touch(g); draw(); };
@@ -1960,25 +1991,27 @@ function openDetail(g, draft){   // draft = {back: () => …}: juego aún sin a�
     if ($('#dhx')) $('#dhx').onclick = () => { g.hm = g.hp = g.hf = g.hid = 0; touch(g); draw(); };
     $('#dpl').onchange = e => { g.plays = Math.max(0, Math.round(+e.target.value || 0)); touch(g); };
     // varias etiquetas a la vez: se marcan las sugeridas (o se escriben separadas por comas) y se añaden de golpe
-    const pend = new Set();
+    const pend = new Set(); let showAll = false;
     const addMany = names => { let n = 0; names.forEach(x => { const t = tagCreate(x); if (t && !g.tags.some(y => tlow(y) === tlow(t))){ g.tags = [...g.tags, t]; n++; } }); if (n) touch(g); draw(); };
     const typed = () => $('#dtn').value.split(',').map(x => x.trim()).filter(Boolean);
     const sugg = () => {   // autocompletado: las que ya existen y coinciden (la última parte tras la coma), más «Crear»
       const parts = $('#dtn').value.split(','), raw = parts[parts.length - 1].trim(), cnt = tagCounts(), have = new Set(g.tags.map(tlow));
-      const ms = tagRank(allTags().filter(t => !have.has(tlow(t))), raw, cnt, true).slice(0, 12);
+      const pool = tagRank(allTags().filter(t => !have.has(tlow(t))), raw, cnt, true), lim = raw ? 12 : showAll ? 999 : 5, ms = pool.slice(0, lim), more = !raw && pool.length > 5;
       const ex = allTags().some(t => tlow(t) === tlow(raw)) || pend.has(raw);
       const extra = [...pend].filter(t => !ms.includes(t));
       $('#dsug').innerHTML = [...extra, ...ms].map(t => tagChip(t, pend.has(t) ? 'inc' : '')).join('') + (raw && !ex ? `<button type="button" class="new" data-new="1">Crear «${esc(raw)}»</button>` : '')
+        + (more ? `<button type="button" class="new" data-more="1">${showAll ? 'Ver menos' : 'Ver todas (' + pool.length + ')'}</button>` : '')
         + (pend.size + typed().length > 1 || pend.size ? `<button type="button" class="new" data-all="1" style="border-style:solid;color:var(--text)">Añadir ${pend.size + typed().length} etiquetas</button>` : '');
     };
     $('#dtags').onclick = e => { const b = e.target.closest('[data-t]'); if (!b) return; const t = b.dataset.t; g.tags = g.tags.filter(x => x !== t); touch(g); draw(); };
     $('#dsug').onclick = e => {
       const b = e.target.closest('button'); if (!b) return;
       if (b.dataset.all) return addMany([...pend, ...typed()]);
+      if (b.dataset.more){ showAll = !showAll; return sugg(); }
       if (b.dataset.new){ const parts = $('#dtn').value.split(','), raw = parts.pop().trim(); if (raw) pend.add(tagCreate(raw)); $('#dtn').value = parts.length ? parts.join(', ') + ', ' : ''; return sugg(); }
       const t = b.dataset.t; pend.has(t) ? pend.delete(t) : pend.add(t); sugg();
     };
-    $('#dtn').oninput = sugg; $('#dtn').onfocus = sugg;
+    $('#dtn').oninput = sugg; sugg();   // las más usadas ya se ven sin tocar el buscador
     $('#dtn').onkeydown = e => { if (e.key !== 'Enter') return; e.preventDefault(); const all = [...pend, ...typed()]; if (all.length) addMany(all); };
     if (!draft) $('#ddel').onclick = () => {
       if ($('#ddel').dataset.sure){ removeGame(g); closeSheet(); toast(`«${g.title}» movido a la papelera`, {label:'Deshacer', fn:() => restoreGame(g)}); }
@@ -2591,6 +2624,7 @@ function openSettings(which){   // which: sección que debe quedar abierta al vo
     <details class="acc" ${which === 'data' ? 'open' : ''}><summary>Datos y copias <small>${list().length} juegos</small></summary><div class="in">
       <div class="btnrow" style="margin-top:0"><button id="exp">Exportar copia</button><button id="imp">Importar copia</button></div>
       <div class="btnrow" style="margin-top:8px"><button id="impl">Importar lista (txt, CSV, JSON)</button></div>
+      ${tplLinks()}
       <input id="impf" type="file" accept=".json,application/json" hidden>
       <div class="btnrow" style="margin-top:8px"><button id="copyall">Copiar todas las listas</button><button id="copycur">Copiar «${esc(ST[UI.tab].label)}»</button></div>
       <div class="btnrow" style="margin-top:8px"><button id="trashbtn">Papelera${trashN ? ` (${trashN})` : ''}</button></div>
@@ -2637,6 +2671,7 @@ function openSettings(which){   // which: sección que debe quedar abierta al vo
   };
   $('#imp').onclick = () => $('#impf').click();
   $('#impl').onclick = () => openImport();
+  bindTpl($('#sheet'));
   $('#tagsbtn').onclick = () => openTags(() => openSettings('tags'));
   $('#settags').onclick = e => { const b = e.target.closest('[data-t]'); if (b) editTag(b.dataset.t, () => openSettings('tags')); };
   $('#histopen').onclick = e => { e.preventDefault(); openHistory(() => openSettings('data')); };
@@ -2847,7 +2882,23 @@ function impParse(text, name){
 }
 
 /* --- pantalla de entrada --- */
-const IMP_TPL = 'titulo,plataforma,estado,nota,progreso,horas,inicio,fin,etiquetas,notas\nHades,Nintendo Switch,completado,4.5,100,22,2024-03-01,2024-03-20,roguelike;indie,Me encantó\nCeleste,PC,backlog,,,,,,plataformas,\nHollow Knight,Nintendo Switch,jugando,,35,,2024-05-02,,metroidvania,\n';
+const IMP_TPL = 'titulo,plataforma,estado,nota,progreso,horas,inicio,fin,etiquetas,saga,notas\nHades,Nintendo Switch,completado,4.5,100,22,2024-03-01,2024-03-20,roguelike;indie,,Me encantó\nCeleste,PC,backlog,,,,,,plataformas,,\nHollow Knight,Nintendo Switch,jugando,,35,,2024-05-02,,metroidvania,,\nThe Legend of Zelda: Breath of the Wild,Nintendo Switch,backlog,,,,,,aventura,The Legend of Zelda,\n';
+const IMP_TPL_JSON = JSON.stringify([
+  {titulo:'Hades', plataforma:'Nintendo Switch', estado:'completado', nota:4.5, progreso:100, horas:22, inicio:'2024-03-01', fin:'2024-03-20', etiquetas:['roguelike', 'indie'], saga:'', notas:'Me encantó'},
+  {titulo:'Celeste', plataforma:'PC', estado:'backlog', etiquetas:['plataformas']},
+  {titulo:'Hollow Knight', plataforma:'Nintendo Switch', estado:'jugando', progreso:35, inicio:'2024-05-02', etiquetas:['metroidvania']},
+  {titulo:'The Legend of Zelda: Breath of the Wild', plataforma:'Nintendo Switch', estado:'backlog', saga:'The Legend of Zelda'}
+], null, 2) + '\n';
+const IMP_TPL_TXT = '# Jugando\nHollow Knight — Nintendo Switch — 35 %\n\n# Backlog\nCeleste (PC)\nThe Legend of Zelda: Breath of the Wild — Nintendo Switch\n\n# Completados\nHades — Nintendo Switch — ★★★★½ — 22 h\n\n# Deseados\n- [ ] Silksong (PC)\n';
+const IMP_TPLS = {csv:['plantilla-backlogmgr.csv', IMP_TPL, 'text/csv'], json:['plantilla-backlogmgr.json', IMP_TPL_JSON, 'application/json'], txt:['plantilla-backlogmgr.txt', IMP_TPL_TXT, 'text/plain']};
+const tplLinks = () => `<div class="hint tpl">Plantillas de ejemplo para ver el formato: ${Object.keys(IMP_TPLS).map(k => `<a href="#" data-tpl="${k}">${k.toUpperCase()}</a>`).join(' · ')}</div>`;
+function bindTpl(root){
+  root.querySelectorAll('[data-tpl]').forEach(l => l.onclick = e => {
+    e.preventDefault(); const [name, body, type] = IMP_TPLS[l.dataset.tpl];
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([type === 'text/csv' ? '\ufeff' + body : body], {type})); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  });
+}
 function openImport(from){
   openSheet(`<div class="top"><h2>Importar lista</h2><button id="x">Atrás</button></div>
     <div class="hint">Un juego por línea (txt), una tabla (CSV) o una lista (JSON). Antes de añadir nada verás una pantalla para revisarlo.</div>
@@ -2858,10 +2909,11 @@ function openImport(from){
     <div class="btnrow"><button id="irev">Revisar</button></div>
     <details class="hnone"><summary>Formatos admitidos</summary>
       <div class="hint">Texto (txt): un juego por línea. Opcional: Título — Plataforma — estado — 40 % — ★★★★ — 12 h. Una línea con un estado («Completados», «# Backlog») fija el estado de las siguientes. También entiende el texto de «Copiar todas las listas».</div>
-      <div class="hint">CSV: primera fila con los nombres de las columnas: título, plataforma, estado, nota, progreso, horas, inicio, fin, etiquetas, notas, veces, portada. Solo el título es obligatorio. Vale con coma, punto y coma o tabulador.</div>
+      <div class="hint">CSV: primera fila con los nombres de las columnas: título, plataforma, estado, nota, progreso, horas, inicio, fin, etiquetas, saga, notas, veces, portada. Solo el título es obligatorio. Vale con coma, punto y coma o tabulador.</div>
       <div class="hint">JSON: una lista de títulos, una lista de objetos con esos mismos campos, o una copia de BacklogMGR.</div>
     </details>
-    <div class="btnrow"><button id="itpl">Descargar plantilla CSV</button></div>`);
+    ${tplLinks()}`);
+  bindTpl($('#sheet'));
   $('#x').onclick = () => from === 'add' ? closeSheet() : openSettings('data');
   const run = async (text, name) => {
     if (!String(text).trim()){ toast('Pega una lista o elige un archivo'); return; }
@@ -2872,10 +2924,6 @@ function openImport(from){
   $('#ifile').onclick = () => $('#ifin').click();
   $('#ifin').onchange = async e => { const f = e.target.files[0]; if (!f) return; let t; try { t = await impRead(f); } catch(_){ toast('No he podido leer ese archivo'); return; } run(t, f.name); };
   $('#irev').onclick = () => run($('#itxt').value, '');
-  $('#itpl').onclick = () => {
-    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + IMP_TPL], {type:'text/csv'})); a.download = 'plantilla-backlogmgr.csv';
-    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
-  };
 }
 
 /* --- pantalla de revisión (staging) --- */
@@ -3016,9 +3064,17 @@ function impDone(ids, o){
 }
 
 /* ---------- novedades y aviso de actualización ---------- */
-const APP_VER = 37;
+const APP_VER = 38;
 /* Historial de cambios: cada versión nueva añade su entrada AL PRINCIPIO. La primera es la que enseña el aviso de novedades. */
 const CHANGELOG = [
+  {v:38, items:[
+    'Al editar un juego, en la ficha ves las etiquetas más usadas sin tocar el buscador, con un botón para ver todas. La saga tiene sus sugerencias con el mismo estilo que las etiquetas.',
+    'Selección múltiple: el botón «Etiquetas y saga» sirve para poner etiquetas y una saga a todos los seleccionados (con «Todos» eliges toda la lista).',
+    'Etiquetas: además de los colores de la lista, hay una rueda para elegir un color propio.',
+    'Plantillas de ejemplo en CSV, JSON y TXT para ver el formato de importación (Ajustes → Datos y copias, y al importar).',
+    '«Editar y añadir» tiene ahora «Añadir y seguir buscando», que vuelve a la búsqueda en vez de cerrar.',
+    'Barra de progreso rediseñada y filtro de sagas traducido al inglés.'
+  ]},
   {v:37, items:[
     'En Añadir juego, el botón ✎ de cada resultado (o «Editar y añadir») abre la ficha completa del juego antes de guardarlo: cambias etiquetas, lista, plataforma, fechas, notas… y se añade todo junto al pulsar «Añadir». Si cancelas, no se guarda nada.',
     'En la ficha de un juego puedes añadir varias etiquetas de golpe: marca las sugeridas o escríbelas separadas por comas.',

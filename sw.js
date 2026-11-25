@@ -1,5 +1,5 @@
 // Service worker: la app funciona sin conexión y las portadas ya vistas se guardan.
-const V = 'backlog-shell-v37', IMG = 'backlog-img-v2';
+const V = 'backlog-shell-v38', IMG = 'backlog-img-v2';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icon.svg', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
 
 self.addEventListener('install', e => {
