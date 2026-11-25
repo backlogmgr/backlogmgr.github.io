@@ -125,3 +125,9 @@ Importar desde Steam, el resto de la hoja de ruta y, más adelante, cuentas con 
 - Etiquetas: rueda de color personalizado además de los colores de la lista.
 - Plantillas de ejemplo CSV / JSON / TXT (Ajustes → Datos y copias, y en la pantalla de importar).
 - «Añadir y seguir buscando» en «Editar y añadir». Filtro de sagas traducido.
+
+## Novedades de la versión 39
+- Filtro de sagas igual que el de etiquetas (hoja con buscador, incluir ✓ / excluir ✕).
+- Selección múltiple: etiquetas y sagas más usadas a la vista con «Ver todas»; tocar una saga la aplica a todos; se ve qué saga tienen los seleccionados.
+- La flecha que despliega los filtros va junto a la de orden ↑/↓.
+- Barra de búsqueda con X propia (algunos móviles no mostraban la del navegador) y barra de selección múltiple reordenada en una cuadrícula de tres filas.
