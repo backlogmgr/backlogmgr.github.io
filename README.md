@@ -107,3 +107,7 @@ Importar desde Steam, el resto de la hoja de ruta y, más adelante, cuentas con 
 - Autocompletado al escribir una etiqueta en la ficha del juego; el botón «Etiquetas» de la selección múltiple las pone o quita a varios juegos a la vez.
 - Filtro de etiquetas con incluir (✓) / excluir (✕) y modo «todas» o «cualquiera».
 - Historial de cambios por versión en Ajustes → Datos y copias. Para versiones futuras, añade una entrada al principio de `CHANGELOG` y sube `APP_VER`.
+
+## Novedades de la versión 36
+- Marcar etiquetas en el filtro o en la selección múltiple ya no devuelve la lista al principio.
+- Las etiquetas se buscan por relevancia (exacta, empieza por, palabra que empieza, contiene) y el filtro y la selección múltiple tienen buscador propio.

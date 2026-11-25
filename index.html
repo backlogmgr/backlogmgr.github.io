@@ -613,7 +613,10 @@ Object.assign(EN, {'Elegir plataforma':'Choose platform','Otra…':'Other…','O
   'Backlog + En espera':'Backlog + On hold','No hay juegos con esos filtros.':'No games match those filters.','Lista':'List','Plataforma':'Platform','Etiqueta':'Tag',
   'Toca uno para buscarlo a mano o ponerle la duración. También los ves con el filtro «Sin duración».':'Tap one to look it up by hand or set its length. You can also see them with the “No length” filter.'});
 Object.assign(EN, {'Tier lists':'Tier lists','Ampliar o reducir':'Expand or collapse','Tier list':'Tier list','Tier':'Tier','Nueva tier list':'New tier list','Mi tier list':'My tier list','(copia)':'(copy)','Sin colocar':'Unplaced','+ Añadir juegos':'+ Add games','+ Añadir fila':'+ Add row','Exportar':'Export','Fila':'Row','Nombre':'Name','Color':'Color','↑ Subir':'↑ Move up','↓ Bajar':'↓ Move down','Vaciar fila':'Empty row','Eliminar fila':'Delete row','Añadir juegos':'Add games','Hecho':'Done','Marcar todos':'Select all','Añadir':'Add','O escribe uno a mano':'Or type one by hand','Título del juego':'Game title','Toca una fila para colocarlo':'Tap a row to place it','Duplicar':'Duplicate','Devolver todo a «Sin colocar»':'Move everything back to «Unplaced»','Eliminar tier list':'Delete tier list','Tier list eliminada':'Tier list deleted','Generando imagen…':'Generating image…','No se pudo generar la imagen':'Couldn\'t generate the image','Compartir':'Share','Ya está en la tier list':'Already in the tier list','Fila vaciada: los juegos vuelven a «Sin colocar»':'Row emptied: games go back to «Unplaced»','Fila eliminada':'Row deleted','Ordena tus juegos por niveles (S, A, B…) y compártelo como imagen.':'Rank your games in tiers (S, A, B…) and share it as an image.','Nombre de la tier list':'Tier list name','Más opciones':'More options','No hay juegos que añadir con este filtro.':'No games to add with this filter.','Añade juegos y colócalos en las filas.':'Add games and place them in the rows.','Color personalizado':'Custom color','Hecho con BacklogMGR':'Made with BacklogMGR'});
-Object.assign(EN, {'Gestionar etiquetas':'Manage tags','Historial de cambios':'Changelog','Etiquetas':'Tags','Nueva etiqueta':'New tag','Crear':'Create','Editar':'Edit','Editar etiqueta':'Edit tag','Nombre':'Name','Color':'Color','Borrar':'Delete','Todas las marcadas':'All marked','Cualquiera':'Any','Quitar filtro':'Clear filter','Filtrar por etiquetas':'Filter by tags','Buscar o crear etiqueta…':'Search or create a tag…','Sin etiquetas':'No tags','Todavía no hay etiquetas.':'No tags yet.','Nueva etiqueta para todos':'New tag for all','Añadir':'Add','Listo':'Done','Todas las etiquetas':'All tags','actual':'current',
+Object.assign(EN, {'Al marcar una etiqueta en el filtro o en la selección múltiple, la lista ya no vuelve arriba: puedes marcar varias seguidas sin volver a bajar.':'Marking a tag in the filter or in multi-select no longer jumps the list back to the top, so you can mark several in a row.',
+'Las etiquetas se buscan por relevancia: primero la coincidencia exacta, luego las que empiezan por lo que escribes, después las que tienen una palabra que empieza así y por último las que solo lo contienen.':'Tags are searched by relevance: exact match first, then tags starting with what you type, then tags with a word starting that way, and finally tags that merely contain it.',
+'El filtro de etiquetas y la selección múltiple tienen ahora su propio buscador de etiquetas.':'The tag filter and multi-select now have their own tag search box.'});
+Object.assign(EN, {'Buscar etiqueta…':'Search tag…','Ninguna coincide.':'No tag matches.','Buscar o crear etiqueta para todos':'Search or create a tag for all','Gestionar etiquetas':'Manage tags','Historial de cambios':'Changelog','Etiquetas':'Tags','Nueva etiqueta':'New tag','Crear':'Create','Editar':'Edit','Editar etiqueta':'Edit tag','Nombre':'Name','Color':'Color','Borrar':'Delete','Todas las marcadas':'All marked','Cualquiera':'Any','Quitar filtro':'Clear filter','Filtrar por etiquetas':'Filter by tags','Buscar o crear etiqueta…':'Search or create a tag…','Sin etiquetas':'No tags','Todavía no hay etiquetas.':'No tags yet.','Nueva etiqueta para todos':'New tag for all','Añadir':'Add','Listo':'Done','Todas las etiquetas':'All tags','actual':'current',
 'Lista central: aquí las creas, les das color, las renombras o las borras en todos los juegos a la vez. Si renombras una al nombre de otra, se fusionan.':'Central list: create tags here, give them a color, rename them or delete them across all games at once. Renaming one to another’s name merges them.',
 'Toca una vez para incluir (✓), otra para excluir (✕) y otra para quitarla.':'Tap once to include (✓), again to exclude (✕), and again to clear it.',
 'Toca una etiqueta para ponerla a todos (o quitarla si ya la tienen todos). Las de borde discontinuo las tienen solo algunos.':'Tap a tag to add it to all (or remove it if all already have it). Dashed ones are on only some.',
@@ -1584,7 +1587,7 @@ $('#grid').addEventListener('error', e => {   // portada rota → marcador de po
 })();
 
 /* ---------- hojas modales ---------- */
-function openSheet(html){ $('#sheet').innerHTML = html; $('#wrap').hidden = false; $('#sheet').scrollTop = 0; }
+function openSheet(html, keep){ const t = $('#sheet').scrollTop; $('#sheet').innerHTML = html; $('#wrap').hidden = false; $('#sheet').scrollTop = keep ? t : 0; }
 function closeSheet(){ $('#wrap').hidden = true; $('#sheet').innerHTML = ''; }
 $('#wrap').addEventListener('mousedown', e => { if (e.target === $('#wrap')) closeSheet(); });
 document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; if (!$('#wrap').hidden) closeSheet(); else if (UI.tiers){ if (UI.tid){ UI.tid = null; TS.sel = null; renderTiers(); } else closeTiers(); } else if (UI.selecting) setSelecting(false); });
@@ -1721,6 +1724,13 @@ function tagCreate(name, quiet){
   return t;
 }
 const tagStyle = t => `--tc:${tagColor(t)}`;
+/* búsqueda de etiquetas: primero la coincidencia exacta, luego las que empiezan por lo escrito, luego las que tienen una palabra que empieza así y al final las que solo lo contienen; a igualdad, las más usadas y después el alfabeto */
+function tagRank(names, raw, cnt = {}, usage){
+  const v = nrmT(raw), by = (a, b) => (cnt[b] || 0) - (cnt[a] || 0) || a.localeCompare(b, 'es');
+  if (!v) return [...names].sort(usage ? by : (a, b) => a.localeCompare(b, 'es'));
+  const rk = t => { const n = nrmT(t); return n === v ? 0 : n.startsWith(v) ? 1 : n.split(' ').some(w => w.startsWith(v)) ? 2 : n.includes(v) ? 3 : -1; };
+  return names.map(t => [t, rk(t)]).filter(x => x[1] >= 0).sort((a, b) => a[1] - b[1] || by(a[0], b[0])).map(x => x[0]);
+}
 function tagEachGame(fn){ const now = Date.now(); for (const g of Object.values(D.games)) if (Array.isArray(g.tags) && fn(g)) g.updated = now; }
 function tagRename(old, nu){   // si «nu» ya existe (otro nombre), se fusionan; devuelve el nombre final
   nu = String(nu).trim().slice(0, 24); if (!nu || nu === old) return old;
@@ -1742,12 +1752,14 @@ const tagChip = (t, cls = '', extra = '') => `<button type="button" data-t="${es
 
 /* gestor de etiquetas (Ajustes) */
 function openTags(back){
+  let kept = false;
   const draw = () => {
     const cnt = tagCounts(), all = allTags();
     openSheet(`<div class="top"><h2>Etiquetas</h2><button id="x">${back ? 'Atrás' : 'Cerrar'}</button></div>
       <div class="hint">Lista central: aquí las creas, les das color, las renombras o las borras en todos los juegos a la vez. Si renombras una al nombre de otra, se fusionan.</div>
       <div class="tadd"><input id="tnn" maxlength="24" placeholder="Nueva etiqueta" autocomplete="off"><button id="tnb" class="pri">Crear</button></div>
-      ${all.length ? all.map(t => `<div class="tli" data-t="${esc(t)}" style="${tagStyle(t)}"><span class="dot"></span><b>${esc(t)}</b><small>${cnt[t] || 0} ${(cnt[t] || 0) === 1 ? 'juego' : 'juegos'}</small><button data-edit>Editar</button></div>`).join('') : '<div class="hint">Todavía no hay etiquetas.</div>'}`);
+      ${all.length ? all.map(t => `<div class="tli" data-t="${esc(t)}" style="${tagStyle(t)}"><span class="dot"></span><b>${esc(t)}</b><small>${cnt[t] || 0} ${(cnt[t] || 0) === 1 ? 'juego' : 'juegos'}</small><button data-edit>Editar</button></div>`).join('') : '<div class="hint">Todavía no hay etiquetas.</div>'}`, kept);
+    kept = true;
     $('#x').onclick = back || closeSheet;
     const add = () => { const v = $('#tnn').value.trim(); if (!v) return; tagCreate(v); draw(); };
     $('#tnb').onclick = add; $('#tnn').onkeydown = e => { if (e.key === 'Enter') add(); };
@@ -1776,43 +1788,56 @@ function editTag(name, back){
 function openTagFilter(){
   const f = UI.tg, q = nrmT(UI.q), base = list().filter(g => inView(g, q) && platOk(g) && durOk(g, UI.dur)), cnt = tagCounts(base), noT = base.filter(g => !g.tags.length).length;
   const st = t => f.inc.includes(t) ? 'inc' : f.exc.includes(t) ? 'exc' : '';
-  const draw = () => {
-    const n = tagOk, shown = base.filter(g => tagOk(g)).length;
-    openSheet(`<div class="top"><h2>Filtrar por etiquetas</h2><button id="x">Listo</button></div>
-      <div class="hint">Toca una vez para incluir (✓), otra para excluir (✕) y otra para quitarla.</div>
-      <div class="seg" id="fmode"><button data-m="and" class="${f.or ? '' : 'on'}">Todas las marcadas</button><button data-m="or" class="${f.or ? 'on' : ''}">Cualquiera</button></div>
-      <div class="tags" id="ftl">${tagChip('__none', st('__none'), '').replace('>__none<', '>Sin tags <small>' + noT + '</small><')}${allTags().map(t => tagChip(t, st(t), ` <small>${cnt[t] || 0}</small>`)).join('')}</div>
-      <div class="hint">${shown} de ${base.length} juegos con este filtro.</div>
-      <div class="btnrow"><button id="fclr"${tgOn() ? '' : ' disabled'}>Quitar filtro</button><button id="fman">Gestionar etiquetas</button></div>`);
-    $('#x').onclick = closeSheet;
-    $('#fmode').onclick = e => { const b = e.target.closest('[data-m]'); if (!b) return; f.or = b.dataset.m === 'or'; render(); draw(); };
-    $('#ftl').onclick = e => {
-      const b = e.target.closest('[data-t]'); if (!b) return; const t = b.dataset.t, s0 = st(t);
-      f.inc = f.inc.filter(x => x !== t); f.exc = f.exc.filter(x => x !== t);
-      if (!s0) f.inc.push(t); else if (s0 === 'inc') f.exc.push(t);
-      render(); draw();
-    };
-    $('#fclr').onclick = () => { UI.tg = {inc:[], exc:[], or:f.or}; render(); closeSheet(); };
-    $('#fman').onclick = () => openTags(() => { render(); openTagFilter(); });
+  let term = '';
+  const chips = () => {   // solo se repinta la lista: así no se pierde la posición del scroll ni el teclado
+    const names = tagRank(allTags(), term, cnt), none = !term || nrmT('Sin tags').includes(nrmT(term));
+    return (none ? tagChip('__none', st('__none'), '').replace('>__none<', '>Sin tags <small>' + noT + '</small><') : '') + names.map(t => tagChip(t, st(t), ` <small>${cnt[t] || 0}</small>`)).join('') || '<span class="hint" style="margin:0">Ninguna coincide.</span>';
   };
-  draw();
+  const paint = () => {
+    $('#ftl').innerHTML = chips();
+    $('#fshown').textContent = `${base.filter(g => tagOk(g)).length} de ${base.length} juegos con este filtro.`;
+    $('#fclr').disabled = !tgOn();
+    $('#fmode').querySelectorAll('[data-m]').forEach(b => b.classList.toggle('on', (b.dataset.m === 'or') === !!f.or));
+  };
+  openSheet(`<div class="top"><h2>Filtrar por etiquetas</h2><button id="x">Listo</button></div>
+    <div class="hint">Toca una vez para incluir (✓), otra para excluir (✕) y otra para quitarla.</div>
+    <div class="seg" id="fmode"><button data-m="and">Todas las marcadas</button><button data-m="or">Cualquiera</button></div>
+    <input id="ftq" type="search" placeholder="Buscar etiqueta…" autocomplete="off" style="margin-bottom:10px">
+    <div class="tags" id="ftl"></div>
+    <div class="hint" id="fshown"></div>
+    <div class="btnrow"><button id="fclr">Quitar filtro</button><button id="fman">Gestionar etiquetas</button></div>`);
+  $('#x').onclick = closeSheet;
+  $('#ftq').oninput = e => { term = e.target.value; paint(); };
+  $('#fmode').onclick = e => { const b = e.target.closest('[data-m]'); if (!b) return; f.or = b.dataset.m === 'or'; render(); paint(); };
+  $('#ftl').onclick = e => {
+    const b = e.target.closest('[data-t]'); if (!b) return; const t = b.dataset.t, s0 = st(t);
+    f.inc = f.inc.filter(x => x !== t); f.exc = f.exc.filter(x => x !== t);
+    if (!s0) f.inc.push(t); else if (s0 === 'inc') f.exc.push(t);
+    render(); paint();
+  };
+  $('#fclr').onclick = () => { UI.tg = {inc:[], exc:[], or:f.or}; render(); closeSheet(); };
+  $('#fman').onclick = () => openTags(() => { render(); openTagFilter(); });
+  paint();
 }
 /* etiquetas de la selección */
 function openSelTags(){
-  const ids = [...UI.sel].filter(id => D.games[id]), gs = ids.map(id => D.games[id]);
-  const draw = () => {
-    const cnt = tagCounts(gs), n = gs.length, state = t => !cnt[t] ? '' : cnt[t] === n ? 'on' : 'some';
-    openSheet(`<div class="top"><h2>Etiquetas de ${n} juego${n === 1 ? '' : 's'}</h2><button id="x">Listo</button></div>
-      <div class="hint">Toca una etiqueta para ponerla a todos (o quitarla si ya la tienen todos). Las de borde discontinuo las tienen solo algunos.</div>
-      <div class="tadd"><input id="tnn" maxlength="24" placeholder="Nueva etiqueta para todos" autocomplete="off"><button id="tnb" class="pri">Añadir</button></div>
-      <div class="tags" id="stl">${allTags().map(t => tagChip(t, state(t), ` <small>${cnt[t] || 0}</small>`)).join('')}</div>`);
-    $('#x').onclick = () => { closeSheet(); render(); };
-    const apply = (t, on) => { const now = Date.now(); gs.forEach(g => { const h = g.tags.includes(t); if (on && !h) { g.tags = [...g.tags, t]; g.updated = now; } else if (!on && h) { g.tags = g.tags.filter(x => x !== t); g.updated = now; } }); save(); };
-    $('#stl').onclick = e => { const b = e.target.closest('[data-t]'); if (!b) return; const t = b.dataset.t; apply(t, state(t) !== 'on'); draw(); };
-    const add = () => { const v = $('#tnn').value.trim(); if (!v) return; const t = tagCreate(v); apply(t, true); draw(); };
-    $('#tnb').onclick = add; $('#tnn').onkeydown = e => { if (e.key === 'Enter') add(); };
+  const ids = [...UI.sel].filter(id => D.games[id]), gs = ids.map(id => D.games[id]), n = gs.length;
+  let term = '';
+  const paint = () => {
+    const cnt = tagCounts(gs), state = t => !cnt[t] ? '' : cnt[t] === n ? 'on' : 'some';
+    $('#stl').innerHTML = tagRank(allTags(), term, tagCounts()).map(t => tagChip(t, state(t), ` <small>${cnt[t] || 0}</small>`)).join('') || '<span class="hint" style="margin:0">Ninguna coincide.</span>';
   };
-  draw();
+  openSheet(`<div class="top"><h2>Etiquetas de ${n} juego${n === 1 ? '' : 's'}</h2><button id="x">Listo</button></div>
+    <div class="hint">Toca una etiqueta para ponerla a todos (o quitarla si ya la tienen todos). Las de borde discontinuo las tienen solo algunos.</div>
+    <div class="tadd"><input id="tnn" maxlength="24" placeholder="Buscar o crear etiqueta para todos" autocomplete="off"><button id="tnb" class="pri">Añadir</button></div>
+    <div class="tags" id="stl"></div>`);
+  $('#x').onclick = () => { closeSheet(); render(); };
+  const apply = (t, on) => { const now = Date.now(); gs.forEach(g => { const h = g.tags.includes(t); if (on && !h) { g.tags = [...g.tags, t]; g.updated = now; } else if (!on && h) { g.tags = g.tags.filter(x => x !== t); g.updated = now; } }); save(); };
+  $('#tnn').oninput = e => { term = e.target.value; paint(); };
+  $('#stl').onclick = e => { const b = e.target.closest('[data-t]'); if (!b) return; const t = b.dataset.t, c = tagCounts(gs)[t] || 0; apply(t, c !== n); paint(); };
+  const add = () => { const v = $('#tnn').value.trim(); if (!v) return; const t = tagCreate(v); apply(t, true); term = ''; $('#tnn').value = ''; paint(); };
+  $('#tnb').onclick = add; $('#tnn').onkeydown = e => { if (e.key === 'Enter') add(); };
+  paint();
 }
 $('#seltag').addEventListener('click', () => { if (UI.sel.size) openSelTags(); });
 function openDetail(g){
@@ -1884,7 +1909,7 @@ function openDetail(g){
     const addT = t => { t = tagCreate(t); if (t && !g.tags.includes(t)) g.tags = [...g.tags, t]; touch(g); draw(); };
     const sugg = () => {   // autocompletado: las que ya existen y coinciden, más «Crear»
       const raw = $('#dtn').value.trim(), v = nrmT(raw), cnt = tagCounts(), have = new Set(g.tags.map(tlow));
-      const ms = allTags().filter(t => !have.has(tlow(t)) && (!v || nrmT(t).includes(v))).sort((a, b) => (cnt[b] || 0) - (cnt[a] || 0) || a.localeCompare(b, 'es')).slice(0, 10);
+      const ms = tagRank(allTags().filter(t => !have.has(tlow(t))), raw, cnt, true).slice(0, 12);
       $('#dsug').innerHTML = ms.map(t => tagChip(t, '')).join('') + (raw && !allTags().some(t => tlow(t) === tlow(raw)) ? `<button type="button" class="new" data-new="1">Crear «${esc(raw)}»</button>` : '');
     };
     $('#dtags').onclick = e => { const b = e.target.closest('[data-t]'); if (!b) return; const t = b.dataset.t; g.tags = g.tags.filter(x => x !== t); touch(g); draw(); };
@@ -2921,9 +2946,14 @@ function impDone(ids, o){
 }
 
 /* ---------- novedades y aviso de actualización ---------- */
-const APP_VER = 35;
+const APP_VER = 36;
 /* Historial de cambios: cada versión nueva añade su entrada AL PRINCIPIO. La primera es la que enseña el aviso de novedades. */
 const CHANGELOG = [
+  {v:36, items:[
+    'Al marcar una etiqueta en el filtro o en la selección múltiple, la lista ya no vuelve arriba: puedes marcar varias seguidas sin volver a bajar.',
+    'Las etiquetas se buscan por relevancia: primero la coincidencia exacta, luego las que empiezan por lo que escribes, después las que tienen una palabra que empieza así y por último las que solo lo contienen.',
+    'El filtro de etiquetas y la selección múltiple tienen ahora su propio buscador de etiquetas.'
+  ]},
   {v:35, items:[
     'Etiquetas con lista central: créalas, dales color, renómbralas, fusiónalas o bórralas en todos los juegos a la vez (Ajustes → Datos y copias → Gestionar etiquetas).',
     'En la ficha de un juego, el campo de etiquetas busca mientras escribes y te deja crear una nueva al momento.',
